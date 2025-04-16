@@ -1,0 +1,92 @@
+﻿<nav class="navbar navbar-expand-md navbar-light bg-light mb-2">
+    <div class="container-fluid">
+        <!-- Vänstersidan (logga + namn) -->
+        <div class="d-flex align-items-center">
+            <a class="navbar-brand" href="/">
+                <img src="/images/LoggaFribergHome.png" alt="logo" style="width: 75px; height:auto; margin:0.3em" />
+            </a>
+            <a class="navbar-brand" href="/">FribergHome.nu</a>
+        </div>
+
+        <!-- Toggler (mobilmeny) -->
+        <button class="navbar-toggler @NavButtonCssClass" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-label="Toggle navigation" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Höger sida: Nav-links -->
+        <div class="collapse navbar-collapse @NavBarCssClass ms-auto" id="navbarCollapse" @onclick="ToggleNavMenu">
+            <ul class="navbar-nav ms-auto mb-2 mb-md-0">
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/searchproperty" Match="NavLinkMatch.All">Sök Bostad</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/dashboard" Match="NavLinkMatch.All">Dashboard</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/searchrealestateagent">Sök Mäklare</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/customerservice">Kundservice</NavLink>
+                </li>
+                <li class="nav-item">
+                    <NavLink class="nav-link" href="/login">Logga in</NavLink>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+@code {
+    private bool collapseNavMenu = true;
+    private string? NavBarCssClass => collapseNavMenu ? null : "show";
+    private string? NavButtonCssClass => collapseNavMenu ? "collapsed" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+
+
+
+@* <div class="top-row ps-3 navbar navbar-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="">FribergHome_Client</a>
+        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</div>
+
+<div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
+    <nav class="flex-column">
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="counter">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Counter
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
+            <NavLink class="nav-link" href="weather">
+                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
+            </NavLink>
+        </div>
+    </nav>
+</div>
+
+@code {
+    private bool collapseNavMenu = true;
+
+    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        collapseNavMenu = !collapseNavMenu;
+    }
+}
+ *@
