@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FribergHomeClient", "FribergHomeClient\FribergHomeClient.csproj", "{3BFD3CEF-806C-44D9-ACC6-C7A35A859EEE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FribergHomeClient", "FribergHomeClient\FribergHomeClient.csproj", "{3BFD3CEF-806C-44D9-ACC6-C7A35A859EEE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {85000CC7-0C3D-4862-B572-C08538171164}
 	EndGlobalSection
 EndGlobal
