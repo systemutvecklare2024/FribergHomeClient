@@ -8,7 +8,109 @@
 }
 else
 {
-    <EditForm Model="Property" OnValidSubmit="HandleSubmit">
+    <RadzenTemplateForm Data="@Property" TItem="PropertyFormViewModel" Submit="@HandleSubmit">
+        <RadzenDataAnnotationsValidator />
+        <RadzenValidationSummary />
+
+        <div class="p-1 grid gap-3">
+
+            <div class="form-control">
+                <label>Bostadstyp</label>
+                @* <RadzenDropDown @bind-Value="Property.PropertyType"
+                                Data="@PropertyTypes.PropertyTypeList()"
+                                TextProperty="@(nameof(Property))"
+                                ValueProperty="string"
+                                Style="width:100%">
+                    <Template Context="option">
+                        @PropertyTypes.GetLocalized(option.ToString())
+                    </Template>
+                </RadzenDropDown> *@
+                <RadzenDropDown @bind-Value="Property.PropertyType"
+                                Data="@PropertyTypes.PropertyTypeList()"
+                                Style="width:100%">
+                    <Template Context="option">
+                        @PropertyTypes.GetLocalized(option)
+                    </Template>
+                </RadzenDropDown>
+            </div>
+
+            <div class="form-control">
+                <label>Byggår</label>
+                <RadzenNumeric @bind-Value="Property.YearBuilt" />
+            </div>
+
+            <div class="form-control">
+                <label>Adress</label>
+                <RadzenTextBox @bind-Value="Property.Street" />
+            </div>
+
+            <div class="form-control">
+                <label>Ort</label>
+                <RadzenTextBox @bind-Value="Property.City" />
+            </div>
+
+            <div class="form-control">
+                <label>Postnummer</label>
+                <RadzenTextBox @bind-Value="Property.PostalCode" />
+            </div>
+
+            <div class="form-control">
+                <label>Boarea</label>
+                <RadzenNumeric @bind-Value="Property.LivingSpace" />
+            </div>
+
+            <div class="form-control">
+                <label>Antal rum</label>
+                <RadzenNumeric @bind-Value="Property.NumberOfRooms" />
+            </div>
+
+            <div class="form-control">
+                <label>Biarea</label>
+                <RadzenNumeric @bind-Value="Property.SecondaryArea" />
+            </div>
+
+            <div class="form-control">
+                <label>Tomtarea</label>
+                <RadzenNumeric @bind-Value="Property.LotSize" />
+            </div>
+
+            <div class="form-control">
+                <label>Månadskostnad</label>
+                <RadzenNumeric @bind-Value="Property.MonthlyFee" />
+            </div>
+
+            <div class="form-control">
+                <label>Driftkostnad</label>
+                <RadzenNumeric @bind-Value="Property.OperationalCostPerYear" />
+            </div>
+
+            <div class="form-control">
+                <label>Utgångspris</label>
+                <RadzenNumeric @bind-Value="Property.ListingPrice" />
+            </div>
+
+            <div class="form-control">
+                <label>Beskrivning</label>
+                <RadzenTextBox @bind-Value="Property.Description" />
+            </div>
+
+            <div class="form-control">
+                <label>Kommun</label>
+                <RadzenNumeric @bind-Value="Property.MuncipalityId" />
+            </div>
+
+            <div class="form-control">
+                <label>Bild</label>
+                <RadzenTextBox @bind-Value="Property.ImageUrls" />
+            </div>
+
+        </div>
+
+        <RadzenButton ButtonType="ButtonType.Submit" Text="Spara" Style="margin-top: 1rem;" />
+    </RadzenTemplateForm>
+
+
+    @* <EditForm Model="Property" OnValidSubmit="HandleSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="p-1 grid gap-3">
@@ -80,5 +182,5 @@ else
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Spara</button>
-    </EditForm>
+    </EditForm> *@
 }
