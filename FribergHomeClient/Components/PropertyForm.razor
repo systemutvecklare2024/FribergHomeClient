@@ -61,12 +61,19 @@
             <label>Beskrivning</label>
             <InputText @bind-Value="f.Description" />
         </div>
-        
+        <div class="form-control">
+            <label>Kommun</label>
+            <InputNumber @bind-Value="f.MuncipalityId" />
+        </div>
+        <div class="form-control">
+            <label>Bild</label>
+            <InputText @bind-Value="f.ImageUrls" />
+        </div>
     </ChildContent>
 </GenericFormComponent>
 
 @code {
-   
+
     [Parameter]
     public int? PropertyId { get; set; }
     private PropertyDTO property { get; set; }
@@ -93,6 +100,8 @@
         if (IsEdit) {
             // Post to /api/properties/edit/{id}
         } else {
+            var result = await Http.PostAsJsonAsync<PropertyDTO>("/api/Properties", property);
+            Console.Write(result);
             // Post to /api/properties/create
         }
     }

@@ -5,7 +5,7 @@ namespace FribergHomeClient.Data.Dto
 {
 	public class PropertyDTO
 	{
-		public int Id { get; set; }
+		public int? Id { get; set; }
 
 		[DataType(DataType.Currency)]
 		public decimal ListingPrice { get; set; }
@@ -31,7 +31,7 @@ namespace FribergHomeClient.Data.Dto
 		public string PostalCode { get; set; }
 		public int MuncipalityId { get; set; }
 
-		public List<string> ImageUrls { get; set; }
+		public string ImageUrls { get; set; }
 
     }
 }
