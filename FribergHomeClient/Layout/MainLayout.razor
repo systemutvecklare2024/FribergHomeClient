@@ -1,13 +1,32 @@
 ﻿@inherits LayoutComponentBase
 
-<NavMenu />
+<RadzenComponents />
+
+@* <RadzenComponents @rendermode="RenderMode.InteractiveWebAssembly" />  BEHÖVER JAG DENNA??? *@
+
+@* <NavMenu />
 <div class="page">
     <main>
         <article class="content px-4">
             @Body
         </article>
     </main>
-</div>
+</div> *@
+
+<RadzenLayout>
+    <RadzenNavMenu />
+    <RadzenSiteDashboard />
+    <RadzenBody>
+        <div class="rz-p-4">
+            @Body
+        </div>
+    </RadzenBody>
+    <RadzenSiteFooter />
+</RadzenLayout>
+
+<HeadContent>
+    <RadzenTheme Theme="software" />
+</HeadContent>
 
 @* @inherits LayoutComponentBase
 <div class="page">
