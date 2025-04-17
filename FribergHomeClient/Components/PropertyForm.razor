@@ -1,108 +1,84 @@
 ﻿@using FribergHomeClient.Data
+@using FribergHomeClient.Data.ViewModel
 @using FribergHomeClient.Data.Dto
 
-@inject HttpClient Http
+@if (Property == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <EditForm Model="Property" OnValidSubmit="HandleSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="p-1 grid gap-3">
 
-<GenericFormComponent TModel="PropertyDTO" Model="property" OnValidSubmit="HandleSubmit">
-    <ChildContent Context="f">
-        <div class="form-control">
-            <label>Bostadstyp</label>
-            <InputSelect @bind-Value="f.PropertyType">
-                @foreach (var option in PropertyTypes.PropertyTypeList()) {
-                    <option value="@option">@PropertyTypes.GetLocalized(option)</option>
-                }
-            </InputSelect>
+            <div class="form-control">
+                <label>Bostadstyp</label>
+                <InputSelect @bind-Value="Property.PropertyType">
+                    @foreach (var option in PropertyTypes.PropertyTypeList())
+                    {
+                        <option value="@option">@PropertyTypes.GetLocalized(option)</option>
+                    }
+                </InputSelect>
+            </div>
+            <div class="form-control">
+                <label>Byggår</label>
+                <InputNumber @bind-Value="Property.YearBuilt" />
+            </div>
+            <div class="form-control">
+                <label>Adress</label>
+                <InputText @bind-Value="Property.Street" />
+            </div>
+            <div class="form-control">
+                <label>Ort</label>
+                <InputText @bind-Value="Property.City" />
+            </div>
+            <div class="form-control">
+                <label>Postnummer</label>
+                <InputText @bind-Value="Property.PostalCode" />
+            </div>
+            <div class="form-control">
+                <label>Boarea</label>
+                <InputNumber @bind-Value="Property.LivingSpace" />
+            </div>
+            <div class="form-control">
+                <label>Antal rum</label>
+                <InputNumber @bind-Value="Property.NumberOfRooms" />
+            </div>
+            <div class="form-control">
+                <label>Biarea</label>
+                <InputNumber @bind-Value="Property.SecondaryArea" />
+            </div>
+            <div class="form-control">
+                <label>Tomtarea</label>
+                <InputNumber @bind-Value="Property.LotSize" />
+            </div>
+            <div class="form-control">
+                <label>Månadskostnad</label>
+                <InputNumber @bind-Value="Property.MonthlyFee" />
+            </div>
+            <div class="form-control">
+                <label>Driftkostnad</label>
+                <InputNumber @bind-Value="Property.OperationalCostPerYear" />
+            </div>
+            <div class="form-control">
+                <label>Utgångspris</label>
+                <InputNumber @bind-Value="Property.ListingPrice" />
+            </div>
+            <div class="form-control">
+                <label>Beskrivning</label>
+                <InputText @bind-Value="Property.Description" />
+            </div>
+            <div class="form-control">
+                <label>Kommun</label>
+                <InputNumber @bind-Value="Property.MuncipalityId" />
+            </div>
+            <div class="form-control">
+                <label>Bild</label>
+                <InputText @bind-Value="Property.ImageUrls" />
+            </div>
         </div>
-        <div class="form-control">
-            <label>Byggår</label>
-            <InputNumber @bind-Value="f.YearBuilt" />
-        </div>
-        <div class="form-control">
-            <label>Adress</label>
-            <InputText @bind-Value="f.Street" />
-        </div>
-        <div class="form-control">
-            <label>Ort</label>
-            <InputText @bind-Value="f.City" />
-        </div>
-        <div class="form-control">
-            <label>Postnummer</label>
-            <InputText @bind-Value="f.PostalCode" />
-        </div>
-        <div class="form-control">
-            <label>Boarea</label>
-            <InputNumber @bind-Value="f.LivingSpace" />
-        </div>
-        <div class="form-control">
-            <label>Antal rum</label>
-            <InputNumber @bind-Value="f.NumberOfRooms" />
-        </div>
-        <div class="form-control">
-            <label>Biarea</label>
-            <InputNumber @bind-Value="f.SecondaryArea" />
-        </div>
-        <div class="form-control">
-            <label>Tomtarea</label>
-            <InputNumber @bind-Value="f.LotSize" />
-        </div>
-        <div class="form-control">
-            <label>Månadskostnad</label>
-            <InputNumber @bind-Value="f.MonthlyFee" />
-        </div>
-        <div class="form-control">
-            <label>Driftkostnad</label>
-            <InputNumber @bind-Value="f.OperationalCostPerYear" />
-        </div>
-        <div class="form-control">
-            <label>Utgångspris</label>
-            <InputNumber @bind-Value="f.ListingPrice" />
-        </div>
-        <div class="form-control">
-            <label>Beskrivning</label>
-            <InputText @bind-Value="f.Description" />
-        </div>
-        <div class="form-control">
-            <label>Kommun</label>
-            <InputNumber @bind-Value="f.MuncipalityId" />
-        </div>
-        <div class="form-control">
-            <label>Bild</label>
-            <InputText @bind-Value="f.ImageUrls" />
-        </div>
-    </ChildContent>
-</GenericFormComponent>
-
-@code {
-
-    [Parameter]
-    public int? PropertyId { get; set; }
-    private PropertyDTO property { get; set; }
-
-    private bool IsEdit => PropertyId.HasValue;
-
-    // TODO: Fix muncipality and images...
-
-    protected override async Task OnInitializedAsync()
-    {
-        // This is Edit
-        if (IsEdit)
-        {
-            property = await Http.GetFromJsonAsync<PropertyDTO>("/api/Properties/1");
-            // Load from api... or get etc?
-        }
-        // This is new
-        else { 
-            property = new PropertyDTO();
-        } 
-    }
-
-    private async Task HandleSubmit() {
-        if (IsEdit) {
-            // Post to /api/properties/edit/{id}
-        } else {
-            var result = await Http.PostAsJsonAsync<PropertyDTO>("/api/Properties", property);
-            Console.Write(result);
-            // Post to /api/properties/create
-        }
-    }
+        <button type="submit" class="btn btn-primary">Spara</button>
+    </EditForm>
 }
