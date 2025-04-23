@@ -60,7 +60,6 @@ namespace FribergHomeClient.Providers
 		{
 			await localStorage.RemoveItemAsync("accessToken");
 
-
 			var hellUserDestroyed = new ClaimsPrincipal(new ClaimsIdentity());
 			var authState = Task.FromResult(new AuthenticationState(hellUserDestroyed));
 			NotifyAuthenticationStateChanged(authState);
