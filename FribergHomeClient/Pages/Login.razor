@@ -1,0 +1,24 @@
+﻿@page "/login"
+<RadzenCard class="rz-my-12 rz-mx-auto rz-p-4 rz-p-md-12" style="max-width: 600px;">
+
+    <RadzenTemplateForm TItem="LoginModel" Submit="@OnLogin" Data="@model">
+        <RadzenLogin AllowResetPassword="false" />
+    </RadzenTemplateForm>
+
+</RadzenCard>
+
+@code{
+    public class LoginModel
+    {
+        public string Email { get; set; }
+        public string Password { get; set; }
+    }
+
+    private LoginModel model = new();
+
+    public async Task OnLogin(LoginModel loginModel)
+    {
+        Console.WriteLine(loginModel.Email);
+        Console.WriteLine(loginModel.Password);
+    }
+}
