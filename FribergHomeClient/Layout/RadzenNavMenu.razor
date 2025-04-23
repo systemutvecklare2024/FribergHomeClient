@@ -1,5 +1,4 @@
-﻿
-<RadzenHeader>
+﻿@* <RadzenHeader>
     <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
         <RadzenLabel Text="FribergHome.nu" />
         <RadzenLink Path="/searchproperty" Text="Sök Bostad" />
@@ -8,4 +7,41 @@
         <RadzenLink Path="/customerservice" Text="Kundservice" />
         <RadzenLink Path="/login" Text="Logga in" />
     </RadzenStack>
-</RadzenHeader>
+</RadzenHeader> *@
+
+
+<RadzenStack Orientation="Orientation.Vertical" Gap="0">
+    <div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start">
+        <div class="rz-col-5">
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="10" AlignItems="AlignItems.Center">
+                <RadzenSidebarToggle Visible="true" Click="ToggleSidebar" />
+                <RadzenImage Path="/images/LoggaFribergHome.png" Style="width: 75px; height: auto;" />
+                <RadzenLabel Text="FribergHome.nu" Style="font-size: 24px; font-weight: bold;"  />
+            </RadzenStack>
+        </div>
+        <div class="rz-col-7">
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="20" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+                <RadzenLink Path="/searchproperty" Text="Sök Bostad" Style="font-size: 1.3em; text-decoration: none;" />
+                <RadzenLink Path="/dashboard" Text="Dashboard" Style="font-size: 1.3em; text-decoration: none;" />
+                <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="font-size: 1.3em; text-decoration: none;" />
+                <RadzenLink Path="/customerservice" Text="Kundservice" Style="font-size: 1.3em; text-decoration: none;" />
+                <RadzenLink Path="/login" Text="Logga in" Style="font-size: 1.3em; text-decoration: none; margin-right:2em" />
+            </RadzenStack>
+        </div>
+    </div>
+</RadzenStack>
+
+@code {
+    private bool IsSidebarExpanded { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> OnSidebarExpanded { get; set; }
+
+    private async Task ToggleSidebar()
+    {
+        IsSidebarExpanded = !IsSidebarExpanded;
+        await OnSidebarExpanded.InvokeAsync(IsSidebarExpanded);
+    }
+
+}
+
