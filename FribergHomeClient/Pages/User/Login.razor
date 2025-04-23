@@ -1,0 +1,64 @@
+﻿@page "/login"
+@using FribergHomeClient.DTOs
+@using FribergHomeClient.Services
+@inject IAuthenticationService AuthService
+@inject NavigationManager NavManager
+
+<RadzenCard class="rz-my-12 rz-mx-auto rz-p-4 rz-p-md-12" style="max-width: 600px;">
+    <RadzenTemplateForm Data=@("LoginWithDefaultValues")>
+        <RadzenLogin AllowRegister="true" AllowResetPassword="false" Username=@userName Password=@password
+        AllowRememberMe="false" RememberMe="@rememberMe"
+        Login=@(args => OnLogin(args, "Login with default values"))
+        Register=@(args => OnRegister("Login with default values")) />
+    </RadzenTemplateForm>
+    @if(failed)
+    {
+        <h1 class="alert alert-danger">RIP</h1>
+    }
+</RadzenCard>
+
+@code{
+    string userName = "admin";
+    string password = "admin";
+    bool rememberMe = true;
+
+    private LoginDTO model = new();
+    private bool failed = false;
+
+    // EventConsole console;
+
+    public async Task OnLogin(LoginArgs args, string name)
+    {
+        model.Email = args.Username;
+        model.Password = args.Password;
+
+        if (!await AuthService.AuthenticateAsync(model))
+        {
+            failed = true;
+        }
+        else{
+            NavManager.NavigateTo("/dashboard");
+        }
+        Console.WriteLine($"{name} -> Username: {args.Username}, password: {args.Password}, remember me: {args.RememberMe}");
+    }
+
+    public async Task OnRegister(string name)
+    {
+        NavManager.NavigateTo("/register");
+        Console.WriteLine($"{name} -> Register");
+    }
+
+    void OnResetPassword(string value, string name)
+    {
+        Console.WriteLine($"{name} -> ResetPassword for user: {value}");
+    }
+
+    public async Task OnLogin(LoginDTO loginModel)
+    {
+        if (!await AuthService.AuthenticateAsync(model))
+        {
+            failed = true;
+        }
+
+    }
+}

@@ -1,7 +1,29 @@
 ﻿@page "/dashboard"
+@using FribergHomeClient.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@inject IAuthenticationService authService
+
+
+<AuthorizeView Roles="Administrator">
+	<h2 class="alert alert-success">Even more special</h2>
+</AuthorizeView>
+
+<AuthorizeView>
+	<Authorized>
+		<RadzenButton Shade="Shade.Darker" Click=@LogOut Text="Logout!!" ButtonStyle="ButtonStyle.Info" />
+		<h1 class="alert alert-success">Secret stuff for authorized users</h1>
+	</Authorized>
+	<NotAuthorized>
+		<h3 class="alert alert-danger">Secret stuff in here, you are not authorized</h3>
+	</NotAuthorized>
+</AuthorizeView>
 
 <h3>Dashboard</h3>
 
 @code {
 
+	private async Task LogOut()
+	{
+		await authService.Logout();
+	}
 }
