@@ -25,7 +25,7 @@ builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
 
 
 builder.Services.AddScoped(sp => new HttpClient 
-{ BaseAddress = new Uri("https://localhost:7248") 
+{ BaseAddress = new Uri("https://localhost:7248")  
 
 });
 builder.Services.AddRadzenComponents();
