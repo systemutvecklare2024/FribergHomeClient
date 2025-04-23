@@ -8,7 +8,7 @@
 }
 else
 {
-    <RadzenTemplateForm Data="@Property" TItem="PropertyFormViewModel" Submit="@HandleSubmit">
+    @*  <RadzenTemplateForm Data="Property" TItem="PropertyFormViewModel" Submit="HandleSubmit">
         <RadzenDataAnnotationsValidator />
         <RadzenValidationSummary />
 
@@ -16,15 +16,6 @@ else
 
             <div class="form-control">
                 <label>Bostadstyp</label>
-                @* <RadzenDropDown @bind-Value="Property.PropertyType"
-                                Data="@PropertyTypes.PropertyTypeList()"
-                                TextProperty="@(nameof(Property))"
-                                ValueProperty="string"
-                                Style="width:100%">
-                    <Template Context="option">
-                        @PropertyTypes.GetLocalized(option.ToString())
-                    </Template>
-                </RadzenDropDown> *@
                 <RadzenDropDown @bind-Value="Property.PropertyType"
                                 Data="@PropertyTypes.PropertyTypeList()"
                                 Style="width:100%">
@@ -107,13 +98,13 @@ else
         </div>
 
         <RadzenButton ButtonType="ButtonType.Submit" Text="Spara" Style="margin-top: 1rem;" />
-    </RadzenTemplateForm>
+    </RadzenTemplateForm> *@
 
 
-    @* <EditForm Model="Property" OnValidSubmit="HandleSubmit">
+    <EditForm Model="Property" OnValidSubmit="HandleSubmit">
         <DataAnnotationsValidator />
         <ValidationSummary />
-        <div class="p-1 grid gap-3">
+        <div class="p-1 grid gap-3 mb-1">
 
             <div class="form-control">
                 <label>Bostadstyp</label>
@@ -182,5 +173,5 @@ else
             </div>
         </div>
         <button type="submit" class="btn btn-primary">Spara</button>
-    </EditForm> *@
+    </EditForm>
 }
