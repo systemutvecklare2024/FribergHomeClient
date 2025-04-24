@@ -1,14 +1,4 @@
-﻿@* <RadzenHeader>
-    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Gap="0">
-        <RadzenLabel Text="FribergHome.nu" />
-        <RadzenLink Path="/searchproperty" Text="Sök Bostad" />
-        <RadzenLink Path="/dashboard" Text="Dashboard" />
-        <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" />
-        <RadzenLink Path="/customerservice" Text="Kundservice" />
-        <RadzenLink Path="/login" Text="Logga in" />
-    </RadzenStack>
-</RadzenHeader> *@
-
+﻿@inject IAuthenticationService authService
 
 <RadzenStack Orientation="Orientation.Vertical" Gap="0">
     <div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start">
@@ -25,7 +15,12 @@
                 <RadzenLink Path="/dashboard" Text="Dashboard" Style="font-size: 1.3em; text-decoration: none;" />
                 <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="font-size: 1.3em; text-decoration: none;" />
                 <RadzenLink Path="/customerservice" Text="Kundservice" Style="font-size: 1.3em; text-decoration: none;" />
-                <RadzenLink Path="/login" Text="Logga in" Style="font-size: 1.3em; text-decoration: none; margin-right:2em" />
+                <RadzenLink Path="/login" Text="Logga in" Style="font-size: 1.3em; text-decoration: none;" />
+                <AuthorizeView>
+                    <Authorized>
+                        <RadzenButton Shade="Shade.Darker" Click=@LogOut Text="Logga ut" ButtonStyle="ButtonStyle.Info" Style="margin-right:2em;" />
+                    </Authorized>
+                </AuthorizeView>
             </RadzenStack>
         </div>
     </div>
@@ -43,5 +38,9 @@
         await OnSidebarExpanded.InvokeAsync(IsSidebarExpanded);
     }
 
+    private async Task LogOut()
+    {
+        await authService.Logout();
+    }
 }
 
