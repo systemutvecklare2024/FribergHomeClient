@@ -1,6 +1,124 @@
 ﻿@page "/register"
-<h3>Register</h3>
+@using FribergHomeClient.DTOs
+@using FribergHomeClient.Services
+@inject NavigationManager NavManager
+@inject IAccountService accountService
+
+@* Author: Emelie *@
+
+@if (model == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })">
+        @if (!success && !string.IsNullOrEmpty(errorMessage))
+        {
+            <div class=" alert alert-danger">
+                <p>@errorMessage</p>
+            </div>
+        }
+        <RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenStack>
+                    <RadzenFieldset Text="Användarinformation">
+                        <RadzenStack Gap="1rem">
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Förnamn" Component="FirstName" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox Style="width: 100%;" Name="FirstName" @bind-Value=model.FirstName />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Efternamn" Component="LastName" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox Style="width: 100%;" Name="LastName" @bind-Value=model.LastName />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="E-post" Component="Email" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox type="email" Style="width: 100%;" Name="Email" @bind-Value=model.Email />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Telefonnummer" Component="PhoneNumber" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox type="phonenumber" Style="width: 100%;" Name="PhoneNumber" @bind-Value=model.PhoneNumber />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Profilbild" Component="ImageUrl" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox Style="width: 100%;" Name="ImageUrl" @bind-Value=model.ImageUrl />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Lösenord" Component="Password" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox type="password" Style="width: 100%;" Name="Password" @bind-Value=model.Password />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="8">
+                                    <RadzenTextBox type="password" Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenStack>
+                    </RadzenFieldset>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-mt-8 rz-mb-4">
+            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
+        </RadzenStack>
+    </RadzenTemplateForm>
+}
 
 @code {
 
+    private AccountDTO model = new();
+    private string errorMessage = string.Empty;
+    private bool success;
+
+
+    async void Submit(AccountDTO arg)
+    {
+        var response = await accountService.RegisterAccount(model);
+        success = response.Success;
+
+        Console.WriteLine(success);
+
+        if (success)
+        {
+            NavManager.NavigateTo("/login");
+        }
+        else
+        {
+            errorMessage = response.Message;
+        }
+    }
+
+    void Cancel()
+    {
+        NavManager.NavigateTo("/");
+    }
 }
+
