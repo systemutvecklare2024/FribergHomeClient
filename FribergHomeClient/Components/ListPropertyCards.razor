@@ -3,14 +3,17 @@
 <h3>ListPropertyCards</h3>
 
 @foreach(var p in Properties){
+	p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
 	<PropertyCard Property="p"></PropertyCard>
 }
 
 @code {
 	public List<PropertyDTO> Properties = new List<PropertyDTO>();
+	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();
 
 	protected override async Task OnInitializedAsync()
 	{
 		Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
+		Muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
 	}
 }

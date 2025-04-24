@@ -30,6 +30,7 @@ namespace FribergHomeClient.Data.Dto
 		public string City { get; set; }
 		public string PostalCode { get; set; }
 		public int MuncipalityId { get; set; }
+		public string Muncipality { get; set; } = "";
 
 		public List<PropertyImageDTO> ImageUrls { get; set; }
 
