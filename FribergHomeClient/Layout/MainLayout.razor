@@ -1,37 +1,40 @@
 ﻿@inherits LayoutComponentBase
 @* <RadzenComponents @rendermode="RenderMode.InteractiveWebAssembly" /> *@
 <RadzenComponents />
-    <RadzenLayout>
-        <RadzenHeader>
-        <RadzenNavMenu OnSidebarExpanded="Test" />
-        </RadzenHeader>
+<RadzenLayout>
+	<RadzenHeader>
+		<RadzenNavMenu OnSidebarExpanded="Test" />
+	</RadzenHeader>
+	<AuthorizeView>
 
-        <RadzenSidebar @bind-Expanded="IsSidebarExpanded" Responsive="false" Style="width: max-content">
-            <RadzenSiteDashboard />
-        </RadzenSidebar>
+		<RadzenSidebar @bind-Expanded="IsSidebarExpanded" Responsive="false" Style="width: max-content">
 
-        <RadzenBody>
-            <div class="rz-p-4">
-                @Body
-            </div>
-        </RadzenBody>
-        
-        <RadzenSiteFooter />
-    </RadzenLayout>
+			<RadzenSiteDashboard />
+		</RadzenSidebar>
+	</AuthorizeView>
+
+	<RadzenBody>
+		<div class="rz-p-4">
+			@Body
+		</div>
+	</RadzenBody>
+
+	<RadzenSiteFooter />
+</RadzenLayout>
 
 
 
 <HeadContent>
-    <RadzenTheme Theme="software" />
+	<RadzenTheme Theme="software" />
 </HeadContent>
 
 @code {
-    private bool IsSidebarExpanded = true;
+	private bool IsSidebarExpanded = true;
 
-    private void Test(bool isExpanded)
-    {
-        IsSidebarExpanded = isExpanded;
-    }
+	private void Test(bool isExpanded)
+	{
+		IsSidebarExpanded = isExpanded;
+	}
 }
 
 
