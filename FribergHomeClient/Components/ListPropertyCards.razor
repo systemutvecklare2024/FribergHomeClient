@@ -1,12 +1,17 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
 <h3>ListPropertyCards</h3>
+<RadzenRow>
+	<RadzenColumn Size="6" Offset="3">
 
-@foreach(var p in Properties){
-	p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
-	<PropertyCard Property="p"></PropertyCard>
-}
+		@foreach (var p in Properties)
+		{
+			p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
+			<PropertyCard Property="p"></PropertyCard>
+		}
+	</RadzenColumn>
 
+</RadzenRow>
 @code {
 	public List<PropertyDTO> Properties = new List<PropertyDTO>();
 	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();

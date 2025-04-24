@@ -1,10 +1,15 @@
 ﻿@inject NavigationManager NavManager
 @using FribergHomeClient.Data.Dto
 
-
+@* Author: Glate *@
 <style>
-	.no-decoration {
-		text-decoration: none;
+	.custom-card:hover {
+		transform: scale(1.02); /* Slight zoom effect */
+		box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3); /* Adds shadow */
+	}
+
+	.custom-card {
+		transition: all 0.3s ease-in-out;
 	}
 
 	.radzen-carousel ul{
@@ -26,14 +31,14 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
+
+
 </style>
 
-<RadzenCard class="rz-my-12 rz-mx-auto p-0 m-1 " Style="max-width: 60em; height: 30vh;">
+<RadzenCard class="rz-my-12 rz-mx-auto p-0 m-1 custom-card" Style="height: 30vh;">
 	<RadzenRow class="rz-text-align-center m-0 p-0" Style="width: 100%; height: 100%;" Gap="0">
-
 		<!-- Image -->
 		<RadzenColumn class="rz-color-on-info-light radzen-carousel" Style="width: 50%; display: flex; flex-grow: 1;">
-			@* <RadzenImage Path="@Property.ImageUrls.FirstOrDefault().ImgURL" Style="width: 100%; max-height: 35vh; object-fit: cover;" /> *@
 			<RadzenCarousel 
 				Auto="false"
 				AllowNavigation="@true"
@@ -54,18 +59,16 @@
 		</RadzenColumn>
 
 		<!-- Property info -->
-		<RadzenColumn  class="" Style="width: 50%; height: 100%;">
+		<RadzenColumn class="" Style="width: 50%; height: 100%; cursor: pointer;">
 			<RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-p-8 rz-border-radius-0 border-radius-right" Style="width: 100%; height: 100%; overflow: hidden; overflow-x: hidden;">
 					
 				<RadzenText TextStyle="TextStyle.H6" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.Street)</b></RadzenText>
 				<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.City), @(Property.Muncipality) kommun</b></RadzenText>
 				<br />
 				<RadzenRow Gap="10">
-@* 					<RadzenColumn SizeSM="5">
-					</RadzenColumn> *@
 					<RadzenColumn SizeSM="5">
 						<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.ListingPrice.ToString("0"))kr</b></RadzenText>
-						<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.MonthlyFee.ToString("0"))/mån</b></RadzenText>
+						<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.MonthlyFee.ToString("0"))kr/mån</b></RadzenText>
 					</RadzenColumn>
 
 					<RadzenColumn SizeSM="5">
@@ -93,11 +96,11 @@
 	{
 		await base.OnInitializedAsync();
 
-		// Property = dbContext.Orders.Include("Customer").Include("Employee").FirstOrDefault();
 	}
 
 	private void NavigateTo()
 	{
-		NavManager.NavigateTo("/");
+		//TODO: Add navigation to details page here!
+		// NavManager.NavigateTo($"/pagestuff/{Property.Id}");
 	}
 }
