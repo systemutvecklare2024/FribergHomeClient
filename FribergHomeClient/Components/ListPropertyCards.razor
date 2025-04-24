@@ -1,0 +1,16 @@
+﻿@using FribergHomeClient.Data.Dto
+@inject HttpClient Http
+<h3>ListPropertyCards</h3>
+
+@foreach(var p in Properties){
+	<PropertyCard Property="p"></PropertyCard>
+}
+
+@code {
+	public List<PropertyDTO> Properties = new List<PropertyDTO>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
+	}
+}

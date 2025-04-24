@@ -1,9 +1,46 @@
 ﻿@using FribergHomeClient.Data.Dto
-<div>
-    @Property.Description
-</div>
+
+<RadzenCard class="rz-my-12 rz-mx-auto p-0 m-1" Style="max-width: 60em; height: 20em;">
+    <RadzenRow class="rz-text-align-center rz-border-info-light m-0 p-0" Style="width: 100%; height: 100%;" Gap="0">
+
+        <!-- Left Column: Image -->
+        <RadzenColumn class="rz-color-on-info-light" Style="width: 50%; height: 100%;">
+            <RadzenImage Path="@Property.ImageUrls.FirstOrDefault()?.ImgURL"
+                         Style="width: 100%; height: 100%; object-fit: cover;" />
+        </RadzenColumn>
+
+        <!-- Right Column: Delivery Information -->
+        <RadzenColumn class="rz-background-color-info-lighter rz-color-on-info-lighter" Style="width: 50%; height: 100%;">
+            <RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-p-8" Style="width: 100%; height: 100%;">
+                <RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Delivery Information</strong></RadzenText>
+                <RadzenRow RowGap="0">
+                    <RadzenColumn SizeSM="4">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Country</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@(Property.YearBuilt)</b></RadzenText>
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">City</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@(Property.YearBuilt)</b></RadzenText>
+                    </RadzenColumn>
+                    <RadzenColumn SizeSM="8">
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Ship name</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@(Property.YearBuilt)</b></RadzenText>
+                        <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Freight</RadzenText>
+                        <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@String.Format(new System.Globalization.CultureInfo("en-US"), "{0:C}", Property.City)</b></RadzenText>
+                    </RadzenColumn>
+                </RadzenRow>
+            </RadzenCard>
+        </RadzenColumn>
+
+    </RadzenRow>
+</RadzenCard>
 
 @code {
-    [Parameter]
-    public PropertyDTO Property { get; set; }
+	[Parameter]
+	public PropertyDTO Property { get; set; }
+
+	protected override async Task OnInitializedAsync()
+	{
+		await base.OnInitializedAsync();
+
+		// Property = dbContext.Orders.Include("Customer").Include("Employee").FirstOrDefault();
+	}
 }
