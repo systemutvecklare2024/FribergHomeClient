@@ -1,0 +1,25 @@
+﻿@page "/details/{id:int}"
+@using FribergHomeClient.Data.Dto
+@using FribergHomeClient.Services
+@inject IPropertyService PropertyService
+
+@if(Property is null)
+{
+    <p>Laddar bostadsinformation...</p>
+}
+else
+{
+    <p>@Property.Street</p>   
+}
+
+@code {
+    [Parameter]
+    public int id { get; set; }
+    public PropertyDTO Property { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Property = await PropertyService.GetPropertyDTO(id);
+    }
+
+}
