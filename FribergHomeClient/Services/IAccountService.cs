@@ -1,5 +1,4 @@
-﻿using FribergHomeClient.Data.ViewModel;
-using FribergHomeClient.DTOs;
+﻿using FribergHomeClient.Data.Dto;
 
 namespace FribergHomeClient.Services
 {
