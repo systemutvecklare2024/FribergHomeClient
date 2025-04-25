@@ -1,0 +1,19 @@
+﻿body {
+}
+
+@media (max-width: 768px) {
+    .rz-col-7 {
+        display: none;
+    }
+
+    .mobile-toggle {
+        display: inline-block !important;
+        margin-left: 20px;
+    }
+}
+
+@media (min-width: 769px) {
+    .mobile-toggle {
+        display: none !important;
+    }
+}

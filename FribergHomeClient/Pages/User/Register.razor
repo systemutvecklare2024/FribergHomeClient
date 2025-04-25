@@ -31,6 +31,9 @@ else
                                 <RadzenColumn Size="12" SizeMD="8">
                                     <RadzenTextBox Style="width: 100%;" Name="FirstName" @bind-Value=model.FirstName />
                                 </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenRequiredValidator Component="FirstName" Text="Förnamn krävs" />
+                                </RadzenColumn>
                             </RadzenRow>
                             <RadzenRow AlignItems="AlignItems.Center">
                                 <RadzenColumn Size="12" SizeMD="4">
@@ -38,6 +41,9 @@ else
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeMD="8">
                                     <RadzenTextBox Style="width: 100%;" Name="LastName" @bind-Value=model.LastName />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenRequiredValidator Component="LastName" Text="Efternamn krävs" />
                                 </RadzenColumn>
                             </RadzenRow>
                             <RadzenRow AlignItems="AlignItems.Center">
@@ -47,13 +53,20 @@ else
                                 <RadzenColumn Size="12" SizeMD="8">
                                     <RadzenTextBox type="email" Style="width: 100%;" Name="Email" @bind-Value=model.Email />
                                 </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
+                                    <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
+                                </RadzenColumn>
                             </RadzenRow>
                             <RadzenRow AlignItems="AlignItems.Center">
                                 <RadzenColumn Size="12" SizeMD="4">
                                     <RadzenLabel Text="Telefonnummer" Component="PhoneNumber" />
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeMD="8">
-                                    <RadzenTextBox type="phonenumber" Style="width: 100%;" Name="PhoneNumber" @bind-Value=model.PhoneNumber />
+                                    <RadzenTextBox Style="width: 100%;" Name="PhoneNumber" @bind-Value=model.PhoneNumber />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenRequiredValidator Component="PhoneNumber" Text="Telefonnummer krävs" />
                                 </RadzenColumn>
                             </RadzenRow>
                             <RadzenRow AlignItems="AlignItems.Center">
@@ -69,7 +82,10 @@ else
                                     <RadzenLabel Text="Lösenord" Component="Password" />
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeMD="8">
-                                    <RadzenTextBox type="password" Style="width: 100%;" Name="Password" @bind-Value=model.Password />
+                                    <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=model.Password />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
                                 </RadzenColumn>
                             </RadzenRow>
                             <RadzenRow AlignItems="AlignItems.Center">
@@ -77,7 +93,10 @@ else
                                     <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeMD="8">
-                                    <RadzenTextBox type="password" Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
+                                    <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="4">
+                                    <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
                                 </RadzenColumn>
                             </RadzenRow>
                         </RadzenStack>

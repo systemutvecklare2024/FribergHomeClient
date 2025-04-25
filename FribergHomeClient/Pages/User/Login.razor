@@ -4,7 +4,35 @@
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavManager
 
-<RadzenCard class="rz-my-12 rz-mx-auto rz-p-4 rz-p-md-12" style="max-width: 600px;">
+<RadzenTemplateForm Data=@model Submit="@((LoginDTO args) => OnLogin(args))">
+    @if (failed && !string.IsNullOrEmpty(errorMessage))
+    {
+        <div class=" alert alert-danger">
+            <p>@errorMessage</p>
+        </div>
+    }
+    <RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
+        <RadzenColumn Size="12" SizeMD="3">
+            <RadzenLabel Text="E-post" />
+            <RadzenTextBox @bind-Value="@model.Email" Name="Email" Style="width:100%" />
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
+                <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
+            </RadzenColumn>
+            <RadzenLabel Text="Lösenord" />
+            <RadzenPassword @bind-Value="@model.Password" Name="Password" Style="width:100%" />
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenButton Text="Logga in" ButtonType="ButtonType.Submit" Style="margin-top:10px; margin-right:10px" />
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Text="Registrera konto" Click="@OnRegister" />
+            </RadzenColumn>
+        </RadzenColumn>
+    </RadzenRow>
+</RadzenTemplateForm>
+
+@* <RadzenCard class="rz-my-12 rz-mx-auto rz-p-4 rz-p-md-12" style="max-width: 600px;">
     <RadzenTemplateForm Data=@("LoginWithDefaultValues")>
         <RadzenLogin AllowRegister="true" AllowResetPassword="false" Username=@userName Password=@password
         AllowRememberMe="false" RememberMe="@rememberMe"
@@ -20,64 +48,92 @@
     {
         <h1 class="alert alert-danger">RIP</h1>
     }
-</RadzenCard>
+</RadzenCard> *@
 
-@code{
 
-    public class LoginTexts
-    {
-        public string UsernameLabel { get; set; } = "Email";
-        public string PasswordLabel { get; set; } = "Lösenord";
-        public string LoginButton { get; set; } = "Logga in";
-        public string RegisterButton { get; set; } = "Registrera";
-        public string RegisterMessage { get; set; } = "Har du inget konto än?";
-    }
 
-    string userName = "admin@friberghome.com";
-    string password = "admin";
-    bool rememberMe = true;
-
+@code {
 
     private LoginDTO model = new();
     private bool failed = false;
-    private LoginTexts loginTexts = new LoginTexts();
+    private string errorMessage = string.Empty;
 
-    // EventConsole console;
-
-    public async Task OnLogin(LoginArgs args, string name)
+    public async Task OnLogin(LoginDTO loginDTO)
     {
-        model.Email = args.Username;
-        model.Password = args.Password;
-
         if (!await AuthService.AuthenticateAsync(model))
         {
             failed = true;
+            errorMessage = "Något gick fel vid inloggningen!";
+
         }
         else
         {
             NavManager.NavigateTo("/dashboard");
         }
-        Console.WriteLine($"{name} -> Username: {args.Username}, password: {args.Password}, remember me: {args.RememberMe}");
+
     }
 
-    public async Task OnRegister(string name)
+    public void OnRegister()
     {
         NavManager.NavigateTo("/register");
-        Console.WriteLine($"{name} -> Register");
-    }
-
-    void OnResetPassword(string value, string name)
-    {
-        Console.WriteLine($"{name} -> ResetPassword for user: {value}");
-    }
-
-    //Remove this one???
-    public async Task OnLogin(LoginDTO loginModel)
-    {
-        if (!await AuthService.AuthenticateAsync(model))
-        {
-            failed = true;
-        }
 
     }
+
+    // public class LoginTexts
+    // {
+    //     public string UsernameLabel { get; set; } = "Email";
+    //     public string PasswordLabel { get; set; } = "Lösenord";
+    //     public string LoginButton { get; set; } = "Logga in";
+    //     public string RegisterButton { get; set; } = "Registrera";
+    //     public string RegisterMessage { get; set; } = "Har du inget konto än?";
+    // }
+
+    // string userName = "admin@friberghome.com";
+    // string password = "admin";
+    // bool rememberMe = true;
+
+
+    // private LoginDTO model = new();
+    // private bool failed = false;
+    // private LoginTexts loginTexts = new LoginTexts();
+
+    // // EventConsole console;
+
+    // public async Task OnLogin(LoginArgs args, string name)
+    // {
+    //     model.Email = args.Username;
+    //     model.Password = args.Password;
+
+    //     if (!await AuthService.AuthenticateAsync(model))
+    //     {
+    //         failed = true;
+    //     }
+    //     else
+    //     {
+    //         NavManager.NavigateTo("/dashboard");
+    //     }
+    //     Console.WriteLine($"{name} -> Username: {args.Username}, password: {args.Password}, remember me: {args.RememberMe}");
+    // }
+
+    // public async Task OnRegister(string name)
+    // {
+    //     NavManager.NavigateTo("/register");
+    //     Console.WriteLine($"{name} -> Register");
+    // }
+
+    // //Remove this one???
+    // void OnResetPassword(string value, string name)
+    // {
+    //     Console.WriteLine($"{name} -> ResetPassword for user: {value}");
+    // }
+
+    // //Remove this one???
+    // public async Task OnLogin(LoginDTO loginModel)
+    // {
+    //     if (!await AuthService.AuthenticateAsync(model))
+    //     {
+    //         failed = true;
+    //     }
+
+    // }
 }
