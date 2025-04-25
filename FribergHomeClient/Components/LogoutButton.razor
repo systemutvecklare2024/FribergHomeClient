@@ -1,0 +1,36 @@
+﻿@using Microsoft.JSInterop
+@using System.Text.Json
+@inject IAuthenticationService authService
+@inject NavigationManager NavManager
+@inject DialogService DialogService
+@inject IJSRuntime JSRuntime
+
+
+<RadzenButton Shade="Shade.Darker" Click=@ShowLogoutDialog Text="Logga ut" ButtonStyle="ButtonStyle.Info" Style="margin-right:2em;" />
+
+
+@code {
+
+    async Task ShowLogoutDialog()
+    {
+        var result = await DialogService.OpenAsync<LogoutConfirmationDialog>(
+            "Bekräftelse",
+            null,
+            new DialogOptions() { Width = "400px", Height = "250px" });
+
+        if (result is bool confirmed && confirmed)
+        {
+            // Logga ut användaren
+            await authService.Logout();
+            NavManager.NavigateTo("/");
+            // NavigationManager.NavigateTo("/logout", forceLoad: true);
+        }
+    }
+
+    // private async Task LogOut()
+    // {
+    //     await authService.Logout();
+    //     NavManager.NavigateTo("/");
+    // }
+
+}
