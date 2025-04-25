@@ -98,7 +98,8 @@ else
             <RadzenFieldset Text="Images">
                 <RadzenTextBox Placeholder="Add image URL..." @bind-Value="newImageUrl" Style="width:80%" />
                 <RadzenButton Icon="add" Text="Add Image" Click="@(() => AddImageUrl())" Style="margin-left: 10px;" />
-
+                    
+                @* TODO: add ability to remove added urls, because we all suck at typing *@
                 <ul>
                     @foreach (var img in property.ImageUrls)
                     {
