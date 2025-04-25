@@ -1,4 +1,4 @@
-﻿namespace FribergHomeClient.DTOs
+﻿namespace FribergHomeClient.Data.Dto
 {
     public class AccountDTO
     {

@@ -1,4 +1,4 @@
-﻿using FribergHomeClient.DTOs;
+﻿using FribergHomeClient.Data.Dto;
 using System.Net.Http.Json;
 
 namespace FribergHomeClient.Services
