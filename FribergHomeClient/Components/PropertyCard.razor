@@ -39,8 +39,9 @@
 	}
 </style>
 
+
 <RadzenCard class="rz-my-12 rz-mx-auto p-0 m-1 custom-card">
-	<RadzenRow class="rz-text-align-center m-0 p-0 responsive-container" Style="width: 100%; row-gap: 0px;" Gap="0">
+	<RadzenRow class="rz-text-align-center m-0 p-0 responsive-container" Style="width: 100%; row-gap: 0px;">
 		<!-- Image -->
 		<RadzenColumn class="rz-color-on-info-light radzen-carousel carousel-column" SizeSM="12" SizeMD="6" Style="width: 100%; display: flex; flex-grow: 1;">
 			<RadzenCarousel Auto="false"
@@ -64,25 +65,25 @@
 
 		<!-- Property info -->
 		<RadzenColumn @onclick="NavigateTo" class="info-column" SizeSM="12" SizeMD="6" Style="width: 100%;">
-			<RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-p-8 info-column-radius"
-						Style="width: 100%; height: 100%; overflow: auto; overflow-y: hidden;">
+			<RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-p-5 info-column-radius"
+						Style="width: 100%; height: 100%; overflow: auto; ">
 				<RadzenText TextStyle="TextStyle.H6" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.Street)</b></RadzenText>
 				<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.City), @(Property.Muncipality) kommun</b></RadzenText>
 				<br />
-				<RadzenRow Gap="10">
-					<RadzenColumn SizeSM="6" SizeMD="6" SizeLG="5">
+				<RadzenRow class="responsive-row">
+					<RadzenColumn SizeSM="6" SizeMD="6" SizeLG="6" Style="flex: 1; max-width: 50%;">
 						<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.ListingPrice.ToString("0"))kr</b></RadzenText>
 						@if (Property.MonthlyFee != 0)
 						{
 							<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.MonthlyFee.ToString("0"))kr/mån</b></RadzenText>
 						}
 					</RadzenColumn>
-					<RadzenColumn SizeSM="6" SizeMD="6" SizeLG="5">
+					<RadzenColumn SizeSM="6" SizeMD="6" SizeLG="6" Style="flex: 1; max-width: 50%;">
 						<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.LivingSpace.ToString("0"))m<sup>2</sup></b></RadzenText>
 						<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="rz-color-on-primary-light"><b>@(Property.NumberOfRooms) rum</b></RadzenText>
 					</RadzenColumn>
 				</RadzenRow>
-				<RadzenRow Style="height: auto; overflow: hidden; margin-bottom: 2em;">
+				<RadzenRow Style="height: auto; overflow: hidden;">
 					<RadzenText TextStyle="TextStyle.Body2" TextAlign="TextAlign.Start" class="radzen-text-overflow">
 						@Property.Description
 					</RadzenText>

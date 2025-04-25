@@ -102,20 +102,16 @@ code {
 	color: #c02d76;
 }
 
-
-/*.responsive-container {
-	height: 30vh;
-}*/
-
 .carousel-column, .info-column {
 	height: 30vh;
 }
 
 
-@media (max-width: 1024px) {
+@media (max-width: 768px) {
 	.responsive-container {
 		flex-direction: column;
 		gap: 1rem; /* Adds spacing between elements */
+		min-width: 200px;
 	}
 
 	.carousel-column, .info-column {
@@ -130,6 +126,7 @@ code {
 		max-height: 25vh; /* Restrict height for smaller screens */
 	}
 
+	/*Border radius stuff. Changes round corners depending on card style*/
 		.radzen-carousel ul {
 			border-top-right-radius: 4px !important;
 			border-bottom-right-radius: 0 !important;
