@@ -101,3 +101,16 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+@media (max-width: 768px) {
+    .responsive-container {
+        flex-direction: column;
+    }
+
+    .carousel-column, .info-column {
+        width: 100%;
+    }
+    .info-column {
+        height: auto;
+    }
+}
