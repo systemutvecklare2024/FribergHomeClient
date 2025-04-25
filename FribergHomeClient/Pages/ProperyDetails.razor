@@ -1,4 +1,4 @@
-﻿@page "/details/{id:int}"
+﻿@page "/details/{Id:int}"
 @using FribergHomeClient.Data.Dto
 @using FribergHomeClient.Services
 @inject IPropertyService PropertyService
@@ -9,17 +9,20 @@
 }
 else
 {
-    <p>@Property.Street</p>   
+    <p>@Property.Street</p> 
+    <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
+    </RadzenStack>
 }
 
 @code {
     [Parameter]
-    public int id { get; set; }
+    public int Id { get; set; }
+
     public PropertyDTO Property { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Property = await PropertyService.GetPropertyDTO(id);
+        Property = await PropertyService.GetPropertyDTO(Id);
     }
 
 }
