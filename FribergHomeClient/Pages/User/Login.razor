@@ -1,8 +1,8 @@
 ﻿@page "/login"
-@using FribergHomeClient.Data.Dto
-@using FribergHomeClient.Services
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavManager
+@using FribergHomeClient.DTOs;
+@using FribergHomeClient.Data.Dto
 
 <RadzenTemplateForm Data=@model Submit="@((LoginDTO args) => OnLogin(args))">
     @if (failed && !string.IsNullOrEmpty(errorMessage))

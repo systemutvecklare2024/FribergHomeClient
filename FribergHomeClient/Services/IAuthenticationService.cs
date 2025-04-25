@@ -1,4 +1,5 @@
 ﻿using FribergHomeClient.Data.Dto;
+using FribergHomeClient.DTOs;
 
 namespace FribergHomeClient.Services
 {
