@@ -1,0 +1,22 @@
+﻿@inject HttpClient Http
+
+@page "/agency"
+@if(agencies == null)
+{
+    <p>Loading...</p>
+} else
+{
+    @foreach(var agency in agencies)
+    {
+        <AgencyCard Agency="agency"></AgencyCard>
+    }
+}
+
+@code {
+    //Call Api fetch RealEstateAgencies
+        List<RealEstateAgencyDTO> agencies;
+    protected override async Task OnInitializedAsync()
+    {
+        agencies = await Http.GetFromJsonAsync<List<RealEstateAgencyDTO>>("api/RealEstateAgencies");
+    }
+}

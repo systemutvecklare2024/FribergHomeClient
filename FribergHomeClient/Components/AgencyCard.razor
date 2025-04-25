@@ -1,0 +1,17 @@
+﻿<RadzenCard Variant="Variant.Filled" class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4">
+        <RadzenImage Path="@Agency?.LogoUrl" Style="width: 100px; height: 100px; border-radius: 50%;" />
+        <RadzenStack Gap="0">
+            <RadzenText TextStyle="TextStyle.Body1"><b>@(Agency?.Name)</b></RadzenText>
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Presentation</RadzenText>
+            <RadzenText TextStyle="TextStyle.Body1"><b>@Agency?.Presentation</b></RadzenText>
+        </RadzenStack>
+    </RadzenStack>
+</RadzenCard>
+
+
+@code {
+    [Parameter]
+   public RealEstateAgencyDTO? Agency { get; set; }
+
+}
