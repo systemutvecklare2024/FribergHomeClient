@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using Blazored.LocalStorage;
-using FribergHomeClient.DTOs;
+using FribergHomeClient.Data.Dto;
 using FribergHomeClient.Providers;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;

@@ -1,5 +1,5 @@
 ﻿@page "/login"
-@using FribergHomeClient.DTOs
+@using FribergHomeClient.Data.Dto
 @using FribergHomeClient.Services
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavManager
@@ -36,7 +36,8 @@
         {
             failed = true;
         }
-        else{
+        else
+        {
             NavManager.NavigateTo("/dashboard");
         }
         Console.WriteLine($"{name} -> Username: {args.Username}, password: {args.Password}, remember me: {args.RememberMe}");
@@ -53,6 +54,7 @@
         Console.WriteLine($"{name} -> ResetPassword for user: {value}");
     }
 
+    //Remove this one???
     public async Task OnLogin(LoginDTO loginModel)
     {
         if (!await AuthService.AuthenticateAsync(model))

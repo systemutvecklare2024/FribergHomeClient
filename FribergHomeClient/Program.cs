@@ -16,6 +16,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddBlazoredLocalStorage();
 
 builder.Services.AddScoped<IPropertyService, PropertyService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();
 

@@ -9,6 +9,8 @@ namespace FribergHomeClient.Mapping
         public MappingProfile()
         {
             CreateMap<PropertyDTO, PropertyFormViewModel>().ReverseMap();
+
         }
+        
     }
 }
