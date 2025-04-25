@@ -1,0 +1,32 @@
+﻿@using FribergHomeClient.Data.Dto
+@inject HttpClient Http
+<h3>ListPropertyCards</h3>
+
+@if (Properties == null)
+{
+	<p>Loading...</p>
+}
+else
+{
+<RadzenRow Gap="0">
+	<RadzenColumn SizeSM="12" SizeMD="6" OffsetMD="3">
+ 
+			@foreach (var p in Properties)
+			{
+				p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
+				<PropertyCard Property="p"></PropertyCard>
+			}
+		</RadzenColumn>
+	</RadzenRow>
+}
+
+@code {
+	public List<PropertyDTO> Properties = new List<PropertyDTO>();
+	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();
+
+	protected override async Task OnInitializedAsync()
+	{
+		Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
+		Muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
+	}
+}
