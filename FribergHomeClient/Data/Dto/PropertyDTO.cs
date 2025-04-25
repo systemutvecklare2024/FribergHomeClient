@@ -32,7 +32,7 @@ namespace FribergHomeClient.Data.Dto
 		public int MuncipalityId { get; set; }
 		public string Muncipality { get; set; } = "";
 
-		public List<PropertyImageDTO> Images { get; set; }
+		public List<PropertyImageDTO> ImageUrls { get; set; }
 
     }
 }
