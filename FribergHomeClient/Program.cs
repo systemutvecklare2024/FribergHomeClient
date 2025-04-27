@@ -11,15 +11,16 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddAutoMapper(typeof(Program));
 
+builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddBlazoredLocalStorage();
 
+// Custom services
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 
+// Auth
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();
-
 builder.Services.AddScoped<AuthenticationStateProvider>(p=>p.GetRequiredService<ApiAuthenticationStateProvider>());
 builder.Services.AddAuthorizationCore();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
@@ -30,6 +31,8 @@ builder.Services.AddScoped(sp => new HttpClient
 	BaseAddress = new Uri("https://localhost:7248")  
 	
 });
+
+// Radzen
 builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<NotificationService>();
 
