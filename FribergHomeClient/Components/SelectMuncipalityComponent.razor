@@ -1,21 +1,18 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
 
-
 <RadzenAutoComplete TValue="MuncipalityDTO"
                     @bind-Value="selectedMuncipality"
                     Data="@filteredMuncipalities"
                     Style="width: 13rem"
                     FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
-                    Placeholder="Type to search municipality..."
+                    Placeholder="Sök kommun..."
                     MinLength="2"
-                    EmptyText="No municipalities found"
+                    EmptyText="Ingen kommun hittad"
                     FilterOperator="StringFilterOperator.Contains"
                     Filter="@OnFilter"
                     Change="@OnSelectedMuncipalityChanged"
-                    InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Company Name" }})" />
-
-
+                    InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Kommun" }})" />
 
 @code {
     [Parameter]
@@ -64,7 +61,7 @@
         }
         else
         {
-            selectedMuncipality = lastValidMunicipalityName; // Reset to last valid value
+            selectedMuncipality = lastValidMunicipalityName;
         }
     }
 
