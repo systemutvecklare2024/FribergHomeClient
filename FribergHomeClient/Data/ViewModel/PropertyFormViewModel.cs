@@ -1,5 +1,7 @@
 ﻿using static FribergHomeClient.Data.PropertyTypes;
 using System.ComponentModel.DataAnnotations;
+using FribergHomeClient.Data.Dto;
+using AutoMapper;
 
 namespace FribergHomeClient.Data.ViewModel
 {
@@ -48,6 +50,14 @@ namespace FribergHomeClient.Data.ViewModel
         [Required]
         public int MuncipalityId { get; set; }
 
+
         public string ImageUrls { get; set; }
+
+        //Fredrik
+        //public static implicit operator PropertyFormViewModel?(PropertyDTO? vmDto)
+        //{
+        //    PropertyFormViewModel model = Mapper.Map<PropertyFormViewModel>(vmDto);
+        //    return model;
+        //}
     }
 }

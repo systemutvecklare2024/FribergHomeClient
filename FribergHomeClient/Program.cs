@@ -1,5 +1,6 @@
 using Blazored.LocalStorage;
 using FribergHomeClient;
+using FribergHomeClient.Mapping;
 using FribergHomeClient.Providers;
 using FribergHomeClient.Services;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -10,8 +11,8 @@ using Radzen;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
-
-builder.Services.AddAutoMapper(typeof(Program));
+//Fredrik
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 builder.Services.AddBlazoredLocalStorage();
 

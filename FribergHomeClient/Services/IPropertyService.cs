@@ -6,6 +6,9 @@ namespace FribergHomeClient.Services
     public interface IPropertyService
     {
         Task<PropertyFormViewModel> GetProperty(int id);
-        Task SaveProperty(PropertyFormViewModel vm);
+        //Task SaveProperty(PropertyFormViewModel vm);
+        Task<List<PropertyDTO>> GetProperties(PropertyDTO propertiesDto);
+        //Fredrik
+        Task SaveProperty(PropertyDTO dto);
     }
 }

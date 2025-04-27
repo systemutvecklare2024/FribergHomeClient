@@ -1,4 +1,5 @@
-﻿using FribergHomeClient.Data.ViewModel;
+﻿using FribergHomeClient.Data.Dto;
+using FribergHomeClient.Data.ViewModel;
 using FribergHomeClient.Services;
 using Microsoft.AspNetCore.Components;
 
@@ -18,5 +19,9 @@ namespace FribergHomeClient.Pages.DashboardPages
             ViewModel = new PropertyFormViewModel();
             return base.OnInitializedAsync();
         }
+
+        //Fredrik
+        //@*Ta fram lista med bostäder*@
+        
     }
 }

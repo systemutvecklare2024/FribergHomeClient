@@ -15,7 +15,7 @@ namespace FribergHomeClient.Services
         public PropertyService(HttpClient client, IMapper mapper)
         {
             _client = client;
-            this._mapper = mapper;
+            _mapper = mapper;
         }
         public async Task<PropertyFormViewModel> GetProperty(int id)
 		{
@@ -31,28 +31,73 @@ namespace FribergHomeClient.Services
             }
         }
 
-        public async Task SaveProperty(PropertyFormViewModel vm)
+        //public async Task SaveProperty(PropertyFormViewModel vm)
+        //{
+        //    var url = vm.Id == null
+        //        ? "/api/Properties"
+        //        : $"/api/Properties/{vm.Id}";
+
+        //    try
+        //    {
+        //        var dto = _mapper.Map<PropertyDTO>(vm);
+
+        //        //if (dto.Id.HasValue)
+        //        //Fredrik
+        //        if (dto.Id > 0)
+        //        {
+        //            var result = await _client.PutAsJsonAsync<PropertyDTO>(url, dto);
+        //        } else
+        //        {
+        //            var result = await _client.PostAsJsonAsync<PropertyDTO>(url, dto);
+        //        }
+        //        // Check status code, throw exceptions
+        //    }
+        //    catch (Exception)
+        //    {
+        //        throw;
+        //    }
+        //}
+
+        //Test method Fredrik
+        public async Task SaveProperty(PropertyDTO dto)
         {
-            var url = vm.Id == null
-                ? "/api/Properties"
-                : $"/api/Properties/{vm.Id}";
+            var url = dto.Id > 0
+                ? $"/api/Properties/{dto.Id}" // Update existing property
+                : "/api/Properties"; // Create new property
 
             try
             {
-                var dto = _mapper.Map<PropertyDTO>(vm);
+                var response = dto.Id > 0
+                    ? await _client.PutAsJsonAsync(url, dto) // Update
+                    : await _client.PostAsJsonAsync(url, dto); // Create
 
-                if (dto.Id.HasValue)
+                if (!response.IsSuccessStatusCode)
                 {
-                    var result = await _client.PutAsJsonAsync<PropertyDTO>(url, dto);
-                } else
-                {
-                    var result = await _client.PostAsJsonAsync<PropertyDTO>(url, dto);
+                    throw new Exception($"API request failed: {response.StatusCode}");
                 }
-                // Check status code, throw exceptions
+
+                Console.WriteLine("Ändringar sparade!");
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Fel vid sparande: {ex.Message}");
+                throw;
+            }
+        }
+
+
+        //*Ta fram lista med bostäder*@
+        public async Task<List<PropertyDTO>> GetProperties(PropertyDTO propertiesDto)
+        {
+            try
+            {
+                var result = await _client.GetFromJsonAsync<List<PropertyDTO>>("/api/Properties");
+                return result;
             }
             catch (Exception)
             {
-                throw;
+                return new List<PropertyDTO>();
             }
         }
     }

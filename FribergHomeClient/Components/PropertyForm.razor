@@ -1,6 +1,7 @@
 ﻿@using FribergHomeClient.Data
 @using FribergHomeClient.Data.ViewModel
 @using FribergHomeClient.Data.Dto
+@inject HttpClient Http
 
 @if (Property == null)
 {
@@ -100,8 +101,8 @@ else
         <RadzenButton ButtonType="ButtonType.Submit" Text="Spara" Style="margin-top: 1rem;" />
     </RadzenTemplateForm> *@
 
-
     <EditForm Model="Property" OnValidSubmit="HandleSubmit">
+    @* <PropertyForm PropertyId="selectedPropertyId.Value" OnSave="RefreshList"></PropertyForm> *@
         <DataAnnotationsValidator />
         <ValidationSummary />
         <div class="p-1 grid gap-3 mb-1">
