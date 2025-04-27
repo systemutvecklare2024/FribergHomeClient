@@ -4,6 +4,7 @@
 @using System.ComponentModel.DataAnnotations
 @using static FribergHomeClient.Data.PropertyTypes
 @inject HttpClient Http
+@inject NotificationService NotificationService
 
 @if (property == null)
 {
@@ -156,13 +157,13 @@ else
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("Success!");
-            // NotificationService.Notify(NotificationSeverity.Success, "Property created");
+            NotificationService.Notify(NotificationSeverity.Success, "Bostad tillagd");
             // Navigation.NavigateTo("/properties");
         }
         else
         {
             Console.WriteLine("Epic failure");
-            // NotificationService.Notify(NotificationSeverity.Error, "Failed to create property");
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att lägga till bostad, försök igen");
         }
     }
     }
