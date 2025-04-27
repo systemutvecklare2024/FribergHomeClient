@@ -1,6 +1,7 @@
 ﻿@using FribergHomeClient.Data
 @using FribergHomeClient.Data.ViewModel
 @using FribergHomeClient.Data.Dto
+@using System.ComponentModel.DataAnnotations
 @using static FribergHomeClient.Data.PropertyTypes
 @inject HttpClient Http
 
@@ -91,14 +92,14 @@ else
                     <RadzenTextBox Name="PostalCode" @bind-Value="property.PostalCode" Placeholder="Postal Code" Style="width:100%" />
                 </RadzenFormField>
                 <RadzenFormField Text="Kommun" Variant="Variant.Outlined">
-                    <RadzenNumeric Name="MuncipalityId" @bind-Value="property.MuncipalityId" Placeholder="Municipality ID" Style="width:100%" />
+                    <SelectMuncipalityComponent @bind-SelectedMunicipalityId="property.MuncipalityId" />
                 </RadzenFormField>
             </RadzenFieldset>
 
             <RadzenFieldset Text="Images">
                 <RadzenTextBox Placeholder="Add image URL..." @bind-Value="newImageUrl" Style="width:80%" />
                 <RadzenButton Icon="add" Text="Add Image" Click="@(() => AddImageUrl())" Style="margin-left: 10px;" />
-                    
+
                 @* TODO: add ability to remove added urls, because we all suck at typing *@
                 <ul>
                     @foreach (var img in property.ImageUrls)
@@ -118,12 +119,16 @@ else
 
 
     @code {
+
     private PropertyDTO property = new()
         {
             ImageUrls = new List<PropertyImageDTO>()
         };
 
     private IEnumerable<PropertyType> propertyTypes = Enum.GetValues<PropertyType>();
+
+    [Required]
+    private List<MuncipalityDTO> muncipalities { get; set; }
 
     private string? newImageUrl;
 

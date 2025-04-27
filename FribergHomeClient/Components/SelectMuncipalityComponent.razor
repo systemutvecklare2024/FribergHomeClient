@@ -1,0 +1,85 @@
+﻿@using FribergHomeClient.Data.Dto
+@inject HttpClient Http
+
+
+<RadzenAutoComplete TValue="MuncipalityDTO"
+                    @bind-Value="selectedMuncipality"
+                    Data="@filteredMuncipalities"
+                    Style="width: 13rem"
+                    FilterCaseSensitivity="FilterCaseSensitivity.CaseInsensitive"
+                    Placeholder="Type to search municipality..."
+                    MinLength="2"
+                    EmptyText="No municipalities found"
+                    FilterOperator="StringFilterOperator.Contains"
+                    Filter="@OnFilter"
+                    Change="@OnSelectedMuncipalityChanged"
+                    InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Company Name" }})" />
+
+
+
+@code {
+    [Parameter]
+    public int SelectedMunicipalityId { get; set; }
+
+    [Parameter]
+    public EventCallback<int> SelectedMunicipalityIdChanged { get; set; }
+
+    private List<MuncipalityDTO> muncipalities { get; set; } = [];
+    private List<string> filteredMuncipalities { get; set; } = [];
+    private string selectedMuncipality;
+    private string lastValidMunicipalityName;
+
+    protected async override Task OnInitializedAsync()
+    {
+        muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality") ?? [];
+        filteredMuncipalities = muncipalities.Select(m => m.Name).ToList();
+    }
+
+    protected override void OnParametersSet()
+    {
+        // Update selectedMuncipality only if SelectedMunicipalityId has changed
+        var selected = muncipalities.FirstOrDefault(m => m.Id == SelectedMunicipalityId);
+        if (selected != null && selected.Name != selectedMuncipality)
+        {
+            selectedMuncipality = selected.Name;
+            lastValidMunicipalityName = selected.Name;
+        }
+    }
+
+    private async Task OnSelectedMuncipalityChanged(object value)
+    {
+        if (value is string name && !string.IsNullOrWhiteSpace(name))
+        {
+            var selected = muncipalities.FirstOrDefault(m => m.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            if (selected != null)
+            {
+                SelectedMunicipalityId = selected.Id;
+                await SelectedMunicipalityIdChanged.InvokeAsync(selected.Id);
+                lastValidMunicipalityName = name;
+            }
+            else
+            {
+                selectedMuncipality = lastValidMunicipalityName;
+            }
+        }
+        else
+        {
+            selectedMuncipality = lastValidMunicipalityName; // Reset to last valid value
+        }
+    }
+
+    private void OnFilter(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            filteredMuncipalities = muncipalities.Select(m => m.Name).ToList();
+        }
+        else
+        {
+            filteredMuncipalities = muncipalities
+                .Where(m => m.Name.Contains(value, StringComparison.OrdinalIgnoreCase))
+                .Select(m => m.Name)
+                .ToList();
+        }
+    }
+}
