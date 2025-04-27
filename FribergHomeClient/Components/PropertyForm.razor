@@ -100,7 +100,10 @@ else
 
         <RadzenButton ButtonType="ButtonType.Submit" Text="Spara" Style="margin-top: 1rem;" />
     </RadzenTemplateForm> *@
-
+    @if (!string.IsNullOrEmpty(SuccesMessage))
+    {
+        <p class="alert alert-success">@SuccesMessage</p>
+    }
     <EditForm Model="Property" OnValidSubmit="HandleSubmit">
     @* <PropertyForm PropertyId="selectedPropertyId.Value" OnSave="RefreshList"></PropertyForm> *@
         <DataAnnotationsValidator />

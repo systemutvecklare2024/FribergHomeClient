@@ -2,6 +2,7 @@
 using FribergHomeClient.Data.ViewModel;
 using FribergHomeClient.Services;
 using Microsoft.AspNetCore.Components;
+using System.Net.Http.Json;
 
 namespace FribergHomeClient.Pages.DashboardPages
 {
@@ -9,19 +10,36 @@ namespace FribergHomeClient.Pages.DashboardPages
     {
         [Inject]
         public IPropertyService PropertyService { get; set; }
+        [Inject]
+        public HttpClient HttpClient { get; set; }
 
-        public PropertyFormViewModel ViewModel;
+        private List<PropertyDTO> properties = new List<PropertyDTO>();
+        private int? selectedPropertyId;
 
-        
-
-        protected override Task OnInitializedAsync()
+        protected override async Task OnInitializedAsync()
         {
-            ViewModel = new PropertyFormViewModel();
-            return base.OnInitializedAsync();
+            await LoadProperties();
         }
 
-        //Fredrik
-        //@*Ta fram lista med bostäder*@
-        
+        private async Task LoadProperties()
+        {
+            properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("/api/Properties");
+        }
+
+        private void SelectedProperty(int propertyId)
+        {
+            selectedPropertyId = propertyId;
+        }
+
+        private void DeselectedProperty()
+        {
+            selectedPropertyId = null;
+        }
+
+        private async Task RefreshList()
+        {
+            await LoadProperties();
+            selectedPropertyId = null;
+        }
     }
 }

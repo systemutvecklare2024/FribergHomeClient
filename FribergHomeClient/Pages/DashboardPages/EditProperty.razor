@@ -4,72 +4,26 @@
 @inject HttpClient Http
 
 @* Fredrik *@
-
-@*Ta fram lista med bostäder*@
-@* Klicka på bostadskort för att välja objekt att redigera *@
-
-@*Ta in id för vald bostad*@
-@*Visa form för aktuell bostad*@
-@*Gör aktuell redigering av bostad*@
-@*Spara ändringar för aktuell bostad*@
+<h3>@(selectedPropertyId == null ? "Välj bostad att redigera" : "Redigera vald bostad")</h3>
 
 @if (selectedPropertyId == null)
 {
-    <h3>Välj bostad att redigera</h3>
-    @foreach (var property in properties)
-    {
-        <button @onclick="() => SelectedProperty(property.Id ?? 0)">
-            <PropertyCard Property="@property"></PropertyCard>
-        </button>
-    }
+    <div>
+        @foreach (var property in properties)
+        {
+            <button @onclick="() => SelectedProperty(property.Id ?? 0)">
+                <PropertyCard Property="@property"></PropertyCard>
+            </button>
+        }
+    </div>
 }
-
 else
 {
     <PropertyForm PropertyId="selectedPropertyId.Value" OnSave="RefreshList"></PropertyForm>
-    <button @onclick="() => DeselectedProperty()">Tillbaka till listan</button>
+    <button class="btn btn-secondary" @onclick="() => DeselectedProperty()">Tillbaka till listan</button>
 }
 
 
-@code {
-    private List<PropertyDTO> properties = new List<PropertyDTO>();
-    private int? selectedPropertyId;
-
-    protected override async Task OnParametersSetAsync()
-    {
-        properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
-    }
-
-    private void SelectedProperty(int propertyId)
-    {
-        Console.WriteLine($"Selected Property ID: {propertyId}");
-        selectedPropertyId = propertyId;
-        StateHasChanged();
-    }
-
-    private void DeselectedProperty()
-    {
-        selectedPropertyId = null;
-        StateHasChanged();
-    }
-
-    private async Task RefreshList()
-    {
-        properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
-        selectedPropertyId = null;
-        StateHasChanged();
-    }
-
-   
 
 
-    // private async Task SelectedProperty(int propertyId)
-    // {
-    //     Console.WriteLine($"Selected Property ID: {propertyId}");
-    //     selectedPropertyId = null;
-    //     await Task.Delay(50);
-    //     selectedPropertyId = propertyId;
-    //     StateHasChanged();
-    // }
-}
 

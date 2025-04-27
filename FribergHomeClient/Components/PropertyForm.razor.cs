@@ -10,6 +10,8 @@ namespace FribergHomeClient.Components
 {
     public partial class PropertyForm
     {
+        private string? SuccesMessage {get; set; }
+
         [Inject]
         public IPropertyService PropertyService { get; set; }
         //Fredrik
@@ -40,7 +42,6 @@ namespace FribergHomeClient.Components
                 Property = Mapper.Map<PropertyFormViewModel>(propertyDto) ?? new PropertyFormViewModel();
                 //Original
                 //Property = await PropertyService.GetProperty(PropertyId.Value);
-
             }
             
             else
@@ -53,66 +54,32 @@ namespace FribergHomeClient.Components
         {
             try
             {
-                Console.WriteLine("HandleSubmit triggered!");
-
                 if (IsEdit && Property != null)
                 {
-                    //*
-                    try
-                    {
-                        //*
-                        Console.WriteLine($"PropertyID: {Property?.Id}, Type: {Property?.PropertyType}");
-
                     var propertyDto = Mapper.Map<PropertyDTO>(Property);
-                        //*
-                        Console.WriteLine($"Mapped DTO ID: {propertyDto?.Id}, Type: {propertyDto?.PropertyType}");
-
                     await PropertyService.SaveProperty(propertyDto);
-                    Console.WriteLine("Ändringar sparade!");
-                     Navigation.NavigateTo("/dashboard/editproperty");
-                    }
-                    catch (Exception mapEx)
-                    {
-                        Console.WriteLine($"Fel vid mappning: {mapEx.Message}");
-                        Console.WriteLine($"StackTrace: {mapEx.StackTrace}");
-                        if (mapEx.InnerException != null)
-                        {
-                            Console.WriteLine($"InnerException: {mapEx.InnerException.Message}");
-                        }
-                    }
 
+                    SuccesMessage = "Ändringar sparade!";
+                    StateHasChanged();
+
+                    await Task.Delay(2000); // Wait for 2 seconds
                 }
                 else
                 {
                     Console.WriteLine("Property is null, cannot save.");
                 }
-                    //else
-                    //{
-                    //    var propertyDto = Mapper.Map<PropertyDTO>(Property);
-                    //    await PropertyService.CreateProperty(propertyDto);
-                    //    Console.WriteLine("Ny egendom skapad!");
-                    //}
+                await OnSave.InvokeAsync();
+            }
 
-                    await OnSave.InvokeAsync();
-            }
-            catch (Exception ex)
+            catch (Exception mapEx)
             {
-                Console.WriteLine($"Fel vid sparande: {ex.Message}");
+                if (mapEx.InnerException != null)
+                {
+                    Console.WriteLine($"InnerException: {mapEx.InnerException.Message}");
+                }
             }
+            Navigation.NavigateTo("/dashboard/editproperty");
         }
 
-        //Fredrik
-        //private readonly PropertyDTO? property;
-        //protected override async Task OnParametersSetAsync()
-        //{
-        //    Property = await Http.GetFromJsonAsync<PropertyDTO>($"api/Properties/{PropertyId}");
-        //}
-
-        //private async Task SaveChanges()
-        //{
-        //    await Http.PutAsJsonAsync($"api/Properties/{property.Id}", property);
-        //    Console.WriteLine("Ändringar utförda");
-        //    await OnSave.InvokeAsync();
-        //}
     }
 }
