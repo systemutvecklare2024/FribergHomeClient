@@ -31,5 +31,6 @@ builder.Services.AddScoped(sp => new HttpClient
 	
 });
 builder.Services.AddRadzenComponents();
+builder.Services.AddScoped<NotificationService>();
 
 await builder.Build().RunAsync();
