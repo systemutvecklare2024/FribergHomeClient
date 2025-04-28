@@ -1,6 +1,7 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
 
+@* Author: Glate *@
 @if (Properties == null)
 {
 	<p>Loading...</p>
@@ -8,7 +9,7 @@
 else
 {
 	<RadzenRow Gap="0" class="rz-justify-content-center">
-		@if (SmallCardContainer)
+		@if (IsCompactView)
 		{
 			<RadzenColumn SizeSM="12" SizeMD="6">
 				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
@@ -49,11 +50,11 @@ else
 	[Parameter]
 	public bool IsCompactView { get; set; } = false;
 
-	[Parameter]
-	public bool SmallCardContainer { get; set; } = false;
+	// [Parameter]
+	// public bool SmallCardContainer { get; set; } = false; //May be unnecessary. Delete if works without. Stuff. Dudestuff.
 
 	[Parameter]
-	public string Header { get; set; } = "";
+	public string Header { get; set; } = ""; //Header for container of properties.
 
 	public List<PropertyDTO> Properties = new List<PropertyDTO>();
 	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();

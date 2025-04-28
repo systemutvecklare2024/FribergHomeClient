@@ -106,13 +106,14 @@ code {
 	height: 30vh;
 }
 
+/*small card container class for viewing on e.g. landing page*/
 .small-card-container {
 	display: flex;
-	gap: 10px; 
-	flex-wrap: wrap; 
+	gap: 10px;
+	flex-wrap: wrap;
 	justify-content: center;
 	max-width: 1200px; /* Determines when wrapping is done */
-	margin: 0 auto; 
+	margin: 0 auto;
 }
 
 @media (max-width: 768px) {
@@ -134,7 +135,7 @@ code {
 		max-height: 25vh; /* Restrict height for smaller screens */
 	}
 
-	/*Border radius stuff. Changes round corners depending on card style*/
+		/*Border radius stuff. Changes round corners depending on card style*/
 		.radzen-carousel ul {
 			border-top-right-radius: 4px !important;
 			border-bottom-right-radius: 0 !important;
