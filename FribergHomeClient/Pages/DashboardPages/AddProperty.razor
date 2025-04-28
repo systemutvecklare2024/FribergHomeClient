@@ -1,9 +1,27 @@
 ﻿@page "/dashboard/addproperty"
 @using FribergHomeClient.Components
+@inject HttpClient Http
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
 
 <h3>AddProperty</h3>
-<PropertyForm></PropertyForm>
-
+<PropertyForm OnSubmit="@CreateProperty" SubmitButtonText="Lägg till"></PropertyForm>
 @code {
-    
+    async Task CreateProperty(PropertyDTO dto)
+    {
+        
+        var response = await Http.PostAsJsonAsync<PropertyDTO>("api/properties", dto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Success!");
+            NotificationService.Notify(NotificationSeverity.Success, "Bostad tillagd");
+            NavigationManager.NavigateTo("/dashboard/myobjects");
+        }
+        else
+        {
+            Console.WriteLine("Epic failure");
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att lägga till bostad, försök igen");
+        }
+    }
 }
