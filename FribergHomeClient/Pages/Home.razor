@@ -3,13 +3,20 @@
 
 <PageTitle>Home</PageTitle>
 <h3>Landing Page</h3>
-<ListPropertyCards Take="5"></ListPropertyCards>
 
-<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
+<SearchBar></SearchBar>
+
+<ListPropertyCards Take=3
+				   IsCompactView=true
+				   SmallCardContainer=true
+				   Header="Nyheter">
+</ListPropertyCards>
+
+@* <RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton> *@
 
 @code {
-    void ButtonClicked()
-    {
-        DService.Alert("Hello");
-    }
+	// void ButtonClicked()
+	// {
+	// 	DService.Alert("Hello");
+	// }
 }

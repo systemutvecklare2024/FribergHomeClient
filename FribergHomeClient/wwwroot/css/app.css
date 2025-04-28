@@ -106,6 +106,14 @@ code {
 	height: 30vh;
 }
 
+.small-card-container {
+	display: flex;
+	gap: 10px; 
+	flex-wrap: wrap; 
+	justify-content: center;
+	max-width: 1200px; /* Determines when wrapping is done */
+	margin: 0 auto; 
+}
 
 @media (max-width: 768px) {
 	.responsive-container {
