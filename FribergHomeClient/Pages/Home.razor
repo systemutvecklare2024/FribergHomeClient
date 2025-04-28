@@ -2,14 +2,11 @@
 @inject DialogService DService
 
 <PageTitle>Home</PageTitle>
-
-@* <ShowAllTheStuff></ShowAllTheStuff> *@
-
-<h1>Hello, world!</h1>
-
-Welcome to your new app.
+<h3>Landing Page</h3>
+<ListPropertyCards Take="5"></ListPropertyCards>
 
 <RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
+
 @code {
     void ButtonClicked()
     {

@@ -1,6 +1,5 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
-<h3>ListPropertyCards</h3>
 
 @if (Properties == null)
 {
@@ -8,9 +7,9 @@
 }
 else
 {
-<RadzenRow Gap="0">
-	<RadzenColumn SizeSM="12" SizeMD="6" OffsetMD="3">
- 
+	<RadzenRow Gap="0">
+		<RadzenColumn SizeSM="12" SizeMD="6" OffsetMD="3">
+
 			@foreach (var p in Properties)
 			{
 				p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
@@ -21,12 +20,23 @@ else
 }
 
 @code {
+	[Parameter]
+	public int Take { get; set; } = 0; //number of listings to be fetched if specified.
+
 	public List<PropertyDTO> Properties = new List<PropertyDTO>();
 	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();
 
 	protected override async Task OnInitializedAsync()
 	{
-		Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
 		Muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
+
+		if (Take == 0)
+		{
+			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
+		}
+		else
+		{
+			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>($"api/properties/latest?take={Take}");
+		}
 	}
 }
