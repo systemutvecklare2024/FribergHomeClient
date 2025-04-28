@@ -5,9 +5,10 @@
 		<div class="rz-p-5 rz-p-md-12 rz-m-5 rz-background-color-primary-lighter" style="border-radius: 4px;">
 			<RadzenText TextStyle="TextStyle.H5">Sök på kommun</RadzenText>
 			<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="1rem" Wrap="FlexWrap.Wrap">
-				<RadzenFormField Text="Placeholder" Variant="@variant" Style="width: 100%;">
-					<RadzenTextBox @bind-Value="@value" />
-				</RadzenFormField>
+
+@* 				TODO: Ändra storlek på SelectMuncipalityComponent? Eller wrappa storlek runt?*@
+					<SelectMuncipalityComponent></SelectMuncipalityComponent> 
+
 			</RadzenStack>
 			<RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" />
 
