@@ -1,9 +1,53 @@
-﻿@page "/dashboard/editproperty"
+﻿@page "/dashboard/editproperty/{Id:int?}"
 @using FribergHomeClient.Components
+@inject HttpClient Http
+@inject NotificationService NotificationService
+@inject NavigationManager NavigationManager
 
-<h3>AddProperty</h3>
-<PropertyForm PropertyId="1"></PropertyForm>
+<h3>Edit Property</h3>
+@if(property != null)
+{
+    <PropertyForm Property="@property" OnSubmit="@EditPropertyCallback" SubmitButtonText="Uppdatera"></PropertyForm>
+} 
+else
+{
+    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
 
 @code {
-    
+    [Parameter]
+    public int? Id { get; set; }
+
+    private PropertyDTO? property;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        // Load Property
+        property = await Http.GetFromJsonAsync<PropertyDTO>($"api/properties/{Id}/details");
+    }
+
+    async Task EditPropertyCallback(PropertyDTO dto)
+    {
+        if(!Id.HasValue)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Ej angiven bostad");
+            NavigationManager.NavigateTo("/dashboard/myobjects");
+        }
+
+        var response = await Http.PutAsJsonAsync<PropertyDTO>($"api/properties/{Id}", dto);
+
+        if (response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Success!");
+            NotificationService.Notify(NotificationSeverity.Success, "Bostad ändrad'");
+            NavigationManager.NavigateTo("/dashboard/myobjects");
+        }
+        else
+        {
+            Console.WriteLine("Epic failure");
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att ändra bostad, försök igen");
+        }
+    }
 }
