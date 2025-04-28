@@ -3,134 +3,135 @@
 @using FribergHomeClient.Data.Dto
 @using System.ComponentModel.DataAnnotations
 @using static FribergHomeClient.Data.PropertyTypes
+
 @inject HttpClient Http
 @inject NotificationService NotificationService
 
-@if (property == null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <RadzenTemplateForm TItem="PropertyDTO" Data="@property" Submit="@(async args => await CreateProperty(args))">
-        <ChildContent>
-            <RadzenFieldset Text="Basic Info">
-                <RadzenFormField Text="List Pris" Variant="Variant.Outlined">
-                    <RadzenNumeric Name="ListingPrice" ShowUpDown="false"
-                    TValue="decimal"
-                    @bind-Value="@property.ListingPrice"
-                    Placeholder="Listing Price"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
-                <RadzenFormField Text="Boarea" Variant="Variant.Outlined">
-                    <RadzenNumeric ShowUpDown="false"
-                    TValue="decimal"
-                    @bind-Value="@property.LivingSpace"
-                    Placeholder="Boarea (m²)"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
-                <RadzenFormField Text="Biarea" Variant="Variant.Outlined">
-                    <RadzenNumeric ShowUpDown="false"
-                    TValue="decimal"
-                    @bind-Value="@property.SecondaryArea"
-                    Placeholder="Biarea (m²)"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
-                <RadzenFormField Text="Tomtarea" Variant="Variant.Outlined">
-                    <RadzenNumeric ShowUpDown="false"
-                    TValue="decimal"
-                    @bind-Value="@property.LotSize"
-                    Placeholder="Tomtarea (m²)"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
 
-                <RadzenFormField Text="Månadskostnad" Variant="Variant.Outlined">
-                    <RadzenNumeric ShowUpDown="false"
-                    TValue="decimal"
-                    @bind-Value="@property.MonthlyFee"
-                    Placeholder="Månadskostnad"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
-                <RadzenFormField Text="Driftkostnad" Variant="Variant.Outlined">
-                    <RadzenNumeric ShowUpDown="false"
-                    TValue="decimal"
-                    @bind-Value="@property.OperationalCostPerYear"
-                    Placeholder="Driftkostnad"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
-                <RadzenFormField Text="Byggår" Variant="Variant.Outlined">
-                    <RadzenNumeric ShowUpDown="false"
-                    TValue="int"
-                    @bind-Value="@property.YearBuilt"
-                    Placeholder="Byggår"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
-                <RadzenFormField Text="Antal rum" Variant="Variant.Outlined">
-                    <RadzenNumeric ShowUpDown="false"
-                    TValue="int"
-                    @bind-Value="@property.NumberOfRooms"
-                    Placeholder="Antal rum"
-                    InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-                </RadzenFormField>
-                <RadzenFormField Text="Upplåtelseform" Variant="Variant.Outlined">
-                    <RadzenDropDown TValue="PropertyType" @bind-Value="property.PropertyType"
-                    Data="@propertyTypes">
-                        <Template Context="option">
-                            @GetLocalized((PropertyType)option)
-                        </Template>
-                    </RadzenDropDown>
-                </RadzenFormField>
-            </RadzenFieldset>
+<RadzenTemplateForm TItem="PropertyDTO" Data="@Property" Submit="@HandleSubmit">
+    <ChildContent>
+        <RadzenFieldset Text="Generell information">
+            <RadzenFormField Text="List Pris" Variant="Variant.Outlined">
+                <RadzenNumeric Name="ListingPrice" ShowUpDown="false"
+                TValue="decimal"
+                @bind-Value="@Property.ListingPrice"
+                Placeholder="Listing Price"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
+            <RadzenFormField Text="Boarea" Variant="Variant.Outlined">
+                <RadzenNumeric ShowUpDown="false"
+                TValue="decimal"
+                @bind-Value="@Property.LivingSpace"
+                Placeholder="Boarea (m²)"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
+            <RadzenFormField Text="Biarea" Variant="Variant.Outlined">
+                <RadzenNumeric ShowUpDown="false"
+                TValue="decimal"
+                @bind-Value="@Property.SecondaryArea"
+                Placeholder="Biarea (m²)"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
+            <RadzenFormField Text="Tomtarea" Variant="Variant.Outlined">
+                <RadzenNumeric ShowUpDown="false"
+                TValue="decimal"
+                @bind-Value="@Property.LotSize"
+                Placeholder="Tomtarea (m²)"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
 
-            <RadzenFieldset Text="Location">
-                <RadzenFormField Text="Adress" Variant="Variant.Outlined">
-                    <RadzenTextBox Name="Street" @bind-Value="property.Street" Placeholder="Street" Style="width:100%" />
-                </RadzenFormField>
-                <RadzenFormField Text="Ort" Variant="Variant.Outlined">
-                    <RadzenTextBox Name="City" @bind-Value="property.City" Placeholder="City" Style="width:100%" />
-                </RadzenFormField>
-                <RadzenFormField Text="Postkod" Variant="Variant.Outlined">
-                    <RadzenTextBox Name="PostalCode" @bind-Value="property.PostalCode" Placeholder="Postal Code" Style="width:100%" />
-                </RadzenFormField>
-                <RadzenFormField Text="Kommun" Variant="Variant.Outlined">
-                    <SelectMuncipalityComponent @bind-SelectedMunicipalityId="property.MuncipalityId" />
-                </RadzenFormField>
-            </RadzenFieldset>
+            <RadzenFormField Text="Månadskostnad" Variant="Variant.Outlined">
+                <RadzenNumeric ShowUpDown="false"
+                TValue="decimal"
+                @bind-Value="@Property.MonthlyFee"
+                Placeholder="Månadskostnad"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
+            <RadzenFormField Text="Driftkostnad" Variant="Variant.Outlined">
+                <RadzenNumeric ShowUpDown="false"
+                TValue="decimal"
+                @bind-Value="@Property.OperationalCostPerYear"
+                Placeholder="Driftkostnad"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
+            <RadzenFormField Text="Byggår" Variant="Variant.Outlined">
+                <RadzenNumeric ShowUpDown="false"
+                TValue="int"
+                @bind-Value="@Property.YearBuilt"
+                Placeholder="Byggår"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
+            <RadzenFormField Text="Antal rum" Variant="Variant.Outlined">
+                <RadzenNumeric ShowUpDown="false"
+                TValue="int"
+                @bind-Value="@Property.NumberOfRooms"
+                Placeholder="Antal rum"
+                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+            </RadzenFormField>
+            <RadzenFormField Text="Upplåtelseform" Variant="Variant.Outlined">
+                <RadzenDropDown TValue="PropertyType" @bind-Value="Property.PropertyType"
+                Data="@propertyTypes">
+                    <Template Context="option">
+                        @GetLocalized((PropertyType)option)
+                    </Template>
+                </RadzenDropDown>
+            </RadzenFormField>
+        </RadzenFieldset>
 
-            <RadzenFieldset Text="Images">
-                <RadzenTextBox Placeholder="Add image URL..." @bind-Value="newImageUrl" Style="width:80%" />
-                <RadzenButton Icon="add" Text="Add Image" Click="@(() => AddImageUrl())" Style="margin-left: 10px;" />
+        <RadzenFieldset Text="Adress information">
+            <RadzenFormField Text="Adress" Variant="Variant.Outlined">
+                <RadzenTextBox Name="Street" @bind-Value="Property.Street" Placeholder="Street" Style="width:100%" />
+            </RadzenFormField>
+            <RadzenFormField Text="Ort" Variant="Variant.Outlined">
+                <RadzenTextBox Name="City" @bind-Value="Property.City" Placeholder="City" Style="width:100%" />
+            </RadzenFormField>
+            <RadzenFormField Text="Postkod" Variant="Variant.Outlined">
+                <RadzenTextBox Name="PostalCode" @bind-Value="Property.PostalCode" Placeholder="Postal Code" Style="width:100%" />
+            </RadzenFormField>
+            <RadzenFormField Text="Kommun" Variant="Variant.Outlined">
+                <SelectMuncipalityComponent @bind-SelectedMunicipalityId="Property.MuncipalityId" />
+            </RadzenFormField>
+        </RadzenFieldset>
 
-                @* TODO: add ability to remove added urls, because we all suck at typing *@
-                <ul>
-                    @foreach (var img in property.ImageUrls)
-                    {
-                        <li>@img.ImgURL</li>
-                    }
-                </ul>
-            </RadzenFieldset>
+        <RadzenFieldset Text="Bilder">
+            <RadzenTextBox Placeholder="Lägg till bild Url..." @bind-Value="newImageUrl" Style="width:80%" />
+            <RadzenButton Icon="add" Text="Lägg till" Click="@(() => AddImageUrl())" Style="margin-left: 10px;" />
 
-            <RadzenFieldset Text="Description">
-                <RadzenTextArea @bind-Value="property.Description" Placeholder="Property Description" Rows="5" Style="width:100%" />
-            </RadzenFieldset>
+            <RadzenRow Style="margin-top: 10px;">
+                @foreach (var img in Property.ImageUrls)
+                {
+                    <RadzenColumn xs="12" sm="6" md="4" lg="3" Style="padding: 10px;">
+                        <RadzenCard Style="text-align: center; padding: 10px;">
+                            <img src="@img.ImgURL" alt="Image" style="width: 100%; height: auto; max-height: 150px; object-fit: cover;" />
+                            <RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger"
+                            Click="@(() => RemoveImageUrl(img))" Style="margin-top: 5px;" />
+                        </RadzenCard>
+                    </RadzenColumn>
+                }
+            </RadzenRow>
+        </RadzenFieldset>
 
-            <RadzenButton ButtonType="ButtonType.Submit" Text="Create Property" Style="margin-top: 20px;" />
-        </ChildContent>
-    </RadzenTemplateForm>
+        <RadzenFieldset Text="Beskrivning">
+            <RadzenTextArea @bind-Value="Property.Description" Placeholder="Bostadsbeskrivning..." Rows="5" Style="width:100%" />
+        </RadzenFieldset>
+
+        <RadzenButton ButtonType="ButtonType.Submit" Text="@SubmitButtonText" Style="margin-top: 20px;" />
+    </ChildContent>
+</RadzenTemplateForm>
 
 
-    @code {
+@code {
+    [Parameter]
+    public PropertyDTO Property { get; set; } = new() { ImageUrls = new List<PropertyImageDTO>() };
 
-    private PropertyDTO property = new()
-        {
-            ImageUrls = new List<PropertyImageDTO>()
-        };
+    [Parameter]
+    public string SubmitButtonText { get; set; } = "Lägg till";
+
+    [Parameter]
+    public EventCallback<PropertyDTO> OnSubmit { get; set; }
+
 
     private IEnumerable<PropertyType> propertyTypes = Enum.GetValues<PropertyType>();
-
-    [Required]
-    private List<MuncipalityDTO> muncipalities { get; set; }
-
     private string? newImageUrl;
 
     private Variant variant = Variant.Outlined;
@@ -139,8 +140,17 @@ else
     {
         if (!string.IsNullOrWhiteSpace(newImageUrl))
         {
-            property.ImageUrls.Add(new PropertyImageDTO { ImgURL = newImageUrl });
+            Property.ImageUrls.Add(new PropertyImageDTO { ImgURL = newImageUrl });
             newImageUrl = string.Empty;
+        }
+    }
+
+    async Task RemoveImageUrl(PropertyImageDTO img)
+    {
+        if (Property.ImageUrls.Contains(img))
+        {
+            Property.ImageUrls.Remove(img);
+            await Task.CompletedTask;
         }
     }
 
@@ -149,22 +159,22 @@ else
         return PropertyTypes.GetLocalized(option);
     }
 
-    async Task CreateProperty(PropertyDTO dto)
+    private async Task HandleSubmit(PropertyDTO dto)
     {
-        dto.ImageUrls = property.ImageUrls;
-        var response = await Http.PostAsJsonAsync<PropertyDTO>("api/properties", dto);
+        dto.ImageUrls = Property.ImageUrls;
 
-        if (response.IsSuccessStatusCode)
+        if (OnSubmit.HasDelegate)
         {
-            Console.WriteLine("Success!");
-            NotificationService.Notify(NotificationSeverity.Success, "Bostad tillagd");
-            // Navigation.NavigateTo("/properties");
+            await OnSubmit.InvokeAsync(dto);
         }
         else
         {
-            Console.WriteLine("Epic failure");
-            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att lägga till bostad, försök igen");
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Ett fel uppstod",
+                    Detail = "Problem med HandleSubmit callback"
+                });
         }
-    }
     }
 }
