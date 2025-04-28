@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace FribergHomeClient.Components
 {
-    public partial class PropertyForm
+    public class PropertyForm1
     {
         [Inject]
         public IPropertyService PropertyService { get; set; }
@@ -18,7 +18,7 @@ namespace FribergHomeClient.Components
 
         // TODO: Fix muncipality and images...
 
-        protected override async Task OnInitializedAsync()
+        protected async Task OnInitializedAsync()
         {
             // This is Edit
             if (IsEdit)
