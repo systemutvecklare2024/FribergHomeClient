@@ -45,15 +45,5 @@
         IsSidebarExpanded = !IsSidebarExpanded;
         await OnSidebarExpanded.InvokeAsync(IsSidebarExpanded);
     }
-
-    private async Task LogOut()
-    {
-
-
-
-        await authService.Logout();
-        NavManager.NavigateTo("/");
-
-    }
 }
 
