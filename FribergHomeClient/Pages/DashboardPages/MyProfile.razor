@@ -33,7 +33,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        agent = await Http.GetFromJsonAsync <RealEstateAgentDTO> ("api/RealEstateAgent/{id}");
+        agent = await Http.GetFromJsonAsync <RealEstateAgentDTO> ("api/RealEstateAgents/My");
     }
 
 }
