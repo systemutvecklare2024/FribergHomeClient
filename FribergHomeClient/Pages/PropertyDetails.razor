@@ -10,17 +10,16 @@
 }
 else
 {
-
-    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center">
+    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" style="width: 50%; margin: auto;">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start">
             <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
                 <RadzenText TextStyle="TextStyle.H3" TextAlign="TextAlign.Left" TagName="TagName.P">@Property.Street</RadzenText>
             </RadzenRow>
         </RadzenStack>
-        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" class="rz-w-50 rz-max-w-50 rz-w-fit-content rz-text-wrap">
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" class="rz-w-fit-content rz-text-wrap">
             <RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" style="background-color:aqua;" class="rz-text-wrap ">
                 <RadzenCarousel Auto="false" AllowNavigation="true"
-                                Style="height: 600px; max-width: 900px;" class="rz-mx-auto"
+                                Style="height: 600px;" class="rz-mx-auto"
                                 ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
                     <Items>
                         @foreach (var image in Property.ImageUrls)
@@ -33,18 +32,18 @@ else
                 </RadzenCarousel>
             </RadzenRow>
         </RadzenStack>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" class="rz-w-50 rz-max-w-50 rz-w-fit-content rz-text-wrap">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" class="rz-w-fit-content rz-text-wrap">
             <RadzenRow Gap="2rem">
                 <RadzenColumn Size="8">
-                    <RadzenText TextStyle="TextStyle.H6" TextAlign="TextAlign.Left" TagName="TagName.P">
-                        @Property.City, @Property.Muncipality
+                    <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
+                        @Property.City, @Property.Muncipality kommun
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Left" TagName="TagName.P">
+                    <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.3rem;">
                         @Property.Description
                     </RadzenText>
                 </RadzenColumn>
                 <RadzenColumn Size="2">
-                    <RadzenText TextStyle="TextStyle.H6" TextAlign="TextAlign.Left" TagName="TagName.P">
+                    <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
                         Utgångspris
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P">
@@ -85,8 +84,8 @@ else
                     }
                 </RadzenColumn>
                 <RadzenColumn Size="2">
-                    <RadzenText TextStyle="TextStyle.H6" TextAlign="TextAlign.Left" TagName="TagName.P">
-                        @Property.ListingPrice
+                    <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
+                        @Property.ListingPrice.ToString("F0") kr
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P">
                         @PropertyTypes.GetLocalized(Property.PropertyType)
@@ -98,30 +97,30 @@ else
                         @Property.NumberOfRooms
                     </RadzenText>
                     <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P">
-                        @Property.LivingSpace
+                        @Property.LivingSpace.ToString("F0") m²
                     </RadzenText>
                     @if (Property.SecondaryArea > 0)
                     {
                         <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P">
-                            @Property.SecondaryArea
+                            @Property.SecondaryArea.ToString("F0") m²
                         </RadzenText>
                     }
                     @if (Property.LotSize > 0)
                     {
                         <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P">
-                            @Property.LotSize
+                            @Property.LotSize.ToString("F0") m²
                         </RadzenText>
                     }
                     @if (Property.MonthlyFee > 0)
                     {
                         <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P">
-                            @Property.MonthlyFee
+                            @Property.MonthlyFee.ToString("F0") kr
                         </RadzenText>
                     }
                     @if (Property.OperationalCostPerYear > 0)
                     {
                         <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P">
-                            @Property.OperationalCostPerYear
+                            @Property.OperationalCostPerYear.ToString("F0") kr/år
                         </RadzenText>
                     }
                 </RadzenColumn>
