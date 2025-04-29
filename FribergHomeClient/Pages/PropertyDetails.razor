@@ -1,0 +1,151 @@
+﻿@page "/properties/{Id:int}/details"
+@using FribergHomeClient.Data
+@using FribergHomeClient.Services
+@inject IPropertyService PropertyService
+
+@if (Property is null)
+{
+    <p>Laddar bostadsinformation...</p>
+}
+else
+{
+    <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" style="width: 50%; margin: auto;">
+        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start">
+            <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
+                <RadzenText TextStyle="TextStyle.H3" TextAlign="TextAlign.Left" TagName="TagName.P">@Property.Street</RadzenText>
+            </RadzenRow>
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch" AlignItems="AlignItems.Center">
+            <RadzenCarousel Auto="false" AllowNavigation="true"
+                            Style="height: 600px; width: 100%;"
+                            ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
+                <Items>
+                    @foreach (var image in Property.ImageUrls)
+                    {
+                        <RadzenCarouselItem>
+                            <RadzenImage Path="@image.ImgURL" class="rz-w-100 rz-h-100" />
+                        </RadzenCarouselItem>
+                    }
+                </Items>
+            </RadzenCarousel>
+        </RadzenStack>
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" Wrap="FlexWrap.Wrap">
+            <RadzenRow Gap="2rem">
+                <RadzenColumn Size="8">
+                    <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
+                        @Property.City, @Property.Muncipality kommun
+                    </RadzenText>
+                    @foreach (var descriptionSection in descriptionArray)
+                    {
+                        <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.5em; margin-bottom:1em">
+                            @descriptionSection
+                        </RadzenText>
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="2">
+                    <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
+                        Utgångspris
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        Bostadstyp
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        Byggår
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        Antal rum
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        Boarea
+                    </RadzenText>
+                    @if (Property.SecondaryArea > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            Biarea
+                        </RadzenText>
+                    }
+                    @if (Property.LotSize > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            Tomtarea
+                        </RadzenText>
+                    }
+                    @if (Property.MonthlyFee > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            Månadsavgift
+                        </RadzenText>
+                    }
+                    @if (Property.OperationalCostPerYear > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            Driftkostnad
+                        </RadzenText>
+                    }
+                </RadzenColumn>
+                <RadzenColumn Size="2">
+                    <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
+                        @Property.ListingPrice.ToString("F0") kr
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        @PropertyTypes.GetLocalized(Property.PropertyType)
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        @Property.YearBuilt
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        @Property.NumberOfRooms
+                    </RadzenText>
+                    <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                        @Property.LivingSpace.ToString("F0") m²
+                    </RadzenText>
+                    @if (Property.SecondaryArea > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            @Property.SecondaryArea.ToString("F0") m²
+                        </RadzenText>
+                    }
+                    @if (Property.LotSize > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            @Property.LotSize.ToString("F0") m²
+                        </RadzenText>
+                    }
+                    @if (Property.MonthlyFee > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            @Property.MonthlyFee.ToString("F0") kr
+                        </RadzenText>
+                    }
+                    @if (Property.OperationalCostPerYear > 0)
+                    {
+                        <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
+                            @Property.OperationalCostPerYear.ToString("F0") kr/år
+                        </RadzenText>
+                    }
+                </RadzenColumn>
+            </RadzenRow>
+        </RadzenStack>
+    </RadzenStack>
+}
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public PropertyDTO Property { get; set; }
+    private string[] descriptionArray = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        Property = await PropertyService.GetPropertyDTO(Id);
+
+        descriptionArray = SplitDescription(Property.Description);
+    }
+
+    private string[] SplitDescription(string description)
+    {
+        return description.Split("\r\n");
+    }
+
+}
