@@ -47,7 +47,8 @@ namespace FribergHomeClient.Services
 
 		public async Task Logout()
 		{
-			client.DefaultRequestHeaders.Clear();
+			client.DefaultRequestHeaders.Clear(); //Deletes token from HttpClient header
+			await localStorage.RemoveItemAsync("accessToken"); //Deletes token from local storage
 			await ((ApiAuthenticationStateProvider)authProvider).LoggedOut();
 		}
 	}
