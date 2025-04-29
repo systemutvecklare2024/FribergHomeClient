@@ -35,8 +35,8 @@ namespace FribergHomeClient.Services
         {
             try
             {
-                var dto = await _client.GetFromJsonAsync<PropertyDTO>($"/api/Properties/{id}");
-                var muncipality = await _client.GetFromJsonAsync<MuncipalityDTO>($"/api/Muncipality/{dto.MuncipalityId}");
+                var dto = await _client.GetFromJsonAsync<PropertyDTO>($"/api/Properties/{id}/details");
+                var muncipality = await _client.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{dto.MuncipalityId}");
                 dto.Muncipality = muncipality.Name;
                 return dto;
             }
