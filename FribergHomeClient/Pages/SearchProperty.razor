@@ -1,9 +1,37 @@
 ﻿@page "/searchproperty"
+@page "/searchproperty/{muncipalityId:int?}"
 @using FribergHomeClient.Components
 
-<h3>SearchProperty</h3>
-<ListPropertyCards></ListPropertyCards>
+
+
+@if (!MuncipalityId.HasValue)
+{
+<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
+<ListPropertyCards Header="Alla listningar"></ListPropertyCards>
+}
+else{
+	<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
+	<ListPropertyCards MuncipalityId="MuncipalityId"></ListPropertyCards>
+}
 
 @code {
+	[Parameter]
+	public int? MuncipalityId { get; set; }
 
+	private async Task HandleSearch(int muncipalityId)
+	{
+		if (muncipalityId != 0)
+		{
+			MuncipalityId = muncipalityId; // Update the page parameter
+			StateHasChanged();
+
+		}
+
+		// await DService.Alert(muncipalityId.ToString());
+	}
+
+	protected override void OnInitialized()
+	{
+
+	}
 }

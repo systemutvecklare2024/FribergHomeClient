@@ -1,27 +1,54 @@
 ﻿@inject HttpClient Http
+@inject NotificationService NotificationService
 
 <RadzenRow Gap="1rem" class="rz-justify-content-center">
 	<RadzenColumn SizeMD="4" SizeSM="12">
-		<div class="rz-p-5 rz-p-md-12 rz-m-5 rz-background-color-primary-lighter" style="border-radius: 4px;">
+		<div class="rz-p-5 rz-p-md-12 rz-m-5 rz-background-color-primary-lighter" style="border-radius: 4px; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);">
 			<RadzenText TextStyle="TextStyle.H5">Sök på kommun</RadzenText>
 			<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="1rem" Wrap="FlexWrap.Wrap">
 
-@* 				TODO: Ändra storlek på SelectMuncipalityComponent? Eller wrappa storlek runt?*@
-					<SelectMuncipalityComponent></SelectMuncipalityComponent> 
-
+				<RadzenFormField Text="Välj kommun" Variant="Variant.Outlined" Style="width: 100%;">
+					<SelectMuncipalityComponent @bind-SelectedMunicipalityId="MuncipalityId" />
+				</RadzenFormField>
 			</RadzenStack>
-			<RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" />
+			@* <button class="rz-button rz-my-2 rz-py-3 rz-background-color-primary" style="width: 100%" @onclick="OnSearch">Sök</button> *@
+			<RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" Click="OnSearch" />
 
+			@if (!string.IsNullOrEmpty(Message))
+			{
+				<RadzenAlert AllowClose="false" AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter ">
+					<RadzenText TextStyle="TextStyle.Body2" class="rz-m-0">@Message</RadzenText>
+				</RadzenAlert>
+			}
 		</div>
 	</RadzenColumn>
 </RadzenRow>
+
 @code {
-	string value = "";
-	Variant variant = Variant.Outlined;
-	DateTime? date = DateTime.Today;
+
+	[Parameter]
+	public int MuncipalityId { get; set; }
+
+	public string Message { get; set; } = "";
+
+	[Parameter]
+	public EventCallback<int> OnSearchMuncipality { get; set; }
 
 	protected override async Task OnInitializedAsync()
 	{
 		await base.OnInitializedAsync();
+	}
+
+	private async Task OnSearch()
+	{
+		if (MuncipalityId == 0)
+		{
+			Message = "Du måste välja kommun";
+		}
+		else
+		{
+			await OnSearchMuncipality.InvokeAsync(MuncipalityId);
+			StateHasChanged(); //Uppdaterar UI
+		}
 	}
 }
