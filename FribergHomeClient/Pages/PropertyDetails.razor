@@ -17,30 +17,30 @@ else
             </RadzenRow>
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch" AlignItems="AlignItems.Center">
-                <RadzenCarousel Auto="false" AllowNavigation="true"
-                                Style="height: 600px; width: 100%;"
-                                ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
-                    <Items>
-                        @foreach (var image in Property.ImageUrls)
-                        {
-                            <RadzenCarouselItem>
-                                <RadzenImage  Path="@image.ImgURL" class="rz-w-100 rz-h-100" />
-                            </RadzenCarouselItem>
-                        }
-                    </Items>
-                </RadzenCarousel>
+            <RadzenCarousel Auto="false" AllowNavigation="true"
+                            Style="height: 600px; width: 100%;"
+                            ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
+                <Items>
+                    @foreach (var image in Property.ImageUrls)
+                    {
+                        <RadzenCarouselItem>
+                            <RadzenImage Path="@image.ImgURL" class="rz-w-100 rz-h-100" />
+                        </RadzenCarouselItem>
+                    }
+                </Items>
+            </RadzenCarousel>
         </RadzenStack>
-        <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap" class="rz-w-fit-content rz-text-wrap">
+        <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" Wrap="FlexWrap.Wrap">
             <RadzenRow Gap="2rem">
                 <RadzenColumn Size="8">
                     <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
                         @Property.City, @Property.Muncipality kommun
                     </RadzenText>
-                    @foreach (var section in descriptionArray)
+                    @foreach (var descriptionSection in descriptionArray)
                     {
                         <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.5em; margin-bottom:1em">
-                            @section
-                    </RadzenText>
+                            @descriptionSection
+                        </RadzenText>
                     }
                 </RadzenColumn>
                 <RadzenColumn Size="2">
@@ -71,7 +71,7 @@ else
                             Tomtarea
                         </RadzenText>
                     }
-                    @if(Property.MonthlyFee > 0)
+                    @if (Property.MonthlyFee > 0)
                     {
                         <RadzenText TextStyle="TextStyle.Subtitle2" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
                             Månadsavgift
@@ -141,12 +141,12 @@ else
     {
         Property = await PropertyService.GetPropertyDTO(Id);
 
-        SplitDescription(Property.Description);
+        descriptionArray = SplitDescription(Property.Description);
     }
 
     private string[] SplitDescription(string description)
     {
-        return description.Split("/r/n");
+        return description.Split("\r\n");
     }
 
 }
