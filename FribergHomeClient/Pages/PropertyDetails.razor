@@ -36,9 +36,12 @@ else
                     <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
                         @Property.City, @Property.Muncipality kommun
                     </RadzenText>
-                    <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.5em">
-                        @Property.Description
+                    @foreach (var section in descriptionArray)
+                    {
+                        <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.5em; margin-bottom:1em">
+                            @section
                     </RadzenText>
+                    }
                 </RadzenColumn>
                 <RadzenColumn Size="2">
                     <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
@@ -132,10 +135,18 @@ else
     public int Id { get; set; }
 
     public PropertyDTO Property { get; set; }
+    private string[] descriptionArray = [];
 
     protected override async Task OnInitializedAsync()
     {
         Property = await PropertyService.GetPropertyDTO(Id);
+
+        SplitDescription(Property.Description);
+    }
+
+    private string[] SplitDescription(string description)
+    {
+        return description.Split("/r/n");
     }
 
 }
