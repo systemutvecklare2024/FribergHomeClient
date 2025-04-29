@@ -31,6 +31,21 @@ namespace FribergHomeClient.Services
             }
         }
 
+        public async Task<PropertyDTO> GetPropertyDTO(int id)
+        {
+            try
+            {
+                var dto = await _client.GetFromJsonAsync<PropertyDTO>($"/api/Properties/{id}/details");
+                var muncipality = await _client.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{dto.MuncipalityId}");
+                dto.Muncipality = muncipality.Name;
+                return dto;
+            }
+            catch (Exception)
+            {
+                return new PropertyDTO();
+            }
+        }
+
         public async Task SaveProperty(PropertyFormViewModel vm)
         {
             var url = vm.Id == null
