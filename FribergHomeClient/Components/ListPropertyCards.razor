@@ -1,10 +1,13 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
+@inject NotificationService NotificationService
 
 @* Author: Glate *@
 @if (Properties == null)
 {
-	<p>Loading...</p>
+	<div style="display: flex; justify-content: center; align-items: center;">
+		<RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+	</div>
 }
 else
 {
@@ -15,15 +18,15 @@ else
 				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
 					@if (!string.IsNullOrEmpty(Header))
 					{
-							<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
+						<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
 					}
 					<div class="small-card-container rz-my-5">
 
-					@foreach (var p in Properties)
-					{
-						p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
-						<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
-					}
+						@foreach (var p in Properties)
+						{
+							p.Muncipality = Muncipalities.First(m => m.Id == p.Id).Name;
+							<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
+						}
 					</div>
 				</div>
 			</RadzenColumn>
@@ -31,16 +34,15 @@ else
 		else
 		{
 			<RadzenColumn SizeSM="12" SizeMD="6">
-
+				<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
 				@foreach (var p in Properties)
 				{
-					p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
+					p.Muncipality = Muncipalities.First(m => m.Id == p.MuncipalityId).Name;
 					<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
 				}
 			</RadzenColumn>
 		}
 	</RadzenRow>
-
 }
 
 @code {
@@ -50,26 +52,44 @@ else
 	[Parameter]
 	public bool IsCompactView { get; set; } = false;
 
-	// [Parameter]
-	// public bool SmallCardContainer { get; set; } = false; //May be unnecessary. Delete if works without. Stuff.
+	[Parameter]
+	public int? MuncipalityId { get; set; }
 
 	[Parameter]
 	public string Header { get; set; } = ""; //Header for container of properties.
 
-	public List<PropertyDTO> Properties = new List<PropertyDTO>();
+	public List<PropertyDTO> Properties;
 	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();
+
+	protected override async Task OnParametersSetAsync()
+	{
+		if (MuncipalityId.HasValue)
+		{
+			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>($"api/properties/muncipality/{MuncipalityId}") ?? [];
+			Header = $"Listningar i {Muncipalities.First(m => m.Id == MuncipalityId).Name}";
+			StateHasChanged();
+		}
+	}
 
 	protected override async Task OnInitializedAsync()
 	{
-		Muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
+		Muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality") ?? [];
 
-		if (Take == 0)
+		if (MuncipalityId != null)
 		{
-			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
+			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>($"api/properties/muncipality/{MuncipalityId}") ?? new List<PropertyDTO>();
 		}
 		else
 		{
-			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>($"api/properties/latest?take={Take}");
+			if (Take == 0)
+			{
+				Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties") ?? [];
+			}
+			else
+			{
+				Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>($"api/properties/latest?take={Take}") ?? [];
+			}
+
 		}
 	}
 }
