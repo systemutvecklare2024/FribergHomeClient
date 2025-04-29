@@ -1,0 +1,8 @@
+﻿@page "/RealEstateAgents/{Id:int?}/Profile"
+
+<AgentProfile Id="Id"></AgentProfile>
+
+@code {
+    [Parameter]
+    public int? Id { get; set; } 
+}
