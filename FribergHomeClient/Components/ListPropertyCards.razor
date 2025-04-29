@@ -1,32 +1,75 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
-<h3>ListPropertyCards</h3>
 
+@* Author: Glate *@
 @if (Properties == null)
 {
 	<p>Loading...</p>
 }
 else
 {
-<RadzenRow Gap="0">
-	<RadzenColumn SizeSM="12" SizeMD="6" OffsetMD="3">
- 
-			@foreach (var p in Properties)
-			{
-				p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
-				<PropertyCard Property="p"></PropertyCard>
-			}
-		</RadzenColumn>
+	<RadzenRow Gap="0" class="rz-justify-content-center">
+		@if (IsCompactView)
+		{
+			<RadzenColumn SizeSM="12" SizeMD="6">
+				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
+					@if (!string.IsNullOrEmpty(Header))
+					{
+							<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
+					}
+					<div class="small-card-container rz-my-5">
+
+					@foreach (var p in Properties)
+					{
+						p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
+						<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
+					}
+					</div>
+				</div>
+			</RadzenColumn>
+		}
+		else
+		{
+			<RadzenColumn SizeSM="12" SizeMD="6">
+
+				@foreach (var p in Properties)
+				{
+					p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
+					<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
+				}
+			</RadzenColumn>
+		}
 	</RadzenRow>
+
 }
 
 @code {
+	[Parameter]
+	public int Take { get; set; } = 0; //number of listings to be fetched if specified.
+
+	[Parameter]
+	public bool IsCompactView { get; set; } = false;
+
+	// [Parameter]
+	// public bool SmallCardContainer { get; set; } = false; //May be unnecessary. Delete if works without. Stuff.
+
+	[Parameter]
+	public string Header { get; set; } = ""; //Header for container of properties.
+
 	public List<PropertyDTO> Properties = new List<PropertyDTO>();
 	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();
 
 	protected override async Task OnInitializedAsync()
 	{
-		Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
 		Muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
+
+		if (Take == 0)
+		{
+			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
+		}
+		else
+		{
+			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>($"api/properties/latest?take={Take}");
+		}
 	}
 }
