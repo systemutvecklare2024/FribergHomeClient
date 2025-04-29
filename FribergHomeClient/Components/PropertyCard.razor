@@ -129,6 +129,7 @@ else
 	private void NavigateTo()
 	{
 		//TODO: Add navigation to details page here!
-		// NavManager.NavigateTo($"/pagestuff/{Property.Id}");
+		Console.WriteLine(Property.Id);
+		NavManager.NavigateTo($"/properties/{Property.Id.Value}/details");
 	}
 }
