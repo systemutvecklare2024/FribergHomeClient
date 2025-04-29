@@ -2,17 +2,21 @@
 @inject DialogService DService
 
 <PageTitle>Home</PageTitle>
+<h3>Landing Page</h3>
 
-@* <ShowAllTheStuff></ShowAllTheStuff> *@
+<SearchBar></SearchBar>
 
-<h1>Hello, world!</h1>
+@* Change IsCompactView for large property cards instead *@
+<ListPropertyCards Take=3
+				   IsCompactView=true 
+				   Header="Nyheter">
+</ListPropertyCards>
 
-Welcome to your new app.
+@* <RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton> *@
 
-<RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton>
 @code {
-    void ButtonClicked()
-    {
-        DService.Alert("Hello");
-    }
+	// void ButtonClicked()
+	// {
+	// 	DService.Alert("Hello");
+	// }
 }
