@@ -2,8 +2,6 @@
 @page "/searchproperty/{muncipalityId:int?}"
 @using FribergHomeClient.Components
 
-
-
 @if (!MuncipalityId.HasValue)
 {
 <SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
@@ -22,16 +20,8 @@ else{
 	{
 		if (muncipalityId != 0)
 		{
-			MuncipalityId = muncipalityId; // Update the page parameter
+			MuncipalityId = muncipalityId;
 			StateHasChanged();
-
 		}
-
-		// await DService.Alert(muncipalityId.ToString());
-	}
-
-	protected override void OnInitialized()
-	{
-
 	}
 }

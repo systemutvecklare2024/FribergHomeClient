@@ -43,7 +43,6 @@ else
 			</RadzenColumn>
 		}
 	</RadzenRow>
-
 }
 
 @code {
@@ -70,7 +69,6 @@ else
 			Header = $"Listningar i {Muncipalities.First(m => m.Id == MuncipalityId).Name}";
 			StateHasChanged();
 		}
-
 	}
 
 	protected override async Task OnInitializedAsync()

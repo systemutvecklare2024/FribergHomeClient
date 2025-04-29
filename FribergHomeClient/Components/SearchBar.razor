@@ -11,7 +11,6 @@
 					<SelectMuncipalityComponent @bind-SelectedMunicipalityId="MuncipalityId" />
 				</RadzenFormField>
 			</RadzenStack>
-			@* <button class="rz-button rz-my-2 rz-py-3 rz-background-color-primary" style="width: 100%" @onclick="OnSearch">Sök</button> *@
 			<RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" Click="OnSearch" />
 
 			@if (!string.IsNullOrEmpty(Message))
@@ -48,7 +47,7 @@
 		else
 		{
 			await OnSearchMuncipality.InvokeAsync(MuncipalityId);
-			StateHasChanged(); //Uppdaterar UI
+			StateHasChanged(); //Updates UI
 		}
 	}
 }
