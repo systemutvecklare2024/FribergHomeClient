@@ -35,7 +35,10 @@ namespace FribergHomeClient.Services
 
 			var content = await response.Content.ReadFromJsonAsync<AuthResponse>();
 			var token = content.Token;
-			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var userId = content.UserId;
+			var agentId = content.AgentId;
+			await localStorage.SetItemAsync<int>("AgentId", agentId);
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
 
 			await localStorage.SetItemAsync("accessToken", token);
 
