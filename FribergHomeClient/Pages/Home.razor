@@ -8,8 +8,8 @@
 
 @* Change IsCompactView for large property cards instead *@
 <ListPropertyCards Take=3
-IsCompactView=true
-Header="Nyheter">
+				   IsCompactView=true
+				   Header="Nyheter">
 </ListPropertyCards>
 
 @* <RadzenButton Click="@ButtonClicked" Text="Hi"></RadzenButton> *@
@@ -22,7 +22,7 @@ Header="Nyheter">
 
 	private async Task HandleSearch(int muncipalityId)
 	{
-		if(muncipalityId != 0)
+		if (muncipalityId != 0)
 			NavManager.NavigateTo($"searchproperty/{muncipalityId}");
 		// await DService.Alert(muncipalityId.ToString());
 	}
