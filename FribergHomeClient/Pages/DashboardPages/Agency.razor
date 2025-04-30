@@ -7,13 +7,13 @@
 
 <h3>Agency</h3>
 
-@if (agency == null && agentId == null)
+@if (agentId.HasValue)
 {
-    <p>Loading...</p>
+    <AgencyCard Name="agentId.agency.Name" Presentation="agentId.agency.Presentation" LogoUrl="agentId.agency.LogoUrl"></AgencyCard>
 }
 else
 {
-    <AgencyCard Name="agentId.agency.Name" Presentation="agency.Presentation" LogoUrl="agency.LogoUrl"></AgencyCard>
+    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
 }
 
 @code {
