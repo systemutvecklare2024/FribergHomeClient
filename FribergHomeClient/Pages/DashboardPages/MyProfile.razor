@@ -1,21 +1,25 @@
 ﻿@page "/dashboard/myprofile"
 @using FribergHomeClient.Components
-@using FribergHomeClient.Data.Dto
 @using Blazored.LocalStorage
 @inject ILocalStorageService LocalStorage
-@inject HttpClient Http
 
 <h3>Min Profil</h3>
 
-@* <AgentProfile Id="agentId" ></AgentProfile> *@
+@if (agentId.HasValue)
+{
+    <AgentProfile Id="agentId"></AgentProfile>
+}
+else
+{
+    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
 
 @code {
-    private int agentId;
+    private int? agentId;
 
     protected override async Task OnInitializedAsync()
     {
         agentId = await LocalStorage.GetItemAsync<int>("AgentId");
-        Console.WriteLine($"agentId={agentId}");
     }
 
 }

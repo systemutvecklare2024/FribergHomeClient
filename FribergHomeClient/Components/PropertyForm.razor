@@ -4,9 +4,12 @@
 @using System.ComponentModel.DataAnnotations
 @using static FribergHomeClient.Data.PropertyTypes
 
+@* Author: Christoffer *@
 @inject HttpClient Http
 @inject NotificationService NotificationService
 
+@inject HttpClient Http
+@inject NotificationService NotificationService
 
 <RadzenTemplateForm TItem="PropertyDTO" Data="@Property" Submit="@HandleSubmit">
     <ChildContent>

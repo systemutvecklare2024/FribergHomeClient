@@ -1,10 +1,11 @@
 ﻿@using FribergHomeClient.Components
 @using FribergHomeClient.Data.Dto
 @inject HttpClient Http
+@inject NotificationService NotificationService
 
 @if (agent == null)
 {
-    <p>Loading...</p>
+    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
 }
 else
 {
@@ -40,7 +41,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        agent = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{Id}");
+        // Need to handle 404s
+        if(!Id.HasValue)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
+            return;
+        }
+        agent = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{Id.Value}");
+        if(agent == null) {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
+        }
     }
 
 }
