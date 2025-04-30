@@ -82,7 +82,7 @@ namespace FribergHomeClient.Services
 
 				if (response!.IsSuccessStatusCode)
 				{
-					var result =  new ResponseService<List<PropertyDTO>>
+					var result = new ResponseService<List<PropertyDTO>>
 					{
 						Data = await response.Content.ReadFromJsonAsync<List<PropertyDTO>>(),
 						Success = true,
