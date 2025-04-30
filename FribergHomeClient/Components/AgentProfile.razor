@@ -41,7 +41,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         agent = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{Id}");
-        Console.WriteLine(agent.FirstName);
     }
 
 }

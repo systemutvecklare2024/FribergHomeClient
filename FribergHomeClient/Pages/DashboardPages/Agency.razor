@@ -1,8 +1,30 @@
 ﻿@page "/dashboard/agency"
 @using FribergHomeClient.Components
+@using FribergHomeClient.Data.Dto
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+@inject HttpClient Http
 
 <h3>Agency</h3>
 
+@if (agency == null && agentId == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <AgencyCard Name="agentId.agency.Name" Presentation="agency.Presentation" LogoUrl="agency.LogoUrl"></AgencyCard>
+}
+
 @code {
+    private int? agentId;
+    private int? Id;
+    RealEstateAgencyPageDTO? agency { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        agentId = await LocalStorage.GetItemAsync<int>("AgentId");
+        agency = await Http.GetFromJsonAsync<RealEstateAgencyPageDTO>($"api/RealEstateAgencies/{Id}");
+    }
 
 }
