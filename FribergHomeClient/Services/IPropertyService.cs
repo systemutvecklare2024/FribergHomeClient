@@ -8,5 +8,7 @@ namespace FribergHomeClient.Services
         Task<PropertyFormViewModel> GetProperty(int id);
         Task SaveProperty(PropertyFormViewModel vm);
         Task<PropertyDTO> GetPropertyDTO(int id);
-    }
+        Task<ResponseService<List<PropertyDTO>>> GetListAsync(string uri);
+
+	}
 }

@@ -33,14 +33,10 @@
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}
-
-	.info-column:hover {
-		
-	}
-
 	.cursor-pointer:hover{
 		cursor: pointer;
 	}
+
 </style>
 
 
@@ -59,7 +55,6 @@
 }
 else
 {
-
 	<RadzenCard class="rz-my-12 rz-mx-auto p-0 m-1 custom-card">
 		<RadzenRow class="rz-text-align-center m-0 p-0 responsive-container" Style="width: 100%; row-gap: 0px;">
 			<!-- Image -->
@@ -128,8 +123,18 @@ else
 
 	private void NavigateTo()
 	{
-		//TODO: Add navigation to details page here!
 		Console.WriteLine(Property.Id);
 		NavManager.NavigateTo($"/properties/{Property.Id.Value}/details");
 	}
+
+	protected override async Task OnAfterRenderAsync(bool firstRender)
+	{
+		if (firstRender)
+		{
+			// Delay to allow the DOM to render, then apply the animation class
+			await Task.Delay(10);
+			StateHasChanged();
+		}
+	}
+
 }
