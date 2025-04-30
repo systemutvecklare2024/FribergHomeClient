@@ -150,3 +150,19 @@ code {
 		border-top-left-radius: 0 !important;
 	}
 }
+
+@media (min-width: 769px) and (max-width: 1024px) {
+	.radzen-carousel ul {
+		border-top-right-radius: 4px !important;
+		border-bottom-right-radius: 0 !important;
+		border-bottom-left-radius: 0 !important;
+		border-top-left-radius: 4px !important;
+	}
+
+	.info-column-radius {
+		border-top-right-radius: 0 !important;
+		border-bottom-right-radius: 4px !important;
+		border-bottom-left-radius: 4px !important;
+		border-top-left-radius: 0 !important;
+	}
+}
