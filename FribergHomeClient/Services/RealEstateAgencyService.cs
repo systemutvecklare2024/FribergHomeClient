@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using FribergHomeClient.Data.Dto;
+using FribergHomeClient.Data.ViewModel;
 using System.Net.Http.Json;
 
 namespace FribergHomeClient.Services
@@ -25,6 +26,43 @@ namespace FribergHomeClient.Services
 
 				return new List<RealEstateAgencyDTO>();
 			}
+        }
+
+        public async Task<RealEstateAgencyDTO> GetById(int id)
+        {
+            try
+            {
+                return  await client.GetFromJsonAsync<RealEstateAgencyDTO>($"/api/RealEstateAgencies/{id}");
+            }
+            catch (Exception)
+            {
+
+                return new RealEstateAgencyDTO();
+            }
+        }
+
+        public async Task<List<ApplicationViewModel>> GetApplicationViewModels(RealEstateAgencyDTO agencyDTO)
+        {
+            List<ApplicationViewModel> applicationViewModels = new List<ApplicationViewModel>();
+            
+            foreach (var applicationDTO in agencyDTO.Applications)
+            {
+                var agent = agencyDTO.Agents.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
+
+                var applicationViewModel = new ApplicationViewModel()
+                {
+                    Id = applicationDTO.Id,
+                    AgentId = applicationDTO.AgentId,
+                    FirstName = agent.FirstName,
+                    LastName = agent.LastName,
+                    CreatedAt = applicationDTO.CreatedAt,
+                    StatusType = applicationDTO.StatusType,
+                    AgencyId = applicationDTO.AgencyId
+
+                };
+                applicationViewModels.Add(applicationViewModel);
+            }
+            return applicationViewModels;
         }
     }
 }

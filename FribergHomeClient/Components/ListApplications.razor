@@ -1,6 +1,73 @@
-﻿<h3>ListApplications</h3>
+﻿@using FribergHomeClient.Data.ViewModel
+@inject IRealEstateAgencyService AgencyService
+
+<h3>ListApplications</h3>
+@if (ApplicationsVM == null)
+{
+    <p>Laddar ansökningar...</p>
+}
+else
+{
+    <RadzenDataGrid AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
+                    Data="@ApplicationsVM" TItem="ApplicationViewModel">
+        <Columns>
+
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
+
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.CreatedAt)" Title="Skapad" />
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.StatusType)" Title="Status" />
+            <RadzenDataGridColumn Width="160px" >
+                <Template Context="applicationViewModel">
+                    <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {ApproveApplication(applicationViewModel.Id);}) Text="Godkänn" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {DenyApplication(applicationViewModel.Id);}) Text="Neka" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+
+    @* <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
+                    Data="@ApplicationsVM" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedApplication>
+        <Columns>
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.FirstName)" Filterable="false" Title="Förnamn" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
+            <RadzenDataGridColumn Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" Frozen="true" Width="160px" />
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.LastName)" Title="Last Name" Width="160px" />
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.CreatedAt)" Title="Ansökningsdatum" Width="200px" />
+            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.StatusType)" Title="Status" Width="120px" />
+        </Columns>
+    </RadzenDataGrid> *@
+}
 
 @code {
-    private List<ApplicationDTO> Applications = [];
+
+    //[Parameter]
+    //public List<ApplicationDTO> Applications { get; set; } = [];
+
+    [Parameter]
+    public List<ApplicationViewModel> ApplicationsVM { get; set; } = [];
+
+    //private ApplicationViewModel selectedApplication = new ApplicationViewModel();
+
+    //Remove this after testing
+    protected override async Task OnInitializedAsync()
+    {
+        var agency = await AgencyService.GetById(1);
+
+        ApplicationsVM = await AgencyService.GetApplicationViewModels(agency);
+
+
+    }
+
+    private void ApproveApplication(int applicationId)
+    {
+        Console.Write($"godkänn {applicationId}");
+    }
+
+    private void DenyApplication(int applicationId)
+    {
+        Console.Write($"neka {applicationId}");
+    }
 
 }
