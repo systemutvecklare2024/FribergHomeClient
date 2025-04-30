@@ -6,12 +6,10 @@ namespace FribergHomeClient.Services
 {
     public class RealEstateAgencyService : IRealEstateAgencyService
     {
-        private readonly IMapper mapper;
         private readonly HttpClient client;
 
-        public RealEstateAgencyService(IMapper mapper, HttpClient client)
+        public RealEstateAgencyService(HttpClient client)
 		{
-            this.mapper = mapper;
             this.client = client;
         }
         public async Task<List<RealEstateAgencyDTO>> GetAll()
@@ -25,7 +23,7 @@ namespace FribergHomeClient.Services
 			catch (Exception)
 			{
 
-				throw;
+				return new List<RealEstateAgencyDTO>();
 			}
         }
     }

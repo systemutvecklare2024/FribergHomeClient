@@ -3,6 +3,7 @@
 @using FribergHomeClient.Services
 @inject NavigationManager NavManager
 @inject IAccountService accountService
+@inject IRealEstateAgencyService RealEstateAgencyService
 
 @* Author: Emelie *@
 
@@ -92,7 +93,7 @@ else
                                     <RadzenLabel Text="Mäklarbyrå" Component="AgencyId" />
                                 </RadzenColumn>
                                 <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenDropDown @bind-Value="model.AgencyId" AllowClear="false" Placeholder="Välj"  Data="@agencies" Style="width: 100%;" TextProperty="Name" ValueProperty="Id" Name="Mäklarbyrå"></RadzenDropDown>
+                                    <RadzenDropDown @bind-Value="model.AgencyId" AllowClear="false" Placeholder="Välj"  Data="@agencies" Style="width: 100%;" TextProperty="Name" ValueProperty="Id" Name="AgencyId"></RadzenDropDown>
                                     <RadzenRequiredValidator Component="AgencyId" Text="Ange Mäklarbyrå" />
                                 </RadzenColumn>
                             </RadzenRow>
@@ -117,16 +118,17 @@ else
     private AccountDTO model = new();
     private string errorMessage = string.Empty;
     private bool success;
-    private RealEstateAgencyDTO[] agencies = [];
+    private List<RealEstateAgencyDTO> agencies = [];
 
-    protected override Task OnInitializedAsync()
+    protected override async Task OnInitializedAsync()
     {
-        return base.OnInitializedAsync();
+        agencies = await RealEstateAgencyService.GetAll();
     }
 
 
     async void Submit(AccountDTO arg)
     {
+        Console.WriteLine(model.AgencyId);
         var response = await accountService.RegisterAccount(model);
         success = response.Success;
 
