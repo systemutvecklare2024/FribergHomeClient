@@ -1,7 +1,35 @@
 ﻿@page "/searchrealestateagent"
+@using FribergHomeClient.Components
+@inject HttpClient Http
 
-<h3>SearchRealEstateAgent</h3>
+<div style="text-align: center;">
+<h3>Sök mäklare eller mäklarfirma</h3>
+<input @bind="searchQuery" />
+</div>
 
+@foreach (var agent in filteredAgents)
+{
+    <AgentProfile agent ="@agent"/>
+}
+
+
+@* Hämta en lista med alla mäklare *@
 @code {
+    private string searchQuery = string.Empty;
+    private string selectedFilter = string.Empty;
 
+    private IEnumerable<RealEstateAgentDTO> filteredAgents => agents
+        .Where(a =>
+            (string.IsNullOrEmpty(searchQuery) ||
+            a.FirstName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+            a.LastName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
+            (a.Agency != null && a.Agency.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))));
+
+
+    private List<RealEstateAgentDTO> agents = new List<RealEstateAgentDTO>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        agents = await Http.GetFromJsonAsync<List<RealEstateAgentDTO>>("api/RealEstateAgents"); 
+    }
 }

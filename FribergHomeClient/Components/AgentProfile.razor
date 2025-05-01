@@ -37,10 +37,17 @@ else
 @code {
     [Parameter]
     public int? Id { get; set; }
-    RealEstateAgentDTO? agent { get; set; }
+    [Parameter]
+    public RealEstateAgentDTO? agent { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
+        // Check if agent is already set
+        if (agent != null)
+        {
+            return;    
+        }
+
         // Need to handle 404s
         if(!Id.HasValue)
         {
