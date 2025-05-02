@@ -4,10 +4,11 @@
 
 @if (!MuncipalityId.HasValue)
 {
-<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
-<ListPropertyCards Header="Alla listningar"></ListPropertyCards>
+	<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
+	<ListPropertyCards InitialHeader="Alla listningar"></ListPropertyCards>
 }
-else{
+else
+{
 	<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
 	<ListPropertyCards MuncipalityId="MuncipalityId"></ListPropertyCards>
 }

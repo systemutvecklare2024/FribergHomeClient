@@ -25,7 +25,6 @@ else
 						<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
 					}
 					<div class="small-card-container rz-my-5">
-
 						@foreach (var p in Properties)
 						{
 							<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
@@ -60,7 +59,9 @@ else
 	public int? MuncipalityId { get; set; }
 
 	[Parameter]
-	public string Header { get; set; } = ""; //Header for container of properties.
+	public string InitialHeader { get; set; } = ""; //Header for container of properties.
+
+	public string Header { get; set; } = "";
 
 	public List<PropertyDTO>? Properties;
 	public string ErrorMessage { get; set; } = string.Empty;
@@ -81,20 +82,23 @@ else
 	{
 		try
 		{
+			Header = InitialHeader;
 			string endpoint = MuncipalityId.HasValue //If MuncipalityId has value
 							? $"muncipality/{MuncipalityId}" //endpoint = this
 							: (Take > 0 ? $"latest?take={Take}" : string.Empty); //else this.
+
 
 			var response = await PropertyService.GetListAsync(endpoint);
 
 			if (response.Success && response.Data != null)
 			{
 				Properties = response.Data;
-				if (string.IsNullOrEmpty(Header))
+
+				if (string.IsNullOrEmpty(InitialHeader))
 				{
 					Header = MuncipalityId.HasValue && Properties.Any()
 							? $"Listningar i {Properties[0].Muncipality}"
-							: MuncipalityId.HasValue
+							: MuncipalityId.HasValue && !Properties.Any()
 								? "Inga listningar"
 								: " ";
 				}
