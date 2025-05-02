@@ -23,9 +23,8 @@ builder.Services.AddScoped<IRealEstateAgencyService, RealEstateAgencyService>();
 // Auth
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();
 builder.Services.AddScoped<AuthenticationStateProvider>(p=>p.GetRequiredService<ApiAuthenticationStateProvider>());
-builder.Services.AddAuthorizationCore();
 builder.Services.AddTransient<IAuthenticationService, AuthenticationService>();
-
+builder.Services.AddAuthorizationCore();
 
 builder.Services.AddScoped(sp => new HttpClient 
 { 

@@ -1,12 +1,9 @@
 ﻿using System.Net.Http.Json;
-using System.Text.Json.Serialization;
 using Blazored.LocalStorage;
 using FribergHomeClient.Data.Dto;
 using FribergHomeClient.Providers;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using static System.Net.WebRequestMethods;
 
 namespace FribergHomeClient.Services
 {
@@ -34,8 +31,15 @@ namespace FribergHomeClient.Services
 			}
 
 			var content = await response.Content.ReadFromJsonAsync<AuthResponse>();
+			if(content == null)
+			{
+				return false;
+			}
+
 			var token = content.Token;
-			client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", token);
+            var userId = content.UserId;
+			var agentId = content.AgentId;
+			await localStorage.SetItemAsync<int>("AgentId", agentId);
 
 			await localStorage.SetItemAsync("accessToken", token);
 

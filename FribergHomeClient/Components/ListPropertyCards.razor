@@ -1,10 +1,17 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
+@inject NotificationService NotificationService
+@inject IPropertyService PropertyService
 
 @* Author: Glate *@
 @if (Properties == null)
 {
-	<p>Loading...</p>
+	if (string.IsNullOrEmpty(ErrorMessage))
+	{
+		<div style="display: flex; justify-content: center; align-items: center;">
+			<RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Secondary" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+		</div>
+	}
 }
 else
 {
@@ -15,32 +22,31 @@ else
 				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
 					@if (!string.IsNullOrEmpty(Header))
 					{
-							<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
+						<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
 					}
 					<div class="small-card-container rz-my-5">
 
-					@foreach (var p in Properties)
-					{
-						p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
-						<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
-					}
+						@foreach (var p in Properties)
+						{
+							<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
+						}
 					</div>
 				</div>
 			</RadzenColumn>
 		}
 		else
 		{
-			<RadzenColumn SizeSM="12" SizeMD="6">
-
-				@foreach (var p in Properties)
-				{
-					p.Muncipality = Muncipalities.FirstOrDefault(m => m.Id == p.Id).Name;
-					<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
-				}
+			<RadzenColumn SizeSM="8" SizeMD="10" SizeLG="6">
+				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
+					<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
+					@foreach (var p in Properties)
+					{
+						<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
+					}
+				</div>
 			</RadzenColumn>
 		}
 	</RadzenRow>
-
 }
 
 @code {
@@ -50,26 +56,64 @@ else
 	[Parameter]
 	public bool IsCompactView { get; set; } = false;
 
-	// [Parameter]
-	// public bool SmallCardContainer { get; set; } = false; //May be unnecessary. Delete if works without. Stuff.
+	[Parameter]
+	public int? MuncipalityId { get; set; }
 
 	[Parameter]
 	public string Header { get; set; } = ""; //Header for container of properties.
 
-	public List<PropertyDTO> Properties = new List<PropertyDTO>();
-	public List<MuncipalityDTO> Muncipalities = new List<MuncipalityDTO>();
+	public List<PropertyDTO>? Properties;
+	public string ErrorMessage { get; set; } = string.Empty;
+
+
+	protected override async Task OnParametersSetAsync()
+	{
+		await LoadPropertiesAsync();
+	}
 
 	protected override async Task OnInitializedAsync()
 	{
-		Muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
+		await LoadPropertiesAsync();
+	}
 
-		if (Take == 0)
+
+	private async Task LoadPropertiesAsync()
+	{
+		try
 		{
-			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>("api/Properties");
+			string endpoint = MuncipalityId.HasValue //If MuncipalityId has value
+							? $"muncipality/{MuncipalityId}" //endpoint = this
+							: (Take > 0 ? $"latest?take={Take}" : string.Empty); //else this.
+
+			var response = await PropertyService.GetListAsync(endpoint);
+
+			if (response.Success && response.Data != null)
+			{
+				Properties = response.Data;
+				if (string.IsNullOrEmpty(Header))
+				{
+					Header = MuncipalityId.HasValue && Properties.Any()
+							? $"Listningar i {Properties[0].Muncipality}"
+							: MuncipalityId.HasValue
+								? "Inga listningar"
+								: " ";
+				}
+			}
+			else
+			{
+				ErrorMessage = response.Message ?? "Ett fel uppstod";
+				NotificationService.Notify(new NotificationMessage
+					{
+						Severity = NotificationSeverity.Error,
+						Summary = ErrorMessage
+					});
+				Console.WriteLine(ErrorMessage);
+			}
 		}
-		else
+		catch (Exception ex)
 		{
-			Properties = await Http.GetFromJsonAsync<List<PropertyDTO>>($"api/properties/latest?take={Take}");
+			ErrorMessage = $"Ett fel uppstod: {ex.Message}";
+			Console.WriteLine(ErrorMessage);
 		}
 	}
 }
