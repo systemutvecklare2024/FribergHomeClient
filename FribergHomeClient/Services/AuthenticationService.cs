@@ -39,7 +39,6 @@ namespace FribergHomeClient.Services
 			var token = content.Token;
             var userId = content.UserId;
 			var agentId = content.AgentId;
-
 			await localStorage.SetItemAsync<int>("AgentId", agentId);
 
             await localStorage.SetItemAsync("accessToken", token);
