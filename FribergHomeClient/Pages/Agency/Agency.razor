@@ -5,19 +5,20 @@
 @if(agencies == null)
 {
     <p>Loading...</p>
-} else
+}
+else
 {
-    @foreach(var agency in agencies)
+    @foreach (var agency in agencies)
     {
-        <AgencyCard Agency="agency"></AgencyCard>
+        <AgencyCard Name="agency.Name" Presentation="agency.Presentation" LogoUrl="agency.LogoUrl"></AgencyCard>
     }
 }
 
 @code {
     //Call Api fetch RealEstateAgencies
-        List<RealEstateAgencyDTO> agencies;
+    List<RealEstateAgencyDTO> agencies;
     protected override async Task OnInitializedAsync()
     {
-        agencies = await Http.GetFromJsonAsync<List<RealEstateAgencyDTO>>("api/RealEstateAgencies");
+        agencies = await Http.GetFromJsonAsync<List<RealEstateAgencyDTO>>("api/RealEstateAgencies") ?? [];
     }
 }

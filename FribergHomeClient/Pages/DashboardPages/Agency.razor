@@ -1,8 +1,30 @@
 ﻿@page "/dashboard/agency"
 @using FribergHomeClient.Components
+@using FribergHomeClient.Data.Dto
+@using Blazored.LocalStorage
+@inject ILocalStorageService LocalStorage
+@inject HttpClient Http
 
 <h3>Agency</h3>
 
+@if (agentId.HasValue)
+{
+    <AgencyCard Name="agentId.agency.Name" Presentation="agentId.agency.Presentation" LogoUrl="agentId.agency.LogoUrl"></AgencyCard>
+}
+else
+{
+    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+}
+
 @code {
+    private int? agentId;
+    private int? Id;
+    RealEstateAgencyPageDTO? agency { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        agentId = await LocalStorage.GetItemAsync<int>("AgentId");
+        agency = await Http.GetFromJsonAsync<RealEstateAgencyPageDTO>($"api/RealEstateAgencies/{Id}");
+    }
 
 }

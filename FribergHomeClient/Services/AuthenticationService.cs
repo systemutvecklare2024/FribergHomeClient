@@ -42,7 +42,7 @@ namespace FribergHomeClient.Services
 
 			await localStorage.SetItemAsync<int>("AgentId", agentId);
 
-			await localStorage.SetItemAsync("accessToken", token);
+            await localStorage.SetItemAsync("accessToken", token);
 
 			await ((ApiAuthenticationStateProvider)authProvider).LoggedIn();
 
