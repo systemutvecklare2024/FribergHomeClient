@@ -15,26 +15,27 @@
 else
 {
     <RadzenDataGrid TItem="PropertyDTO"
-                    AllowFiltering="true"
-                    AllowColumnResize="true"
-                    AllowAlternatingRows="false"
-                    FilterMode="FilterMode.Advanced"
-                    FilterPopupRenderMode="PopupRenderMode.OnDemand"
-                    AllowSorting="true"
-                    PageSize="20"
-                    AllowPaging="true"
-                    PagerHorizontalAlign="HorizontalAlign.Left"
-                    ShowPagingSummary="true"
-                    Data="@properties"
-                    ColumnWidth="300px"
-                    LogicalFilterOperator="LogicalFilterOperator.Or"
-                    SelectionMode="DataGridSelectionMode.Single"
-                    @bind-Value=@selectedProperties
-                    CellContextMenu="@OnCellContextMenu">
+    AllowFiltering="true"
+    AllowColumnResize="true"
+    AllowAlternatingRows="false"
+    FilterMode="FilterMode.Advanced"
+    FilterPopupRenderMode="PopupRenderMode.OnDemand"
+    AllowSorting="true"
+    PageSize="20"
+    AllowPaging="true"
+    PagerHorizontalAlign="HorizontalAlign.Left"
+    ShowPagingSummary="true"
+    Data="@properties"
+    ColumnWidth="300px"
+    LogicalFilterOperator="LogicalFilterOperator.Or"
+    SelectionMode="DataGridSelectionMode.Single"
+    @bind-Value=@selectedProperties
+    RowRender="@OnRowRender"
+    CellContextMenu="@OnCellContextMenu">
         <Columns>
             <RadzenDataGridColumn Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
                 <Template Context="data">
-                    <RadzenImage Path="@data.ImageUrls.FirstOrDefault().ImgURL" class="rz-gravatar" AlternateText="@(data.Street)" />
+                    <RadzenImage Path="@GetImage(data)" class="rz-gravatar" AlternateText="@(data.Street)" />
                 </Template>
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Title="Typ" Width="100px">
@@ -57,10 +58,23 @@ else
 @code {
     IQueryable<PropertyDTO> properties;
     IList<PropertyDTO> selectedProperties;
+    HashSet<int> removingPropertyIds = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
+        await LoadProperties();
+    }
+
+    private string GetImage(PropertyDTO dto)
+    {
+        return string.IsNullOrWhiteSpace(dto.ImageUrls.FirstOrDefault()?.ImgURL)
+        ? "https://placehold.co/80x60?text=No+Photo"
+        : dto.ImageUrls.FirstOrDefault().ImgURL;
+    }
+
+    private async Task LoadProperties()
+    {
         var res = await PropertyService.GetListAsync("my");
 
         if (!res.Success || res.Data == null)
@@ -70,6 +84,16 @@ else
         }
 
         properties = res.Data.AsQueryable();
+    }
+
+    void OnRowRender(RowRenderEventArgs<PropertyDTO> args)
+    {
+        Console.WriteLine($"Rendering row {args.Data.Id}");
+
+        if(removingPropertyIds.Contains(args.Data.Id.Value))
+        {
+            args.Attributes.Add("class", "rz-data-row fade-out");
+        }
     }
 
     void OnCellContextMenu(DataGridCellMouseEventArgs<PropertyDTO> args)
@@ -140,18 +164,35 @@ else
 
         var result = await DialogService.OpenAsync<ConfirmationDialog>(
             "Bekräftelse borttagning",
-            new Dictionary<string, object>
-                                            {
-                {"Description", "Vill du verkligen ta bort objektet?"},
+            new Dictionary<string, object> {
+                {"Description", $"Vill du verkligen ta bort objektet på {propertyDTO.Street}?"},
                 {"SubmitButtonText", "Ta bort"},
                 {"OnSubmit", async () =>
                 {
+                    DialogService.Close();
                     var result = await PropertyService.DeleteAsync(propertyDTO.Id.Value);
+                    if(!result.Success)
+                    {
+                        Console.WriteLine($"Error: {result.Message}");
+                    } else
+                    {
+
+                        var dtoId = propertyDTO.Id.Value;
+                        removingPropertyIds.Add(dtoId);
+                        StateHasChanged();
+
+                        await Task.Delay(800);
+
+                        // Update the table
+                        properties = properties.Where(p => p.Id != propertyDTO.Id).AsQueryable();
+                        removingPropertyIds.Remove(dtoId);
+                        StateHasChanged();
+                    }
                     return result.Success;
                 }
-                }
-                                            },
+            }
+                                                        },
             new DialogOptions() { Width = "400px", Height = "250px" }
-    );
+        );
     }
 }

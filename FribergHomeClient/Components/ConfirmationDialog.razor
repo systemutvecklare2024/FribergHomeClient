@@ -28,8 +28,9 @@
         {
             try
             {
+                DialogService.Close();
                 var result = await OnSubmit.Invoke();
-
+                
                 if (result)
                 {
                     NotificationService.Notify(new NotificationMessage
@@ -38,7 +39,7 @@
                             Summary = "Klar",
                             Detail = SuccessMessage
                         });
-                    DialogService.Close(true);
+                    
                 }
                 else
                 {

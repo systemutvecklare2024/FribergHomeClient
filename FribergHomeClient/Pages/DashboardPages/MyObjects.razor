@@ -1,11 +1,11 @@
-﻿@page "/dashboard/myobjects"
+﻿@using Microsoft.AspNetCore.Authorization
+@using System.Security.Claims
+
+@page "/dashboard/myobjects"
+@attribute [Authorize(Roles = "Agent")]
 
 @* Author: Christoffer *@
-
 <h3>MyObjects</h3>
 
 <ListMyProperties></ListMyProperties>
 
-@code {
-
-}
