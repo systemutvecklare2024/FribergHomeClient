@@ -25,16 +25,12 @@ namespace FribergHomeClient.Providers
 			var savedToken = await localStorage.GetItemAsync<string>("accessToken");
 			if (savedToken == null)
 			{
-                Console.WriteLine("We have no token hello?");
 				return new AuthenticationState(user);
 			}
-
-            Console.WriteLine($"SavedToken={savedToken}");
 
 			var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(savedToken);
 			if (tokenContent.ValidTo > DateTime.Now)
 			{
-                Console.WriteLine("Token is old as fook");
 				return new AuthenticationState(user);
 			}
 
@@ -42,7 +38,6 @@ namespace FribergHomeClient.Providers
 
 			user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", savedToken);
-            Console.WriteLine("Token is valid, lets authenticate it ffs");
 			return new AuthenticationState(user);
 		}
 
