@@ -1,6 +1,6 @@
 ﻿namespace FribergHomeClient.Data
 {
-
+    //Author:Emelie
     public static class StatusTypes
     {
         public enum StatusType

@@ -3,6 +3,7 @@ using System.Net.Http.Json;
 
 namespace FribergHomeClient.Services
 {
+    //Author:Emelie
     public class AccountService : IAccountService
     {
         private readonly HttpClient _client;

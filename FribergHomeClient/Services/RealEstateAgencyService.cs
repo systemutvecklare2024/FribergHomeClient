@@ -5,13 +5,16 @@ using System.Net.Http.Json;
 
 namespace FribergHomeClient.Services
 {
+    //Author: Emelie
     public class RealEstateAgencyService : IRealEstateAgencyService
     {
         private readonly HttpClient client;
+        private readonly IMapper mapper;
 
-        public RealEstateAgencyService(HttpClient client)
+        public RealEstateAgencyService(HttpClient client, IMapper mapper)
 		{
             this.client = client;
+            this.mapper = mapper;
         }
         public async Task<List<RealEstateAgencyDTO>> GetAll()
         {
@@ -28,26 +31,41 @@ namespace FribergHomeClient.Services
 			}
         }
 
-        public async Task<RealEstateAgencyDTO> GetById(int id)
+        public async Task<RealEstateAgencyPageDTO> GetById(int id)
         {
             try
             {
-                return  await client.GetFromJsonAsync<RealEstateAgencyDTO>($"/api/RealEstateAgencies/{id}");
+                return  await client.GetFromJsonAsync<RealEstateAgencyPageDTO>($"/api/RealEstateAgencies/{id}");
             }
             catch (Exception)
             {
 
-                return new RealEstateAgencyDTO();
+                return new RealEstateAgencyPageDTO();
             }
         }
 
-        public async Task<List<ApplicationViewModel>> GetApplicationViewModels(RealEstateAgencyDTO agencyDTO)
+        public async Task HandleApplication(ApplicationViewModel applicationVM)
+        {
+            try
+            {
+                var dto = mapper.Map<ApplicationDTO>(applicationVM);
+                client.PostAsJsonAsync<ApplicationDTO>($"/api/RealEstateAgencies/{dto.AgencyId}/applications/{dto.Id}", dto);
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public async Task<List<ApplicationViewModel>> GenerateApplicationViewModels(RealEstateAgencyPageDTO agencyDTO) //Should this be async
         {
             List<ApplicationViewModel> applicationViewModels = new List<ApplicationViewModel>();
             
             foreach (var applicationDTO in agencyDTO.Applications)
             {
                 var agent = agencyDTO.Agents.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
+                //var agent1 = GetById(applicationDTO.AgencyId);
 
                 var applicationViewModel = new ApplicationViewModel()
                 {

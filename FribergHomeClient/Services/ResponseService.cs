@@ -1,5 +1,6 @@
 ﻿namespace FribergHomeClient.Services
 {
+    //Author:Emelie
     public class ResponseService<T>
     {
         public bool Success { get; set; } = true;

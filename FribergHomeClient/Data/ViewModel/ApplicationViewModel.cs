@@ -2,6 +2,7 @@
 
 namespace FribergHomeClient.Data.ViewModel
 {
+    //Author:Emelie
     public class ApplicationViewModel
     {
         public int Id { get; set; }

@@ -3,6 +3,8 @@
 @inject NavigationManager NavManager
 @using FribergHomeClient.Data.Dto
 
+@* //Author:Emelie *@
+
 <RadzenTemplateForm Data=@model Submit="@((LoginDTO args) => OnLogin(args))">
     @if (failed && !string.IsNullOrEmpty(errorMessage))
     {

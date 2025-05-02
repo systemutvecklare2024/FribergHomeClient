@@ -1,26 +1,31 @@
-﻿@using FribergHomeClient.Data.ViewModel
+﻿@using FribergHomeClient.Data
+@using FribergHomeClient.Data.ViewModel
+@using static FribergHomeClient.Data.StatusTypes
 @inject IRealEstateAgencyService AgencyService
 
-<h3>ListApplications</h3>
-@if (ApplicationsVM == null)
+@* //Author:Emelie *@
+
+@if (ApplicationViewModels == null)
 {
     <p>Laddar ansökningar...</p>
 }
 else
 {
     <RadzenDataGrid AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
-                    Data="@ApplicationsVM" TItem="ApplicationViewModel">
+                    Data="@ApplicationViewModels" TItem="ApplicationViewModel" ColumnWidth="100px">
         <Columns>
-
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
-
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.CreatedAt)" Title="Skapad" />
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.StatusType)" Title="Status" />
-            <RadzenDataGridColumn Width="160px" >
+            <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
+            <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
+            <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.CreatedAt)" Title="Skapad" />
+            <RadzenDataGridColumn Width="50px" Title="Status">
                 <Template Context="applicationViewModel">
-                    <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {ApproveApplication(applicationViewModel.Id);}) Text="Godkänn" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Info" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {DenyApplication(applicationViewModel.Id);}) Text="Neka" />
+                    @StatusTypes.GetLocalized(applicationViewModel.StatusType)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Width="50px">
+                <Template Context="applicationViewModel">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {ApproveApplication(applicationViewModel);}) Text="Godkänn" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {DenyApplication(applicationViewModel);}) Text="Neka" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -42,32 +47,35 @@ else
 
 @code {
 
-    //[Parameter]
-    //public List<ApplicationDTO> Applications { get; set; } = [];
-
     [Parameter]
-    public List<ApplicationViewModel> ApplicationsVM { get; set; } = [];
+    public List<ApplicationDTO> Applications { get; set; } = [];
 
-    //private ApplicationViewModel selectedApplication = new ApplicationViewModel();
+    public List<ApplicationViewModel> ApplicationViewModels { get; set; } = [];
 
     //Remove this after testing
     protected override async Task OnInitializedAsync()
     {
-        var agency = await AgencyService.GetById(1);
+        var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending);
+        var agency = await AgencyService.GetById(1); //Applications[0].AgencyId ok to use or get i elsewhere?
 
-        ApplicationsVM = await AgencyService.GetApplicationViewModels(agency);
+        ApplicationViewModels = await AgencyService.GenerateApplicationViewModels(agency);
 
 
     }
 
-    private void ApproveApplication(int applicationId)
+    private async void ApproveApplication(ApplicationViewModel applicationVM)
     {
-        Console.Write($"godkänn {applicationId}");
+        applicationVM.StatusType = StatusType.Approved;
+        await AgencyService.HandleApplication(applicationVM); //Recieve Response here later
+
+        Console.WriteLine($"godkänn {applicationVM.StatusType.ToString()}");
+        //ApplicationViewModels.Remove(applicationVM);
     }
 
-    private void DenyApplication(int applicationId)
+    private void DenyApplication(ApplicationViewModel applicationVM)
     {
-        Console.Write($"neka {applicationId}");
+        applicationVM.StatusType = StatusType.Denied;
+        Console.WriteLine($"neka {applicationVM.StatusType.ToString()}");
     }
 
 }
