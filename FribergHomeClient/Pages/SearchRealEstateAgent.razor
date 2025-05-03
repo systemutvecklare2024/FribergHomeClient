@@ -10,13 +10,15 @@
 
 @if (filteredAgents == null || filteredAgents.Count == 0)
 {
+    <div style="text-align:center;">
     <p>Loading...</p>
+    </div>
 }
 else
 {
     @foreach (var agent in filteredAgents)
     {
-        <AgentProfile id="@agent.Id" />
+        <AgentProfile Id="@agent.Id" />
     }
 }
 
@@ -45,7 +47,7 @@ else
                 (a.Agency?.Name?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
             ).ToList();
         }
-        StateHasChanged();
+        
     }
 
 
@@ -53,8 +55,8 @@ else
     private void HandleInputChange(ChangeEventArgs e)
     {
         SearchQuery = e.Value?.ToString() ?? string.Empty;
-        StateHasChanged(); 
-        SearchAgents();    
+        SearchAgents();   
+        StateHasChanged();
     }
 
 
