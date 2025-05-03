@@ -1,35 +1,61 @@
 ﻿@page "/searchrealestateagent"
 @using FribergHomeClient.Components
+@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
 
 <div style="text-align: center;">
-<h3>Sök mäklare eller mäklarfirma</h3>
-<input @bind="searchQuery" />
+    <h3>Sök mäklare eller mäklarfirma</h3>
+    <input value="@SearchQuery" @oninput="@HandleInputChange" />
 </div>
 
-@foreach (var agent in filteredAgents)
+@if (filteredAgents == null || filteredAgents.Count == 0)
 {
-    <AgentProfile agent ="@agent"/>
+    <p>Loading...</p>
+}
+else
+{
+    @foreach (var agent in filteredAgents)
+    {
+        <AgentProfile id="@agent.Id" />
+    }
 }
 
-
-@* Hämta en lista med alla mäklare *@
 @code {
-    private string searchQuery = string.Empty;
-    private string selectedFilter = string.Empty;
-
-    private IEnumerable<RealEstateAgentDTO> filteredAgents => agents
-        .Where(a =>
-            (string.IsNullOrEmpty(searchQuery) ||
-            a.FirstName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-            a.LastName.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ||
-            (a.Agency != null && a.Agency.Name.Contains(searchQuery, StringComparison.OrdinalIgnoreCase))));
-
-
-    private List<RealEstateAgentDTO> agents = new List<RealEstateAgentDTO>();
+    private List<RealEstateAgentDTO> agents;
+    private List<RealEstateAgentDTO> filteredAgents = new List<RealEstateAgentDTO>();
+    private string SearchQuery = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        agents = await Http.GetFromJsonAsync<List<RealEstateAgentDTO>>("api/RealEstateAgents"); 
+        agents = await Http.GetFromJsonAsync<List<RealEstateAgentDTO>>("api/RealEstateAgents");
+        filteredAgents = agents;
     }
+
+    private void SearchAgents()
+    {
+        if (string.IsNullOrEmpty(SearchQuery))
+        {
+            filteredAgents = agents;
+        }
+        else
+        {
+            filteredAgents = agents.Where(a =>
+                (a.FirstName?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.LastName?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.Agency?.Name?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
+            ).ToList();
+        }
+        StateHasChanged();
+    }
+
+
+
+    private void HandleInputChange(ChangeEventArgs e)
+    {
+        SearchQuery = e.Value?.ToString() ?? string.Empty;
+        StateHasChanged(); 
+        SearchAgents();    
+    }
+
+
 }
