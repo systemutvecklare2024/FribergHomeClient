@@ -4,8 +4,9 @@
 @using FribergHomeClient.Data.Dto
 @if(agencies == null)
 {
-    <p>Loading...</p>
-} else
+    <Spinner/>
+}
+else
 {
     @foreach(var agency in agencies)
     {
