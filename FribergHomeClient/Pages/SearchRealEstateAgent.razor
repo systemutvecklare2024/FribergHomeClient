@@ -1,7 +1,63 @@
 ﻿@page "/searchrealestateagent"
+@using FribergHomeClient.Components
+@using FribergHomeClient.Data.Dto
+@inject HttpClient Http
 
-<h3>SearchRealEstateAgent</h3>
+<div style="text-align: center;">
+    <h3>Sök mäklare eller mäklarfirma</h3>
+    <input value="@SearchQuery" @oninput="@HandleInputChange" />
+</div>
+
+@if (filteredAgents == null || filteredAgents.Count == 0)
+{
+    <div style="text-align:center;">
+    <p>Loading...</p>
+    </div>
+}
+else
+{
+    @foreach (var agent in filteredAgents)
+    {
+        <AgentProfile Id="@agent.Id" />
+    }
+}
 
 @code {
+    private List<RealEstateAgentDTO> agents;
+    private List<RealEstateAgentDTO> filteredAgents = new List<RealEstateAgentDTO>();
+    private string SearchQuery = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        agents = await Http.GetFromJsonAsync<List<RealEstateAgentDTO>>("api/RealEstateAgents");
+        filteredAgents = agents;
+    }
+
+    private void SearchAgents()
+    {
+        if (string.IsNullOrEmpty(SearchQuery))
+        {
+            filteredAgents = agents;
+        }
+        else
+        {
+            filteredAgents = agents.Where(a =>
+                (a.FirstName?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.LastName?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.Agency?.Name?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
+            ).ToList();
+        }
+        
+    }
+
+
+
+    private void HandleInputChange(ChangeEventArgs e)
+    {
+        SearchQuery = e.Value?.ToString() ?? string.Empty;
+        SearchAgents();   
+        StateHasChanged();
+    }
+
 
 }
