@@ -4,6 +4,7 @@
 @inject NavigationManager NavManager
 @inject IAccountService accountService
 @inject DialogService DialogService
+@inject NotificationService NotificationService
 
 @* Author: Emelie *@
 
@@ -14,14 +15,14 @@
 else
 {
 	<RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })">
-		@if (!success && !string.IsNullOrEmpty(errorMessage))
-		{
-			<div class=" alert alert-danger">
-				<p>@errorMessage</p>
-			</div>
-		}
 		<RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
-			<RadzenColumn Size="12" SizeMD="4">
+			<RadzenColumn SizeSM="8" SizeMD="6" SizeLG="4">
+				@if (!success && !string.IsNullOrEmpty(errorMessage))
+				{
+					<div class=" alert alert-danger">
+						<p>@errorMessage</p>
+					</div>
+				}
 				<RadzenStack>
 					<RadzenFieldset Text="Användarinformation">
 						<RadzenStack Gap="1rem">
@@ -70,17 +71,13 @@ else
 								</RadzenColumn>
 								<RadzenColumn SizeSM="12" SizeMD="9" Style="justify-content: center;">
 
-									<RadzenRow>
-										<RadzenCard Style="text-align: center; padding: 10px;">
-											<img src="@model.ImageUrl" alt="Image" style="width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
-											<RadzenColumn>
-												<RadzenButton Icon="add" Text="Lägg till" Click="@(() => OpenImageDialog())" Style="margin-left: 1rem;" />
-												<RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger" Click="@(() => RemoveImage())" Style="margin-left: 1rem;" />
-
-											</RadzenColumn>
-
-										</RadzenCard>
-									</RadzenRow>
+									<RadzenCard Style="text-align: center; padding: 10px; display: flex; align-items: center; justify-content: center;">
+										<img src="@model.ImageUrl" alt="Image" style="max-width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
+										<RadzenColumn Style="display: flex; flex-direction: column; align-items: center; margin-left: 1rem;">
+											<RadzenButton Icon="add" Text="Lägg till" Click="@(() => OpenImageDialog())" class="rz-my-2" />
+											<RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger" Click="@(() => RemoveImage())" class="rz-my-2" />
+										</RadzenColumn>
+									</RadzenCard>
 
 								</RadzenColumn>
 							</RadzenRow>
@@ -122,6 +119,7 @@ else
 
 	private AccountDTO model = new();
 	private string errorMessage = string.Empty;
+	private List<ValidationProblemDetails> ProblemDetails = new();
 	private bool success;
 	private string defaultImage = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
 
@@ -139,7 +137,19 @@ else
 		}
 		else
 		{
+			ProblemDetails = response.ProblemDetails;
 			errorMessage = response.Message;
+
+			foreach (var s in ProblemDetails)
+			{
+				NotificationService.Notify(new NotificationMessage
+					{
+						Severity = NotificationSeverity.Error,
+						Summary = s.Key,
+						Detail = s.Value
+					});
+			}
+			StateHasChanged();
 		}
 	}
 
@@ -167,7 +177,7 @@ else
 		var result = await DialogService.OpenAsync<UploadImageDialog>(
 			"Lägg till profilbild",
 			parameters,
-			new DialogOptions() { Width = "30rem", Height = "30rem" });
+			new DialogOptions() { Width = "25rem", Height = "30rem" });
 
 		if (result != null)
 		{
