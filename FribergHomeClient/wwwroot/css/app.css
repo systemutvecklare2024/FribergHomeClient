@@ -166,3 +166,19 @@ code {
 		border-top-left-radius: 0 !important;
 	}
 }
+
+tr.rz-data-row.fade-out {
+	animation: fadeAndShrink 0.8s ease-out forwards;
+}
+
+@keyframes fadeAndShrink {
+	from {
+		opacity: 1;
+		height: auto;
+	}
+
+	to {
+		opacity: 0;
+		height: 0;
+	}
+}
