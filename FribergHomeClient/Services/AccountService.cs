@@ -28,21 +28,7 @@ namespace FribergHomeClient.Services
 				}
 
 				//If not successful status code:
-				var errorContent = await result.Content.ReadAsStringAsync();
-
-				Dictionary<string, List<string>> errorDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(errorContent);
-
-				List<ValidationProblemDetails> problemDetails = new List<ValidationProblemDetails>();
-
-				foreach (var p in errorDictionary)
-				{
-					ValidationProblemDetails validationProblemDetails = new ValidationProblemDetails()
-					{
-						Key = p.Key,
-						Value = p.Value[0]
-					};
-					problemDetails.Add(validationProblemDetails);
-				}
+				List<ValidationProblemDetails> problemDetails = await HttpClientService.GetValidationProblemsAsync(result);
 
 				return new ResponseService<AccountDTO>
 				{
@@ -50,19 +36,6 @@ namespace FribergHomeClient.Services
 					Message = $"Något gick fel vid registrering: {result.ReasonPhrase}",
 					ProblemDetails = problemDetails
 				};
-
-				//var response = new ResponseService<AccountDTO>();
-				//response.Success = false;
-				//response.Message = $"Något gick fel vid registrering: {result.ReasonPhrase}";
-				//response.ProblemDetails = problemDetails;
-				//return response;
-
-				//return new ResponseService<AccountDTO>
-				//{
-				//	Success = false,
-				//	Message = $"Något gick fel vid registrering: {result.Content.ReadAsStringAsync()}",
-				//	ValidationProblemDetails = problemDetails
-				//};
 			}
 			// Check status code, throw exceptions
 			catch (Exception ex)
