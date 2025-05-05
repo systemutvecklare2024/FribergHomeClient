@@ -63,7 +63,11 @@
         }
         else
         {
-            selectedMuncipality = lastValidMunicipalityName;
+            // selectedMuncipality = lastValidMunicipalityName;
+            //TODO: Förstör den här nånting? Dubbelkolla innan push
+            selectedMuncipality = string.Empty;
+            SelectedMunicipalityId = 0; // Assuming 0 means no municipality is selected
+            await SelectedMunicipalityIdChanged.InvokeAsync(0);
         }
     }
 

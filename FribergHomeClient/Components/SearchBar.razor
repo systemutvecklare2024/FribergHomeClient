@@ -14,12 +14,12 @@
 			</RadzenStack>
 			<RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" Click="OnSearch" />
 
-			@if (!string.IsNullOrEmpty(Message))
+@* 			@if (!string.IsNullOrEmpty(Message))
 			{
 				<RadzenAlert AllowClose="false" AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter ">
 					<RadzenText TextStyle="TextStyle.Body2" class="rz-m-0">@Message</RadzenText>
 				</RadzenAlert>
-			}
+			} *@
 		</div>
 	</RadzenColumn>
 </RadzenRow>
@@ -41,14 +41,14 @@
 
 	private async Task OnSearch()
 	{
-		if (MuncipalityId == 0)
-		{
-			Message = "Du måste välja kommun";
-		}
-		else
-		{
+		// if (MuncipalityId == 0)
+		// {
+		// 	Message = "Du måste välja kommun";
+		// }
+		// else
+		// {
 			await OnSearchMuncipality.InvokeAsync(MuncipalityId);
 			StateHasChanged(); //Updates UI
-		}
+		// }
 	}
 }
