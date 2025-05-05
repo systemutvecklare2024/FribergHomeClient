@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
-using Newtonsoft.Json.Linq;
 
 namespace FribergHomeClient.Providers
 {
@@ -29,9 +28,10 @@ namespace FribergHomeClient.Providers
 			}
 
 			var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(savedToken);
-			if (tokenContent.ValidTo > DateTime.Now)
+			if (tokenContent.ValidTo < DateTime.UtcNow)
 			{
-				return new AuthenticationState(user);
+				await LoggedOut();
+				return new AuthenticationState(new ClaimsPrincipal(new ClaimsIdentity()));
 			}
 
 			var claims = GetClaims(tokenContent);
@@ -54,16 +54,19 @@ namespace FribergHomeClient.Providers
 			var tokenContent = jwtSecurityTokenHandler.ReadJwtToken(savedToken);
 			var claims = GetClaims(tokenContent);
 			var user = new ClaimsPrincipal(new ClaimsIdentity(claims, "jwt"));
+            client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", savedToken);
 
-			var authState = Task.FromResult(new AuthenticationState(user));
+            var authState = Task.FromResult(new AuthenticationState(user));
             NotifyAuthenticationStateChanged(authState);
 		}
 
 		public async Task LoggedOut()
 		{
 			await localStorage.RemoveItemAsync("accessToken");
+            client.DefaultRequestHeaders.Clear();
+            await localStorage.RemoveItemAsync("AgentId");
 
-			var hellUserDestroyed = new ClaimsPrincipal(new ClaimsIdentity());
+            var hellUserDestroyed = new ClaimsPrincipal(new ClaimsIdentity());
 			var authState = Task.FromResult(new AuthenticationState(hellUserDestroyed));
 			NotifyAuthenticationStateChanged(authState);
 		}
