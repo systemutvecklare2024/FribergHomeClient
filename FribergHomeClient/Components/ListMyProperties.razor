@@ -1,0 +1,198 @@
+﻿@using FribergHomeClient.Data
+@using static FribergHomeClient.Data.PropertyTypes
+@inject HttpClient Http
+@inject NotificationService NotificationService
+@inject ContextMenuService ContextMenuService
+@inject NavigationManager NavigationManager
+@inject DialogService DialogService
+@inject IPropertyService PropertyService
+
+
+@if (properties == null)
+{
+    <Spinner />
+}
+else
+{
+    <RadzenDataGrid TItem="PropertyDTO"
+    AllowFiltering="true"
+    AllowColumnResize="true"
+    AllowAlternatingRows="false"
+    FilterMode="FilterMode.Advanced"
+    FilterPopupRenderMode="PopupRenderMode.OnDemand"
+    AllowSorting="true"
+    PageSize="20"
+    AllowPaging="true"
+    PagerHorizontalAlign="HorizontalAlign.Left"
+    ShowPagingSummary="true"
+    Data="@properties"
+    ColumnWidth="300px"
+    LogicalFilterOperator="LogicalFilterOperator.Or"
+    SelectionMode="DataGridSelectionMode.Single"
+    @bind-Value=@selectedProperties
+    RowRender="@OnRowRender"
+    CellContextMenu="@OnCellContextMenu">
+        <Columns>
+            <RadzenDataGridColumn Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
+                <Template Context="data">
+                    <RadzenImage Path="@GetImage(data)" class="rz-gravatar" AlternateText="@(data.Street)" />
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Title="Typ" Width="100px">
+                <Template Context="property">
+                    @GetPropertyTypeDisplayName(property.PropertyType)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Property="@nameof(PropertyDTO.ListingPrice)" Title="Pris" Width="120px" />
+            <RadzenDataGridColumn Property="@nameof(PropertyDTO.Street)" Title="Adress" Frozen="true" Width="160px" />
+            <RadzenDataGridColumn Property="@nameof(PropertyDTO.City)" Title="Ort" Width="120px" />
+            <RadzenDataGridColumn Property="@nameof(PropertyDTO.PostalCode)" Title="Post nummer" Width="80px" />
+            <RadzenDataGridColumn Property="@nameof(PropertyDTO.YearBuilt)" Title="Byggår" Width="120px" />
+            <RadzenDataGridColumn Property="@nameof(PropertyDTO.LivingSpace)" Title="Boarea" Width="80px" />
+            <RadzenDataGridColumn Property="@nameof(PropertyDTO.NumberOfRooms)" Title="Rum" Width="80px" />
+        </Columns>
+    </RadzenDataGrid>
+}
+
+
+@code {
+    IQueryable<PropertyDTO> properties;
+    IList<PropertyDTO> selectedProperties;
+    HashSet<int> removingPropertyIds = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        await LoadProperties();
+    }
+
+    private string GetImage(PropertyDTO dto)
+    {
+        return string.IsNullOrWhiteSpace(dto.ImageUrls.FirstOrDefault()?.ImgURL)
+        ? "https://placehold.co/80x60?text=No+Photo"
+        : dto.ImageUrls.FirstOrDefault().ImgURL;
+    }
+
+    private async Task LoadProperties()
+    {
+        var res = await PropertyService.GetListAsync("my");
+
+        if (!res.Success || res.Data == null)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta dina bostäder, försök igen");
+            return;
+        }
+
+        properties = res.Data.AsQueryable();
+    }
+
+    void OnRowRender(RowRenderEventArgs<PropertyDTO> args)
+    {
+        Console.WriteLine($"Rendering row {args.Data.Id}");
+
+        if(removingPropertyIds.Contains(args.Data.Id.Value))
+        {
+            args.Attributes.Add("class", "rz-data-row fade-out");
+        }
+    }
+
+    void OnCellContextMenu(DataGridCellMouseEventArgs<PropertyDTO> args)
+    {
+        selectedProperties = new List<PropertyDTO> { args.Data };
+
+        var actions = new Dictionary<int, Action>
+        {
+            {
+                1, () =>
+                {
+                    ContextMenuService.Close();
+                    NavigationManager.NavigateTo($"/properties/{args.Data.Id}/details");
+                }
+            },
+            {
+                2, () =>
+                {
+                    ContextMenuService.Close();
+                    NavigationManager.NavigateTo($"/dashboard/editproperty/{args.Data.Id}");
+                }
+            },
+            {
+                3, async () =>
+                {
+                    ContextMenuService.Close();
+                    await ShowDeleteDialog(args.Data);
+
+                }
+            }
+        };
+
+        ContextMenuService.Open(args, new List<ContextMenuItem> {
+            new ContextMenuItem() { Text = "Detaljer", Value = 1, Icon = "visibility"},
+            new ContextMenuItem() { Text = "Ändra", Value = 2, Icon = "edit"},
+            new ContextMenuItem() { Text = "Ta Bort", Value = 3, Icon = "delete"}
+        },
+        (e) =>
+        {
+            if (actions.TryGetValue(Convert.ToInt32(e.Value), out var action))
+            {
+                action.Invoke();
+            }
+            else
+            {
+                Console.WriteLine("Det här blev inte bra");
+            }
+        });
+    }
+
+    private string GetPropertyTypeDisplayName(PropertyType type)
+    {
+        return PropertyTypes.GetLocalized(type);
+    }
+
+    async Task ShowDeleteDialog(PropertyDTO propertyDTO)
+    {
+        if (propertyDTO == null || propertyDTO.Id == null)
+        {
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Det sket sig",
+                    Detail = "Det här blev inte bra"
+                });
+            return;
+        }
+
+        var result = await DialogService.OpenAsync<ConfirmationDialog>(
+            "Bekräftelse borttagning",
+            new Dictionary<string, object> {
+                {"Description", $"Vill du verkligen ta bort objektet på {propertyDTO.Street}?"},
+                {"SubmitButtonText", "Ta bort"},
+                {"OnSubmit", async () =>
+                {
+                    DialogService.Close();
+                    var result = await PropertyService.DeleteAsync(propertyDTO.Id.Value);
+                    if(!result.Success)
+                    {
+                        Console.WriteLine($"Error: {result.Message}");
+                    } else
+                    {
+
+                        var dtoId = propertyDTO.Id.Value;
+                        removingPropertyIds.Add(dtoId);
+                        StateHasChanged();
+
+                        await Task.Delay(800);
+
+                        // Update the table
+                        properties = properties.Where(p => p.Id != propertyDTO.Id).AsQueryable();
+                        removingPropertyIds.Remove(dtoId);
+                        StateHasChanged();
+                    }
+                    return result.Success;
+                }
+            }
+                                                        },
+            new DialogOptions() { Width = "400px", Height = "250px" }
+        );
+    }
+}
