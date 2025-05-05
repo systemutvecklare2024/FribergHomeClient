@@ -63,11 +63,9 @@
         }
         else
         {
-            // selectedMuncipality = lastValidMunicipalityName;
-            //TODO: Förstör den här nånting? Dubbelkolla innan push
             selectedMuncipality = string.Empty;
-            SelectedMunicipalityId = 0; // Assuming 0 means no municipality is selected
-            await SelectedMunicipalityIdChanged.InvokeAsync(0);
+            SelectedMunicipalityId = 0; //0 == No municipality selected
+            await SelectedMunicipalityIdChanged.InvokeAsync(0); //Returns 0 to the eventcallback (No municipality selected).
         }
     }
 
