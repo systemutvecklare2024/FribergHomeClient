@@ -3,35 +3,42 @@
 @inject NavigationManager NavManager
 @using FribergHomeClient.Data.Dto
 
-<RadzenTemplateForm Data=@model Submit="@((LoginDTO args) => OnLogin(args))">
-    @if (failed && !string.IsNullOrEmpty(errorMessage))
-    {
-        <div class=" alert alert-danger">
-            <p>@errorMessage</p>
-        </div>
-    }
-    <RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
-        <RadzenColumn Size="12" SizeMD="3">
+<PageTitle>Logga in</PageTitle>
+
+<Panel Title="Logga in">
+    <RadzenTemplateForm Data=@model Submit="@((LoginDTO args) => OnLogin(args))">
+        @if (failed && !string.IsNullOrEmpty(errorMessage))
+        {
+            <div class=" alert alert-danger">
+                <p>@errorMessage</p>
+            </div>
+        }
+        <RadzenStack class="rz-mb-3" Gap="0.5rem" >
             <RadzenLabel Text="E-post" />
-            <RadzenTextBox @bind-Value="@model.Email" Name="Email" Style="width:100%" />
-            <RadzenColumn Size="12" SizeMD="3">
-                <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
-                <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
-            </RadzenColumn>
+            <RadzenTextBox @bind-Value="@model.Email" Name="Email" />
+            <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
+            <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
+        </RadzenStack>
+
+        <RadzenStack class="rz-mb-3" Gap="0.5rem">
             <RadzenLabel Text="Lösenord" />
-            <RadzenPassword @bind-Value="@model.Password" Name="Password" Style="width:100%" />
-            <RadzenColumn Size="12" SizeMD="3">
-                <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
-            </RadzenColumn>
-            <RadzenColumn Size="12" SizeMD="3">
-                <RadzenButton Text="Logga in" ButtonType="ButtonType.Submit" Style="margin-top:10px; margin-right:10px" />
-                <RadzenButton ButtonStyle="ButtonStyle.Light" Size="ButtonSize.Medium" Text="Registrera konto" Click="@OnRegister" />
-            </RadzenColumn>
-        </RadzenColumn>
-    </RadzenRow>
-</RadzenTemplateForm>
+            <RadzenPassword @bind-Value="@model.Password" Name="Password" Style="width:100%;" />
+            <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
+        </RadzenStack>
 
 
+        <RadzenRow class="rz-mt-4">
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenButton Text="Logga in" ButtonType="ButtonType.Submit" Style="width: 100%;" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+                <RadzenButton ButtonStyle="ButtonStyle.Light" Style="width: 100%;" Text="Registrera konto" Click="@OnRegister" />
+            </RadzenColumn>
+        </RadzenRow>
+
+
+    </RadzenTemplateForm>
+</Panel>
 
 @code {
 
