@@ -1,6 +1,4 @@
-﻿using static System.Net.Mime.MediaTypeNames;
-
-namespace FribergHomeClient.Data.Dto
+﻿namespace FribergHomeClient.Data.Dto
 {
     public class RealEstateAgencyPageDTO
     {

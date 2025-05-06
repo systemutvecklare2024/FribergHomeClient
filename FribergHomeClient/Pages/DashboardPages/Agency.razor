@@ -7,9 +7,9 @@
 
 <h3>Agency</h3>
 
-@if (agentId.HasValue)
+@if (agency != null)
 {
-    <AgencyCard Name="agentId.agency.Name" Presentation="agentId.agency.Presentation" LogoUrl="agentId.agency.LogoUrl"></AgencyCard>
+    <AgencyCard Name="@agency.Name" Presentation="@agency.Presentation" LogoUrl="@agency.LogoUrl"></AgencyCard>
 }
 else
 {
@@ -17,14 +17,11 @@ else
 }
 
 @code {
-    private int? agentId;
-    private int? Id;
     RealEstateAgencyPageDTO? agency { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        agentId = await LocalStorage.GetItemAsync<int>("AgentId");
-        agency = await Http.GetFromJsonAsync<RealEstateAgencyPageDTO>($"api/RealEstateAgencies/{Id}");
+        agency = await Http.GetFromJsonAsync<RealEstateAgencyPageDTO>($"api/RealEstateAgencies/My");
     }
 
 }

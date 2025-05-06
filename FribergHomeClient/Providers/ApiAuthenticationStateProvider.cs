@@ -63,8 +63,10 @@ namespace FribergHomeClient.Providers
 		public async Task LoggedOut()
 		{
 			await localStorage.RemoveItemAsync("accessToken");
+            client.DefaultRequestHeaders.Clear();
+            await localStorage.RemoveItemAsync("AgentId");
 
-			var hellUserDestroyed = new ClaimsPrincipal(new ClaimsIdentity());
+            var hellUserDestroyed = new ClaimsPrincipal(new ClaimsIdentity());
 			var authState = Task.FromResult(new AuthenticationState(hellUserDestroyed));
 			NotifyAuthenticationStateChanged(authState);
 		}

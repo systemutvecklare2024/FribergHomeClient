@@ -1,0 +1,66 @@
+﻿@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<div class="rz-dialog-content rz-p-4">
+    <h4>@Description</h4>
+    <div class="rz-mt-4 rz-text-align-right">
+        <RadzenButton Text="Avbryt" ButtonStyle="ButtonStyle.Light" Click="@(() => DialogService.Close(false))" class="rz-mr-2" />
+        <RadzenButton Text="@SubmitButtonText" ButtonStyle="ButtonStyle.Danger" Click="@HandleSubmit" />
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string Description { get; set; }
+
+    [Parameter]
+    public string SubmitButtonText { get; set; }
+
+    [Parameter]
+    public string SuccessMessage { get; set; } = "Åtgärden slutfördes.";
+
+    [Parameter]
+    public Func<Task<bool>>? OnSubmit { get; set; }
+
+    private async Task HandleSubmit()
+    {
+        if (OnSubmit is not null)
+        {
+            try
+            {
+                DialogService.Close();
+                var result = await OnSubmit.Invoke();
+                
+                if (result)
+                {
+                    NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Success,
+                            Summary = "Klar",
+                            Detail = SuccessMessage
+                        });
+                    
+                }
+                else
+                {
+                    NotificationService.Notify(new NotificationMessage
+                        {
+                            Severity = NotificationSeverity.Error,
+                            Summary = "Fel",
+                            Detail = "Åtgärden misslyckades."
+                        });
+                }
+            }
+            catch (Exception ex)
+            {
+                NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = "Fel",
+                        Detail = $"Ett fel uppstod: {ex.Message}"
+                    });
+            }
+        }
+
+    }
+}

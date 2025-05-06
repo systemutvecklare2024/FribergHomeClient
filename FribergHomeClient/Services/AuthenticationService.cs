@@ -39,7 +39,6 @@ namespace FribergHomeClient.Services
 			var token = content.Token;
             var userId = content.UserId;
 			var agentId = content.AgentId;
-
 			await localStorage.SetItemAsync<int>("AgentId", agentId);
 
             await localStorage.SetItemAsync("accessToken", token);
@@ -51,9 +50,6 @@ namespace FribergHomeClient.Services
 
 		public async Task Logout()
 		{
-			client.DefaultRequestHeaders.Clear(); //Deletes token from HttpClient header
-			await localStorage.RemoveItemAsync("accessToken"); //Deletes token from local storage
-            await localStorage.RemoveItemAsync("AgentId");
             await ((ApiAuthenticationStateProvider)authProvider).LoggedOut();
 		}
 	}
