@@ -85,7 +85,7 @@ namespace FribergHomeClient.Services
             }
             catch (Exception ex)
             {
-                return new ServiceResponse { Success = false, Message =  ex.Message };
+                return new ServiceResponse { Success = false, Message = ex.Message };
             }
         }
 
