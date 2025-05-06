@@ -55,6 +55,7 @@ else
     {        
         var agency = await AgencyService.GetById(1); //Remove when implemented i AgencyCard
         Applications = agency.Applications; //Remove when implemented i AgencyCard
+        Console.WriteLine(Applications[0].AgentId);
         var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending).ToList();
 
         ApplicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications);

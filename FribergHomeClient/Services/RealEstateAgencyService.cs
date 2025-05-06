@@ -36,12 +36,13 @@ namespace FribergHomeClient.Services
         {
             try
             {
+                Console.WriteLine("Hamnar i try");
                 return  await client.GetFromJsonAsync<RealEstateAgencyPageDTO>($"/api/RealEstateAgencies/{id}");
                 //Handle response here
             }
             catch (Exception)
             {
-
+                Console.WriteLine("Hamnar i catch");
                 return new RealEstateAgencyPageDTO();
             }
         }
@@ -89,11 +90,13 @@ namespace FribergHomeClient.Services
                 var agencyDTO = await GetById(applicationDTO.AgencyId);
                 if(agencyDTO == null)
                 {
+                    Console.WriteLine("AgencyDTO är null");
                     return new List<ApplicationViewModel>(); //What to do here?
                 }
                 var agent = agencyDTO.Agents.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
                 if(agent == null)
                 {
+                    Console.WriteLine("Agent är null");
                     return new List<ApplicationViewModel>(); //What to do here?
                 }
 
