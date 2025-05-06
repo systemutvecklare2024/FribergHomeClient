@@ -11,7 +11,7 @@ namespace FribergHomeClient.Services
         {
             _client = client;
         }
-        public async Task<ResponseService<AccountDTO>> RegisterAccount(AccountDTO accountDTO)
+        public async Task<ServiceResponse<AccountDTO>> RegisterAccount(AccountDTO accountDTO)
         {
             try
             {
@@ -20,10 +20,10 @@ namespace FribergHomeClient.Services
                 if (result.IsSuccessStatusCode)
                 {
                     var account = await result.Content.ReadFromJsonAsync<AccountDTO>();
-                    return new ResponseService<AccountDTO> { Data = account };
+                    return new ServiceResponse<AccountDTO> { Data = account };
                 }
 
-                return new ResponseService<AccountDTO>
+                return new ServiceResponse<AccountDTO>
                 {
                     Success = false,
                     Message = $"Något gick fel vid registrering: {result.ReasonPhrase}"
@@ -33,7 +33,7 @@ namespace FribergHomeClient.Services
             catch (Exception ex)
             {
 
-                return new ResponseService<AccountDTO>
+                return new ServiceResponse<AccountDTO>
                 {
                     Success = false,
                     Message = $"Undantag: {ex.Message}"

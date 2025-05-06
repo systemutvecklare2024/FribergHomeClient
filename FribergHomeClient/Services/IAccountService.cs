@@ -4,6 +4,6 @@ namespace FribergHomeClient.Services
 {
     public interface IAccountService
     {
-        Task<ResponseService<AccountDTO>> RegisterAccount(AccountDTO accountDTO);
+        Task<ServiceResponse<AccountDTO>> RegisterAccount(AccountDTO accountDTO);
     }
 }
