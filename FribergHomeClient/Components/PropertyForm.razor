@@ -165,7 +165,13 @@
     private async Task HandleSubmit(PropertyDTO dto)
     {
         dto.ImageUrls = Property.ImageUrls;
-
+        if (dto.ImageUrls.Count == 0)
+        {
+            dto.ImageUrls.Add(new PropertyImageDTO
+                {
+                    ImgURL = "https://placehold.co/80x60?text=No+Photo"
+                });
+        }
         if (OnSubmit.HasDelegate)
         {
             await OnSubmit.InvokeAsync(dto);
