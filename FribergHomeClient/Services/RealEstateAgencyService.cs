@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FribergHomeClient.Data.Dto;
 using FribergHomeClient.Data.ViewModel;
+using Radzen;
 using System.Net.Http.Json;
 
 namespace FribergHomeClient.Services
@@ -36,6 +37,7 @@ namespace FribergHomeClient.Services
             try
             {
                 return  await client.GetFromJsonAsync<RealEstateAgencyPageDTO>($"/api/RealEstateAgencies/{id}");
+                //Handle response here
             }
             catch (Exception)
             {
@@ -44,40 +46,63 @@ namespace FribergHomeClient.Services
             }
         }
 
-        public async Task HandleApplication(ApplicationViewModel applicationVM)
+        public async Task<ResponseService<bool>> HandleApplication(ApplicationViewModel applicationVM)
         {
             try
             {
                 var dto = mapper.Map<ApplicationDTO>(applicationVM);
-                client.PostAsJsonAsync<ApplicationDTO>($"/api/RealEstateAgencies/{dto.AgencyId}/applications/{dto.Id}", dto);
+                var response = await client.PostAsJsonAsync<ApplicationDTO>($"/api/RealEstateAgencies/{dto.AgencyId}/applications/{dto.Id}", dto);
+                if (response.IsSuccessStatusCode)
+                {
+                    var result = new ResponseService<bool>()
+                    {
+                        Success = true,
+                        Message = response.ReasonPhrase ?? ""
+                    };
+                    return result;
+                }
+
+                return new ResponseService<bool>()
+                {
+                    Success = false,
+                    Message = response.ReasonPhrase ?? ""
+                };
+
             }
-            catch (Exception)
+            catch (HttpRequestException ex)
             {
 
-                throw;
+                return new ResponseService<bool>()
+                {
+                    Success = false,
+                    Message = $"Något gick fel:{ex.Message}" ?? ""
+                };
             }
         }
 
-        public async Task<List<ApplicationViewModel>> GenerateApplicationViewModels(RealEstateAgencyPageDTO agencyDTO) //Should this be async
+        public async Task<List<ApplicationViewModel>> GenerateApplicationViewModels(List<ApplicationDTO> applicationDTOs) //Should this be async
         {
             List<ApplicationViewModel> applicationViewModels = new List<ApplicationViewModel>();
             
-            foreach (var applicationDTO in agencyDTO.Applications)
+            foreach (var applicationDTO in applicationDTOs)
             {
-                var agent = agencyDTO.Agents.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
-                //var agent1 = GetById(applicationDTO.AgencyId);
-
-                var applicationViewModel = new ApplicationViewModel()
+                var agencyDTO = await GetById(applicationDTO.AgencyId);
+                if(agencyDTO == null)
                 {
-                    Id = applicationDTO.Id,
-                    AgentId = applicationDTO.AgentId,
-                    FirstName = agent.FirstName,
-                    LastName = agent.LastName,
-                    CreatedAt = applicationDTO.CreatedAt,
-                    StatusType = applicationDTO.StatusType,
-                    AgencyId = applicationDTO.AgencyId
+                    return new List<ApplicationViewModel>(); //What to do here?
+                }
+                var agent = agencyDTO.Agents.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
+                if(agent == null)
+                {
+                    return new List<ApplicationViewModel>(); //What to do here?
+                }
 
-                };
+                var applicationViewModel = mapper.Map<ApplicationViewModel>(applicationDTO);
+
+                applicationViewModel.FirstName = agent.FirstName;
+                applicationViewModel.LastName = agent.LastName;
+
+
                 applicationViewModels.Add(applicationViewModel);
             }
             return applicationViewModels;

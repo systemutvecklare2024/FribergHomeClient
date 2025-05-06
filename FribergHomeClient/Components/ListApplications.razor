@@ -2,6 +2,7 @@
 @using FribergHomeClient.Data.ViewModel
 @using static FribergHomeClient.Data.StatusTypes
 @inject IRealEstateAgencyService AgencyService
+@inject NotificationService NotificationService
 
 @* //Author:Emelie *@
 
@@ -11,6 +12,13 @@
 }
 else
 {
+    @if (!success && !string.IsNullOrEmpty(errorMessage))
+    {
+        <RadzenAlert Style="AlertStyle.Danger">
+            @errorMessage
+        </RadzenAlert>
+    }
+
     <RadzenDataGrid AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
                     Data="@ApplicationViewModels" TItem="ApplicationViewModel" ColumnWidth="100px">
         <Columns>
@@ -24,25 +32,12 @@ else
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="50px">
                 <Template Context="applicationViewModel">
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {ApproveApplication(applicationViewModel);}) Text="Godkänn" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(() => {DenyApplication(applicationViewModel);}) Text="Neka" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(async () => await ApproveApplication(applicationViewModel)) Text="Godkänn" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(async () => await DenyApplication(applicationViewModel)) Text="Neka" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
     </RadzenDataGrid>
-
-    @* <RadzenDataGrid AllowFiltering="true" AllowColumnResize="true" AllowAlternatingRows="false" FilterMode="FilterMode.Advanced" AllowSorting="true" PageSize="5" AllowPaging="true" PagerHorizontalAlign="HorizontalAlign.Left" ShowPagingSummary="true"
-                    Data="@ApplicationsVM" ColumnWidth="300px" LogicalFilterOperator="LogicalFilterOperator.Or" SelectionMode="DataGridSelectionMode.Single" @bind-Value=@selectedApplication>
-        <Columns>
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.FirstName)" Filterable="false" Title="Förnamn" Frozen="true" Width="80px" TextAlign="TextAlign.Center" />
-            <RadzenDataGridColumn Title="Photo" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
-            </RadzenDataGridColumn>
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" Frozen="true" Width="160px" />
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.LastName)" Title="Last Name" Width="160px" />
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.CreatedAt)" Title="Ansökningsdatum" Width="200px" />
-            <RadzenDataGridColumn Property="@nameof(ApplicationViewModel.StatusType)" Title="Status" Width="120px" />
-        </Columns>
-    </RadzenDataGrid> *@
 }
 
 @code {
@@ -52,30 +47,59 @@ else
 
     public List<ApplicationViewModel> ApplicationViewModels { get; set; } = [];
 
-    //Remove this after testing
+    private bool success = false;
+    private string errorMessage = string.Empty;
+
+
     protected override async Task OnInitializedAsync()
-    {
-        var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending);
-        var agency = await AgencyService.GetById(1); //Applications[0].AgencyId ok to use or get i elsewhere?
+    {        
+        var agency = await AgencyService.GetById(1); //Remove when implemented i AgencyCard
+        Applications = agency.Applications; //Remove when implemented i AgencyCard
+        var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending).ToList();
 
-        ApplicationViewModels = await AgencyService.GenerateApplicationViewModels(agency);
-
-
+        ApplicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications);
     }
 
-    private async void ApproveApplication(ApplicationViewModel applicationVM)
+    private async Task ApproveApplication(ApplicationViewModel applicationVM)
     {
         applicationVM.StatusType = StatusType.Approved;
-        await AgencyService.HandleApplication(applicationVM); //Recieve Response here later
-
-        Console.WriteLine($"godkänn {applicationVM.StatusType.ToString()}");
-        //ApplicationViewModels.Remove(applicationVM);
+        var result = await AgencyService.HandleApplication(applicationVM);
+        success = result.Success;
+        if (!success)
+        {
+            errorMessage = result.Message;
+            return;
+        }
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Success,
+                Summary = "Godkänd",
+                Detail = "Du har nu godkänt ansökan"
+            });
+        ApplicationViewModels.Remove(applicationVM);
+        StateHasChanged();
     }
 
-    private void DenyApplication(ApplicationViewModel applicationVM)
+    private async Task DenyApplication(ApplicationViewModel applicationVM)
     {
         applicationVM.StatusType = StatusType.Denied;
-        Console.WriteLine($"neka {applicationVM.StatusType.ToString()}");
+        var result = await AgencyService.HandleApplication(applicationVM);
+        success = result.Success;
+        if (!success)
+        {
+            errorMessage = result.Message;
+            return;
+        }
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Info,
+                Summary = "Nekad",
+                Detail = "Du har nu nekat ansökan"
+            });
+        ApplicationViewModels.Remove(applicationVM);
+        StateHasChanged();
+
+
     }
 
 }
