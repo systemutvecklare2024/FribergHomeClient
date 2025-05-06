@@ -2,9 +2,8 @@
 
 namespace FribergHomeClient.Services
 {
-	public class HttpClientService
+	public class BengelService
 	{
-
 		public static async Task<List<ValidationProblemDetails>> GetValidationProblemsAsync(HttpResponseMessage response)
 		{
 			var errorContent = await response.Content.ReadAsStringAsync();
@@ -14,14 +13,17 @@ namespace FribergHomeClient.Services
 			{
 				Dictionary<string, List<string>> errorDictionary = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(errorContent);
 
-				foreach (var p in errorDictionary)
+				if (errorDictionary != null)
 				{
-					ValidationProblemDetails validationProblemDetails = new ValidationProblemDetails()
+					foreach (var p in errorDictionary)
 					{
-						Key = p.Key,
-						Value = p.Value[0]
-					};
-					problemDetails.Add(validationProblemDetails);
+						ValidationProblemDetails validationProblemDetails = new ValidationProblemDetails()
+						{
+							Key = p.Key,
+							Value = p.Value[0]
+						};
+						problemDetails.Add(validationProblemDetails);
+					}
 				}
 			}
 			catch (Exception ex)

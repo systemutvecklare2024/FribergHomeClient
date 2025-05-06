@@ -28,7 +28,7 @@ namespace FribergHomeClient.Services
 				}
 
 				//If not successful status code:
-				List<ValidationProblemDetails> problemDetails = await HttpClientService.GetValidationProblemsAsync(result);
+				List<ValidationProblemDetails> problemDetails = await BengelService.GetValidationProblemsAsync(result);
 
 				return new ResponseService<AccountDTO>
 				{
