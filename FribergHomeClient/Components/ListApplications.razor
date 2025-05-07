@@ -62,7 +62,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        agents = await AgentService.GetAll();
+        var response = await AgentService.GetAll();
+        success = response.Success;
+        if (!response.Success)
+        {
+            errorMessage = response.Message;
+            return;
+        }
+        agents = response.Data;
         applicationViewModels = await AgencyService.GenerateApplicationViewModels(Applications, agents);
         dataLoaded = true;
         StateHasChanged();
