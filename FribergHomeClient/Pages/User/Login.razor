@@ -3,12 +3,14 @@
 @inject NavigationManager NavManager
 @using FribergHomeClient.Data.Dto
 
+@* //Author:Emelie *@
+
 <RadzenTemplateForm Data=@model Submit="@((LoginDTO args) => OnLogin(args))">
     @if (failed && !string.IsNullOrEmpty(errorMessage))
     {
-        <div class=" alert alert-danger">
-            <p>@errorMessage</p>
-        </div>
+        <RadzenAlert Style="AlertStyle.Danger">
+            @errorMessage
+        </RadzenAlert>
     }
     <RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
         <RadzenColumn Size="12" SizeMD="3">

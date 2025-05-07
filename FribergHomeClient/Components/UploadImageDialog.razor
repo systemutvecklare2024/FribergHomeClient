@@ -1,0 +1,64 @@
+﻿@inject DialogService DialogService
+@inject NotificationService NotificationService
+
+<div class="rz-dialog-content rz-p-4">
+	<div class="rz-mt-4 rz-text-align-right">
+		<RadzenCard Style="text-align: center; padding: 10px; margin: 0 auto;">
+			<RadzenColumn >
+				<RadzenRow Style="padding: 10px;">
+					@if(IsValidUrl(newImageUrl))
+					{
+						<img src="@newImageUrl" alt="Image" style="width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
+					}
+					else{
+						<img src="@ExistingImageUrl" alt="Image" style="width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
+					}
+					<RadzenTextBox Placeholder="Lägg till bild Url..." Style="" Name="ImageUrl" @bind-Value=newImageUrl />
+				</RadzenRow>
+				<RadzenRow>
+					<RadzenButton Icon="add" Text="Lägg till" Click="@(() => AddImage())" Style="margin-left: 1rem;" />
+					@* <RadzenButton Icon="save" Text="Spara" ButtonStyle="ButtonStyle.Primary" Click="@(() => DialogService.Close(ExistingImageUrl))" /> *@
+				</RadzenRow>
+				@if (!string.IsNullOrEmpty(ErrorMessage))
+				{
+					<RadzenAlert AllowClose="false" AlertStyle="AlertStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter ">
+						<RadzenText TextStyle="TextStyle.Body2">@ErrorMessage</RadzenText>
+					</RadzenAlert>
+				}
+			</RadzenColumn>
+		</RadzenCard>
+
+	</div>
+</div>
+
+@code {
+	[Parameter]
+	public string ExistingImageUrl { get; set; }
+	private string newImageUrl;
+	private string? ErrorMessage { get; set; }
+
+	private void RemoveImage()
+	{
+		ExistingImageUrl = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
+	}
+
+	private void AddImage()
+	{
+		if (IsValidUrl(newImageUrl))
+		{
+			ExistingImageUrl = newImageUrl;
+			ErrorMessage = string.Empty;
+			DialogService.Close(ExistingImageUrl);
+		}
+		else
+		{
+			ErrorMessage = "Ogiltig bildadress!";
+		}
+	}
+
+	public bool IsValidUrl(string url)
+	{
+		return Uri.TryCreate(url, UriKind.Absolute, out Uri? uriResult)
+						&& (uriResult.Scheme == Uri.UriSchemeHttp || uriResult.Scheme == Uri.UriSchemeHttps);
+	}
+}

@@ -43,7 +43,7 @@ else
         if (response.IsSuccessStatusCode)
         {
             Console.WriteLine("Success!");
-            NotificationService.Notify(NotificationSeverity.Success, "Bostad ändrad'");
+            NotificationService.Notify(NotificationSeverity.Success, "Bostad ändrad");
             NavigationManager.NavigateTo("/dashboard/myobjects");
         }
         else

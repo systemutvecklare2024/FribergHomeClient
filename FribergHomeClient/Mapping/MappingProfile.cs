@@ -9,6 +9,10 @@ namespace FribergHomeClient.Mapping
         public MappingProfile()
         {
             CreateMap<PropertyDTO, PropertyFormViewModel>().ReverseMap();
+            CreateMap<ApplicationDTO, ApplicationViewModel>()
+                .ForMember(dest => dest.FirstName, opt => opt.Ignore())
+                .ForMember(dest => dest.LastName, opt => opt.Ignore())
+                .ReverseMap();
 
         }
         

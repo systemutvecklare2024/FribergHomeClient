@@ -34,5 +34,7 @@ namespace FribergHomeClient.Data.Dto
 
 		public List<PropertyImageDTO> ImageUrls { get; set; }
 
-    }
+		public int RealEstateAgentId { get; set; } //Fredrik
+
+	}
 }
