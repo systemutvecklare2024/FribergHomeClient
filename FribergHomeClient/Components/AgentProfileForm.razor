@@ -4,6 +4,7 @@
 @inject NotificationService NotificationService
 @inject NavigationManager NavManager
 @inject IAccountService accountService
+@inject DialogService DialogService
 
 @if (agent == null)
 {
@@ -136,14 +137,14 @@ else
     }
     async void Submit(AccountDTO arg)
     {
-        var response = await agent
+        var response = await accountService.
         success = response.Success;
 
         Console.WriteLine(success);
 
         if (success)
         {
-            NavManager.NavigateTo("/login");
+            NavManager.NavigateTo("/RealEstateAgents/My");
         }
         else
         {
@@ -170,18 +171,18 @@ else
 
     private void RemoveImage()
     {
-        model.ImageUrl = defaultImage;
+        agent.ImageUrl = defaultImage;
     }
 
     protected override void OnInitialized()
     {
-        model.ImageUrl = defaultImage;
+        agent.ImageUrl = defaultImage;
     }
 
     private async Task OpenImageDialog()
     {
         var parameters = new Dictionary<string, object>{
-            { "ExistingImageUrl", model.ImageUrl }
+            { "ExistingImageUrl", agent.ImageUrl }
         };
 
         var result = await DialogService.OpenAsync<UploadImageDialog>(
@@ -191,7 +192,7 @@ else
 
         if (result != null)
         {
-            model.ImageUrl = result.ToString();
+            agent.ImageUrl = result.ToString();
         }
     }
     
