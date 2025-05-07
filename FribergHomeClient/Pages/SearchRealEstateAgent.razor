@@ -3,6 +3,8 @@
 @using FribergHomeClient.Data.Dto
 @inject HttpClient Http
 
+@* Author: Fredrik *@
+
 <div style="text-align: center;">
     <h3>Sök mäklare eller mäklarfirma</h3>
     <input value="@SearchQuery" @oninput="@HandleInputChange" />
@@ -11,7 +13,7 @@
 @if (filteredAgents == null || filteredAgents.Count == 0)
 {
     <div style="text-align:center;">
-    <Spinner />
+        <Spinner />
     </div>
 }
 else
@@ -47,17 +49,13 @@ else
                 (a.Agency?.Name?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
             ).ToList();
         }
-        
+
     }
-
-
 
     private void HandleInputChange(ChangeEventArgs e)
     {
         SearchQuery = e.Value?.ToString() ?? string.Empty;
-        SearchAgents();   
+        SearchAgents();
         StateHasChanged();
     }
-
-
 }

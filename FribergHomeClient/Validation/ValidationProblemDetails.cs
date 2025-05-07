@@ -1,4 +1,7 @@
-﻿namespace FribergHomeClient.Validation
+﻿
+// Author: Glate, Christoffer
+
+namespace FribergHomeClient.Validation
 {
     public class ValidationProblemDetails
     {

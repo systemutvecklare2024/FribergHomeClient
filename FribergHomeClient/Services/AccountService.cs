@@ -2,6 +2,8 @@
 using System.Net.Http.Json;
 using FribergHomeClient.Validation;
 
+// Author: Christoffer, Glate
+
 namespace FribergHomeClient.Services
 {
 	public class AccountService : IAccountService

@@ -1,19 +1,17 @@
-﻿
-using AutoMapper;
-using FribergHomeClient.Data.Dto;
+﻿using FribergHomeClient.Data.Dto;
 using System.Net.Http.Json;
+
+// Author: Christoffer, Emelie, Glate
 
 namespace FribergHomeClient.Services
 {
     public class PropertyService : IPropertyService
     {
         private readonly HttpClient _client;
-        private readonly IMapper _mapper;
 
-        public PropertyService(HttpClient client, IMapper mapper)
+        public PropertyService(HttpClient client)
         {
             _client = client;
-            this._mapper = mapper;
         }
 
         public async Task<PropertyDTO> GetPropertyDTO(int id)

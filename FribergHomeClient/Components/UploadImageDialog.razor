@@ -18,7 +18,6 @@
 				</RadzenRow>
 				<RadzenRow>
 					<RadzenButton Icon="add" Text="Lägg till" Click="@(() => AddImage())" Style="margin-left: 1rem;" />
-					@* <RadzenButton Icon="save" Text="Spara" ButtonStyle="ButtonStyle.Primary" Click="@(() => DialogService.Close(ExistingImageUrl))" /> *@
 				</RadzenRow>
 				@if (!string.IsNullOrEmpty(ErrorMessage))
 				{

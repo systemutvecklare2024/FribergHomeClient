@@ -5,6 +5,9 @@ using FribergHomeClient.Providers;
 using Microsoft.AspNetCore.Components.Authorization;
 using Newtonsoft.Json;
 
+// Author: Marcus
+// CoAuthor: Team Charlie
+
 namespace FribergHomeClient.Services
 {
 	public class AuthenticationService : IAuthenticationService

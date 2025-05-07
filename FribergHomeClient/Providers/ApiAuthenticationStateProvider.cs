@@ -3,6 +3,9 @@ using System.Security.Claims;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
 
+// Author: Marcus
+// CoAuthor: Team Charlie
+
 namespace FribergHomeClient.Providers
 {
 	public class ApiAuthenticationStateProvider : AuthenticationStateProvider
