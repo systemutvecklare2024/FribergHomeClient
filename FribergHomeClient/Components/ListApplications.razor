@@ -45,10 +45,7 @@ else
 
     [Parameter]
     public List<ApplicationDTO> Applications { get; set; } = [];
-
     public List<ApplicationViewModel> applicationViewModels = [];
-    //public IQueryable<ApplicationViewModel> applicationViewModels;
-
     public List<RealEstateAgentDTO> agents = [];
     private RadzenDataGrid<ApplicationViewModel> applicationList;
     private bool success = false;
@@ -64,7 +61,6 @@ else
         var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending).ToList();
 
         applicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications, agents);
-        //applicationViewModels = applicationViewModelsList.AsQueryable();
     }
 
     private async Task ApproveApplication(ApplicationViewModel applicationVM)

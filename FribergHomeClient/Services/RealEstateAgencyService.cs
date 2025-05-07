@@ -87,20 +87,12 @@ namespace FribergHomeClient.Services
         {
             List<ApplicationViewModel> applicationViewModels = new List<ApplicationViewModel>();
 
-            //var agencyDTO = await GetById(applicationDTOs[0].AgencyId);
-            //if (agencyDTO == null)
-            //{
-            //    Console.WriteLine("AgencyDTO är null");
-            //    return new List<ApplicationViewModel>(); //What to do here?
-            //}
-
             foreach (var applicationDTO in applicationDTOs)
             {
                 var agent = agentDTOs.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
-                //var agent = agentService.GetById(applicationDTO.AgentId);
+
                 if(agent == null)
                 {
-                    Console.WriteLine("Agent är null");
                     return new List<ApplicationViewModel>(); //What to do here?
                 }
 
