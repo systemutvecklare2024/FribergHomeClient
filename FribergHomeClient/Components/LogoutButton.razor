@@ -5,6 +5,8 @@
 @inject DialogService DialogService
 @inject IJSRuntime JSRuntime
 
+@* //Author:Emelie *@
+
 
 <RadzenButton Shade="Shade.Darker" Click=@ShowLogoutDialog Text="Logga ut" ButtonStyle="ButtonStyle.Info" Style="margin-right:2em;" />
 
@@ -26,11 +28,5 @@
             // NavigationManager.NavigateTo("/logout", forceLoad: true);
         }
     }
-
-    // private async Task LogOut()
-    // {
-    //     await authService.Logout();
-    //     NavManager.NavigateTo("/");
-    // }
 
 }

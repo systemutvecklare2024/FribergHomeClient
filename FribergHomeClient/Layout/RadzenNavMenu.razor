@@ -1,6 +1,8 @@
 ﻿@inject IAuthenticationService authService
 @inject NavigationManager NavManager
 
+@* //Author:Emelie *@
+
 <RadzenStack Orientation="Orientation.Vertical" Gap="0">
     <div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start" style="background-color: #EFEDEB;">
         <div class="rz-col-5">
@@ -19,7 +21,6 @@
                         <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="font-size: 1.3em; text-decoration: none;" />
                         <RadzenLink Path="/customerservice" Text="Kundservice" Style="font-size: 1.3em; text-decoration: none;" />
                         <LogoutButton />
-                        @* <RadzenButton Shade="Shade.Darker" Click=@LogOut Text="Logga ut" ButtonStyle="ButtonStyle.Info" Style="margin-right:2em;" /> *@
                     </Authorized>
                     <NotAuthorized>
                         <RadzenLink Path="/searchproperty" Text="Sök Bostad" Style="font-size: 1.3em; text-decoration: none;" />

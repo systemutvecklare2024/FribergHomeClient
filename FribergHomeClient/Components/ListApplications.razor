@@ -1,0 +1,110 @@
+﻿@using FribergHomeClient.Data
+@using FribergHomeClient.Data.ViewModel
+@using static FribergHomeClient.Data.StatusTypes
+@inject IRealEstateAgencyService AgencyService
+@inject NotificationService NotificationService
+@inject IRealEstateAgentService AgentService
+
+@* //Author:Emelie *@
+
+@if (applicationViewModels == null)
+{
+    <p>Laddar ansökningar...</p>
+}
+else
+{
+    @if (!success && !string.IsNullOrEmpty(errorMessage))
+    {
+        <RadzenAlert Style="AlertStyle.Danger">
+            @errorMessage
+        </RadzenAlert>
+    }
+
+    <RadzenDataGrid @ref="applicationList" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
+                    Data="@applicationViewModels" TItem="ApplicationViewModel" ColumnWidth="100px">
+        <Columns>
+            <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
+            <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
+            <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.CreatedAt)" Title="Skapad" />
+            <RadzenDataGridColumn Width="50px" Title="Status">
+                <Template Context="applicationViewModel">
+                    @StatusTypes.GetLocalized(applicationViewModel.StatusType)
+                </Template>
+            </RadzenDataGridColumn>
+            <RadzenDataGridColumn Width="50px">
+                <Template Context="applicationViewModel">
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(async () => await ApproveApplication(applicationViewModel)) Text="Godkänn" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(async () => await DenyApplication(applicationViewModel)) Text="Neka" />
+                </Template>
+            </RadzenDataGridColumn>
+        </Columns>
+    </RadzenDataGrid>
+}
+
+@code {
+
+    [Parameter]
+    public List<ApplicationDTO> Applications { get; set; } = [];
+    public List<ApplicationViewModel> applicationViewModels = [];
+    public List<RealEstateAgentDTO> agents = [];
+    private RadzenDataGrid<ApplicationViewModel> applicationList;
+    private bool success = false;
+    private string errorMessage = string.Empty;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        agents = await AgentService.GetAll();
+        var agency = await AgencyService.GetById(1); //Remove when implemented in AgencyCard
+        Applications = agency.Applications; //Remove when implemented in AgencyCard
+        Console.WriteLine(Applications[0].AgentId);
+        var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending).ToList();
+
+        applicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications, agents);
+    }
+
+    private async Task ApproveApplication(ApplicationViewModel applicationVM)
+    {
+        applicationVM.StatusType = StatusType.Approved;
+        var result = await AgencyService.HandleApplication(applicationVM);
+        success = result.Success;
+        if (!success)
+        {
+            errorMessage = result.Message;
+            return;
+        }
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Success,
+                Summary = "Godkänd",
+                Detail = "Du har nu godkänt ansökan"
+            });
+
+        applicationViewModels.Remove(applicationVM);
+        applicationList.Reload();
+        StateHasChanged();
+    }
+
+    private async Task DenyApplication(ApplicationViewModel applicationVM)
+    {
+        applicationVM.StatusType = StatusType.Denied;
+        var result = await AgencyService.HandleApplication(applicationVM);
+        success = result.Success;
+        if (!success)
+        {
+            errorMessage = result.Message;
+            return;
+        }
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Info,
+                Summary = "Nekad",
+                Detail = "Du har nu nekat ansökan"
+            });
+        applicationViewModels.Remove(applicationVM);
+        applicationList.Reload();
+        StateHasChanged();
+
+    }
+
+}
