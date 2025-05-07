@@ -1,0 +1,38 @@
+﻿@using FribergHomeClient.Components
+@using FribergHomeClient.Data.Dto
+@inject HttpClient Http
+@inject NotificationService NotificationService
+@inject NavigationManager navigationManager
+
+@if (agent == null)
+{
+    <Spinner />
+}
+else
+{
+    
+}
+
+@code {
+    [Parameter]
+    public int? Id { get; set; }
+    private UpdateAgentDTO? agent;
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Need to handle 404s
+        if (!Id.HasValue)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
+            return;
+        }
+        agent = await Http.GetFromJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My");
+        if (agent == null)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
+        }
+    }
+    
+    
+}

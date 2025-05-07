@@ -10,10 +10,20 @@
 @if (agency != null)
 {
     <AgencyCard Name="@agency.Name" Presentation="@agency.Presentation" LogoUrl="@agency.LogoUrl"></AgencyCard>
+    <RadzenRow JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Normal" Gap="1">
+
+
+        @foreach (var agent in agency.Agents)
+        {
+            <RadzenColumn Size="2" class="rz-text-align-center rz-p-2">
+                <SmallAgentCard Agent="@agent"/>
+            </RadzenColumn>
+        }
+    </RadzenRow>
 }
 else
 {
-    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    <Spinner/>
 }
 
 @code {

@@ -2,6 +2,7 @@
 @using FribergHomeClient.Data.Dto
 @inject HttpClient Http
 @inject NotificationService NotificationService
+@inject NavigationManager navigationManager
 
 @if (agent == null)
 {
@@ -28,9 +29,14 @@ else
                     <RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Telefonnummer</RadzenText>
                     <RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@(agent?.PhoneNumber)</b></RadzenText>
                 </RadzenColumn>
-            </RadzenRow>
+             </RadzenRow>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="1rem" Wrap="FlexWrap.Wrap">
+                <RadzenButton Click="NavigateTo" Text="Uppdatera Profil" ButtonStyle="ButtonStyle.Base" />
+            </RadzenStack>
         </RadzenCard>
     </RadzenCard>
+
+    
 }
 
 
@@ -51,6 +57,10 @@ else
         if(agent == null) {
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
         }
+    }
+    void NavigateTo()
+    {
+        navigationManager.NavigateTo("/RealEstateAgents/UpdateProfile/My");
     }
 
 }
