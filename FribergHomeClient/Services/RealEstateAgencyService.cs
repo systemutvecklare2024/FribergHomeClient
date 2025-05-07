@@ -12,10 +12,12 @@ namespace FribergHomeClient.Services
         private readonly HttpClient client;
         private readonly IMapper mapper;
 
+
         public RealEstateAgencyService(HttpClient client, IMapper mapper)
 		{
             this.client = client;
             this.mapper = mapper;
+
         }
         public async Task<List<RealEstateAgencyDTO>> GetAll()
         {
@@ -81,19 +83,21 @@ namespace FribergHomeClient.Services
             }
         }
 
-        public async Task<List<ApplicationViewModel>> GenerateApplicationViewModels(List<ApplicationDTO> applicationDTOs) //Should this be async
+        public async Task<List<ApplicationViewModel>> GenerateApplicationViewModels(List<ApplicationDTO> applicationDTOs, List<RealEstateAgentDTO> agentDTOs) //Should this be async
         {
             List<ApplicationViewModel> applicationViewModels = new List<ApplicationViewModel>();
-            
+
+            //var agencyDTO = await GetById(applicationDTOs[0].AgencyId);
+            //if (agencyDTO == null)
+            //{
+            //    Console.WriteLine("AgencyDTO är null");
+            //    return new List<ApplicationViewModel>(); //What to do here?
+            //}
+
             foreach (var applicationDTO in applicationDTOs)
             {
-                var agencyDTO = await GetById(applicationDTO.AgencyId);
-                if(agencyDTO == null)
-                {
-                    Console.WriteLine("AgencyDTO är null");
-                    return new List<ApplicationViewModel>(); //What to do here?
-                }
-                var agent = agencyDTO.Agents.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
+                var agent = agentDTOs.FirstOrDefault(a => a.Id == applicationDTO.AgentId);
+                //var agent = agentService.GetById(applicationDTO.AgentId);
                 if(agent == null)
                 {
                     Console.WriteLine("Agent är null");
@@ -102,8 +106,8 @@ namespace FribergHomeClient.Services
 
                 var applicationViewModel = mapper.Map<ApplicationViewModel>(applicationDTO);
 
-                applicationViewModel.FirstName = agent.FirstName;
-                applicationViewModel.LastName = agent.LastName;
+                applicationViewModel.FirstName = agent.FirstName; 
+                applicationViewModel.LastName = agent.LastName; 
 
 
                 applicationViewModels.Add(applicationViewModel);

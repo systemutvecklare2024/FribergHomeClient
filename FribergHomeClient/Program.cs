@@ -19,6 +19,7 @@ builder.Services.AddBlazoredLocalStorage();
 builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRealEstateAgencyService, RealEstateAgencyService>();
+builder.Services.AddScoped<IRealEstateAgentService, RealEstateAgentService>();
 
 // Auth
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();

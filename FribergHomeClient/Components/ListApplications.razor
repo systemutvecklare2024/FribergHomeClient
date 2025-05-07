@@ -3,10 +3,11 @@
 @using static FribergHomeClient.Data.StatusTypes
 @inject IRealEstateAgencyService AgencyService
 @inject NotificationService NotificationService
+@inject IRealEstateAgentService AgentService
 
 @* //Author:Emelie *@
 
-@if (ApplicationViewModels == null)
+@if (applicationViewModels == null)
 {
     <p>Laddar ansökningar...</p>
 }
@@ -19,8 +20,8 @@ else
         </RadzenAlert>
     }
 
-    <RadzenDataGrid AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
-                    Data="@ApplicationViewModels" TItem="ApplicationViewModel" ColumnWidth="100px">
+    <RadzenDataGrid @ref="applicationList" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
+                    Data="@applicationViewModels" TItem="ApplicationViewModel" ColumnWidth="100px">
         <Columns>
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
@@ -45,20 +46,25 @@ else
     [Parameter]
     public List<ApplicationDTO> Applications { get; set; } = [];
 
-    public List<ApplicationViewModel> ApplicationViewModels { get; set; } = [];
+    public List<ApplicationViewModel> applicationViewModels = [];
+    //public IQueryable<ApplicationViewModel> applicationViewModels;
 
+    public List<RealEstateAgentDTO> agents = [];
+    private RadzenDataGrid<ApplicationViewModel> applicationList;
     private bool success = false;
     private string errorMessage = string.Empty;
 
 
     protected override async Task OnInitializedAsync()
-    {        
-        var agency = await AgencyService.GetById(1); //Remove when implemented i AgencyCard
-        Applications = agency.Applications; //Remove when implemented i AgencyCard
+    {
+        agents = await AgentService.GetAll();
+        var agency = await AgencyService.GetById(1); //Remove when implemented in AgencyCard
+        Applications = agency.Applications; //Remove when implemented in AgencyCard
         Console.WriteLine(Applications[0].AgentId);
         var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending).ToList();
 
-        ApplicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications);
+        applicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications, agents);
+        //applicationViewModels = applicationViewModelsList.AsQueryable();
     }
 
     private async Task ApproveApplication(ApplicationViewModel applicationVM)
@@ -77,7 +83,9 @@ else
                 Summary = "Godkänd",
                 Detail = "Du har nu godkänt ansökan"
             });
-        ApplicationViewModels.Remove(applicationVM);
+
+        applicationViewModels.Remove(applicationVM);
+        applicationList.Reload();
         StateHasChanged();
     }
 
@@ -97,9 +105,9 @@ else
                 Summary = "Nekad",
                 Detail = "Du har nu nekat ansökan"
             });
-        ApplicationViewModels.Remove(applicationVM);
+        applicationViewModels.Remove(applicationVM);
+        applicationList.Reload();
         StateHasChanged();
-
 
     }
 
