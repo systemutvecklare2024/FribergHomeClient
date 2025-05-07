@@ -7,9 +7,9 @@
 
 @* //Author:Emelie *@
 
-@if (applicationViewModels == null)
+@if (!dataLoaded)
 {
-    <p>Laddar ansökningar...</p>
+    <Spinner/>
 }
 else
 {
@@ -50,17 +50,16 @@ else
     private RadzenDataGrid<ApplicationViewModel> applicationList;
     private bool success = false;
     private string errorMessage = string.Empty;
+    private bool dataLoaded = false;
 
 
     protected override async Task OnInitializedAsync()
     {
         agents = await AgentService.GetAll();
-        var agency = await AgencyService.GetById(1); //Remove when implemented in AgencyCard
-        Applications = agency.Applications; //Remove when implemented in AgencyCard
-        Console.WriteLine(Applications[0].AgentId);
-        var pendingApplications = Applications.Where(a => a.StatusType == StatusType.Pending).ToList();
+        applicationViewModels = await AgencyService.GenerateApplicationViewModels(Applications, agents);
+        dataLoaded = true;
+        StateHasChanged();
 
-        applicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications, agents);
     }
 
     private async Task ApproveApplication(ApplicationViewModel applicationVM)
