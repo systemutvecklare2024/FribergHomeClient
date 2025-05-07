@@ -60,6 +60,7 @@ else
         dataLoaded = true;
         StateHasChanged();
 
+        applicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications, agents);
     }
 
     private async Task ApproveApplication(ApplicationViewModel applicationVM)
