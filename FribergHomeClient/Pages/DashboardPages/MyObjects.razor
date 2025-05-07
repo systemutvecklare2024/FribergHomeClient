@@ -2,7 +2,7 @@
 @using System.Security.Claims
 
 @page "/dashboard/myobjects"
-@attribute [Authorize(Roles = "Agent")]
+@attribute [Authorize(Roles = "Agent, SuperAgent")]
 
 @* Author: Christoffer *@
 <h3>MyObjects</h3>
