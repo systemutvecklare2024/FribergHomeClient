@@ -8,7 +8,7 @@
 
 @if (agentId.HasValue)
 {
-    <UpdateAgentProfile Property="@agent" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></UpdateAgentProfile>
+    <AgentProfileForm Property="@agent" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></AgentProfileForm>
 }
 else
 {

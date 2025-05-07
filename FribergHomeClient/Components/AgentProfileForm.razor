@@ -2,7 +2,8 @@
 @using FribergHomeClient.Data.Dto
 @inject HttpClient Http
 @inject NotificationService NotificationService
-@inject NavigationManager navigationManager
+@inject NavigationManager NavManager
+@inject IAccountService accountService
 
 @if (agent == null)
 {
@@ -10,13 +11,113 @@
 }
 else
 {
-    
+    <RadzenTemplateForm Data="@agent" Submit="@((AccountDTO args) => { Submit(args); })">
+        <RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
+            <RadzenColumn SizeSM="8" SizeMD="6" SizeLG="4">
+                @if (!success && !string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class=" alert alert-danger">
+                        <p>@errorMessage</p>
+                    </div>
+                }
+                <RadzenStack>
+                    <RadzenFieldset Text="Användarinformation">
+                        <RadzenStack Gap="1rem">
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Förnamn" Component="FirstName" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenTextBox Style="width: 100%;" Name="FirstName" @bind-Value=agent.FirstName />
+                                    <RadzenRequiredValidator Component="FirstName" Text="Förnamn krävs" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Efternamn" Component="LastName" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenTextBox Style="width: 100%;" Name="LastName" @bind-Value=agent.LastName />
+                                    <RadzenRequiredValidator Component="LastName" Text="Efternamn krävs" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="E-post" Component="Email" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenTextBox type="email" Style="width: 100%;" Name="Email" @bind-Value=agent.Email />
+                                    <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
+                                    <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Telefonnummer" Component="PhoneNumber" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenTextBox Style="width: 100%;" Name="PhoneNumber" @bind-Value=agent.PhoneNumber />
+                                    <RadzenRequiredValidator Component="PhoneNumber" Text="Telefonnummer krävs" />
+                                </RadzenColumn>
+                            </RadzenRow>
+
+
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Profilbild" Component="ImageUrl" />
+                                </RadzenColumn>
+                                <RadzenColumn SizeSM="12" SizeMD="9" Style="justify-content: center;">
+
+                                    <RadzenCard Style="text-align: center; padding: 10px; display: flex; align-items: center; justify-content: center;">
+                                        <img src="@agent.ImageUrl" alt="Image" style="max-width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
+                                        <RadzenColumn Style="display: flex; flex-direction: column; align-items: center; margin-left: 1rem;">
+                                            <RadzenButton Icon="add" Text="Lägg till" Click="@(() => OpenImageDialog())" class="rz-my-2" />
+                                            <RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger" Click="@(() => RemoveImage())" class="rz-my-2" />
+                                        </RadzenColumn>
+                                    </RadzenCard>
+
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Lösenord" Component="Password" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=agent.Password />
+                                    <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=agent.ConfirmPassword />
+                                    <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenStack>
+                    </RadzenFieldset>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-mt-4 rz-mb-4">
+                    <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Spara" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenTemplateForm>
 }
 
 @code {
     [Parameter]
     public int? Id { get; set; }
-    private UpdateAgentDTO? agent;
+    private AccountDTO? agent;
+    private string errorMessage = string.Empty;
+    private bool success;
 
 
     protected override async Task OnInitializedAsync()
@@ -27,10 +128,70 @@ else
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
             return;
         }
-        agent = await Http.GetFromJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My");
+        agent = await Http.GetFromJsonAsync<AccountDTO>($"api/RealEstateAgents/My");
         if (agent == null)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
+        }
+    }
+    async void Submit(AccountDTO arg)
+    {
+        var response = await agent
+        success = response.Success;
+
+        Console.WriteLine(success);
+
+        if (success)
+        {
+            NavManager.NavigateTo("/login");
+        }
+        else
+        {
+            ProblemDetails = response.ProblemDetails;
+            errorMessage = response.Message;
+
+            foreach (var s in ProblemDetails)
+            {
+                NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = s.Key,
+                        Detail = s.Value
+                    });
+            }
+            StateHasChanged();
+        }
+    }
+
+    void Cancel()
+    {
+        NavManager.NavigateTo("/");
+    }
+
+    private void RemoveImage()
+    {
+        model.ImageUrl = defaultImage;
+    }
+
+    protected override void OnInitialized()
+    {
+        model.ImageUrl = defaultImage;
+    }
+
+    private async Task OpenImageDialog()
+    {
+        var parameters = new Dictionary<string, object>{
+            { "ExistingImageUrl", model.ImageUrl }
+        };
+
+        var result = await DialogService.OpenAsync<UploadImageDialog>(
+            "Lägg till profilbild",
+            parameters,
+            new DialogOptions() { Width = "25rem", Height = "30rem" });
+
+        if (result != null)
+        {
+            model.ImageUrl = result.ToString();
         }
     }
     
