@@ -2,6 +2,9 @@
 @using FribergHomeClient.Data
 @using FribergHomeClient.Services
 @inject IPropertyService PropertyService
+@inject HttpClient Http
+
+@* //Author:Emelie *@
 
 @if (Property is null)
 {
@@ -17,8 +20,8 @@ else
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch" AlignItems="AlignItems.Center">
             <RadzenCarousel Auto="false" AllowNavigation="true"
-                            Style="height: 600px; width: 100%;"
-                            ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
+            Style="height: 600px; width: 100%;"
+            ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
                 <Items>
                     @foreach (var image in Property.ImageUrls)
                     {
@@ -35,12 +38,29 @@ else
                     <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
                         @Property.City, @Property.Muncipality kommun
                     </RadzenText>
+
                     @foreach (var descriptionSection in descriptionArray)
                     {
                         <RadzenText TextStyle="TextStyle.Body1" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.5em; margin-bottom:1em">
                             @descriptionSection
                         </RadzenText>
                     }
+
+                    @* @* Fredrik*@
+                    <RadzenStack>
+                        @if (agent != null)
+                        {
+                            <AgentProfile Id="@Property.RealEstateAgentId" />
+                        }
+                        else
+                        {
+                            <RadzenCard class="rz-my12 rz-mx-auto" Style="max-width: 420px">
+                                <RadzenText TextStyle="TextStyle.H5">Mäklare ej tilldelad</RadzenText>
+                                <RadzenText TextStyle="TextStyle.Body1">Denna bostad har ännu ingen tilldelad mäklare</RadzenText>
+                            </RadzenCard>
+                        }
+                    </RadzenStack>
+
                 </RadzenColumn>
                 <RadzenColumn Size="2">
                     <RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P">
@@ -134,11 +154,25 @@ else
     public int Id { get; set; }
 
     public PropertyDTO Property { get; set; }
+    //Fredrik 
+    private RealEstateAgentDTO? agent { get; set; }
+
     private string[] descriptionArray = [];
 
     protected override async Task OnInitializedAsync()
     {
+
         Property = await PropertyService.GetPropertyDTO(Id);
+
+        // //Fredrik
+        if (Property?.RealEstateAgentId != null && Property.RealEstateAgentId > 0)
+        {
+            agent = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{Property.RealEstateAgentId}");
+        }
+        else
+        {
+            Console.WriteLine("AgentId är NULL eller saknas.");    
+        }
 
         descriptionArray = SplitDescription(Property.Description);
     }

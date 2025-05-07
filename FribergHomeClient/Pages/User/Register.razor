@@ -6,6 +6,7 @@
 @inject IAccountService accountService
 @inject DialogService DialogService
 @inject NotificationService NotificationService
+@inject IRealEstateAgencyService agencyService
 
 @* Author: Emelie *@
 @* Puts: Christoffer *@
@@ -14,7 +15,7 @@
 
 @if (model == null)
 {
-    <Spinner />
+	<p><em>Loading...</em></p>
 }
 else
 {
@@ -83,6 +84,49 @@ else
                                     </RadzenColumn>
                                 </RadzenCard>
 
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Lösenord" Component="Password" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=model.Password />
+                                    <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
+                                    <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                            <RadzenRow AlignItems="AlignItems.Center">
+                                <RadzenColumn Size="12" SizeMD="3">
+                                    <RadzenLabel Text="Mäklarbyrå" Component="AgencyId" />
+                                </RadzenColumn>
+                                <RadzenColumn Size="12" SizeMD="9">
+                                    <RadzenDropDown Data="@realEstateAgencies" TextProperty="Name" ValueProperty="Id" Placeholder="Välj mäklarbyrå" Style="width: 100%;" Name="AgencyId" @bind-Value=model.AgencyId />
+                                    <RadzenRequiredValidator Component="AgencyId" Text="Du måste välja mäklarbyrå" />
+                                </RadzenColumn>
+                            </RadzenRow>
+                        </RadzenStack>
+                    </RadzenFieldset>
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow>
+            <RadzenColumn Size="12" SizeMD="4">
+                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-mt-4 rz-mb-4">
+                    <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
+                </RadzenStack>
+            </RadzenColumn>
+        </RadzenRow>
+    </RadzenTemplateForm>
                             </RadzenColumn>
                         </RadzenRow>
                         <RadzenRow AlignItems="AlignItems.Center">
@@ -124,11 +168,16 @@ else
 @code {
 
     private AccountDTO model = new();
+    private List<RealEstateAgencyDTO> realEstateAgencies = [];
     private string errorMessage = string.Empty;
     private List<ValidationProblemDetails> ProblemDetails = new();
     private bool success;
     private string defaultImage = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
 
+    protected override async Task OnInitializedAsync()
+    {
+        realEstateAgencies = await agencyService.GetAll();
+    }
 
     async void Submit(AccountDTO arg)
     {
