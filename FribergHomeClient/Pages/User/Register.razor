@@ -1,6 +1,7 @@
 ﻿@page "/register"
 @using FribergHomeClient.Data.Dto
 @using FribergHomeClient.Services
+@using FribergHomeClient.Validation
 @inject NavigationManager NavManager
 @inject IAccountService accountService
 @inject DialogService DialogService
@@ -8,121 +9,130 @@
 @inject IRealEstateAgencyService agencyService
 
 @* Author: Emelie *@
+@* Puts: Christoffer *@
+
+<PageTitle>Registrera konto</PageTitle>
 
 @if (model == null)
 {
-    <p><em>Loading...</em></p>
+    <Spinner />
 }
 else
 {
-    <RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })">
-        <RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
-            <RadzenColumn SizeSM="8" SizeMD="6" SizeLG="4">
-                @if (!success && !string.IsNullOrEmpty(errorMessage))
-                {
-                    <div class=" alert alert-danger">
-                        <p>@errorMessage</p>
-                    </div>
-                }
-                <RadzenStack>
-                    <RadzenFieldset Text="Användarinformation">
-                        <RadzenStack Gap="1rem">
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Förnamn" Component="FirstName" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenTextBox Style="width: 100%;" Name="FirstName" @bind-Value=model.FirstName />
-                                    <RadzenRequiredValidator Component="FirstName" Text="Förnamn krävs" />
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Efternamn" Component="LastName" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenTextBox Style="width: 100%;" Name="LastName" @bind-Value=model.LastName />
-                                    <RadzenRequiredValidator Component="LastName" Text="Efternamn krävs" />
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="E-post" Component="Email" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenTextBox type="email" Style="width: 100%;" Name="Email" @bind-Value=model.Email />
-                                    <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
-                                    <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Telefonnummer" Component="PhoneNumber" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenTextBox Style="width: 100%;" Name="PhoneNumber" @bind-Value=model.PhoneNumber />
-                                    <RadzenRequiredValidator Component="PhoneNumber" Text="Telefonnummer krävs" />
-                                </RadzenColumn>
-                            </RadzenRow>
+    <Panel Title="Registrera">
+        <RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })">
+            @if (!success && !string.IsNullOrEmpty(errorMessage))
+            {
+                <div class=" alert alert-danger">
+                    <p>@errorMessage</p>
+                </div>
+            }
+            <RadzenStack>
+                <RadzenFieldset Text="Användarinformation">
+                    <RadzenStack Gap="1rem">
+                        @* FirstName *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="Förnamn" Component="FirstName" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9">
+                                <RadzenTextBox Style="width: 100%;" Name="FirstName" @bind-Value=model.FirstName />
+                                <RadzenRequiredValidator Component="FirstName" Text="Förnamn krävs" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                        @* LastName *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="Efternamn" Component="LastName" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9">
+                                <RadzenTextBox Style="width: 100%;" Name="LastName" @bind-Value=model.LastName />
+                                <RadzenRequiredValidator Component="LastName" Text="Efternamn krävs" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                        @* Email *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="E-post" Component="Email" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9">
+                                <RadzenTextBox type="email" Style="width: 100%;" Name="Email" @bind-Value=model.Email />
+                                <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
+                                <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                        @* PhoneNumber *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="Telefonnummer" Component="PhoneNumber" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9">
+                                <RadzenTextBox Style="width: 100%;" Name="PhoneNumber" @bind-Value=model.PhoneNumber />
+                                <RadzenRequiredValidator Component="PhoneNumber" Text="Telefonnummer krävs" />
+                            </RadzenColumn>
+                        </RadzenRow>
 
+                        @* Author: Glate *@
+                        @* ProfileImage *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="Profilbild" Component="ImageUrl" />
+                            </RadzenColumn>
+                            <RadzenColumn SizeSM="12" SizeMD="9" Style="justify-content: center;">
 
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Profilbild" Component="ImageUrl" />
-                                </RadzenColumn>
-                                <RadzenColumn SizeSM="12" SizeMD="9" Style="justify-content: center;">
+                                <RadzenCard Style="text-align: center; padding: 10px; display: flex; align-items: center; justify-content: center;">
+                                    <img src="@model.ImageUrl" alt="Image" style="max-width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
+                                    <RadzenColumn Style="display: flex; flex-direction: column; align-items: center; margin-left: 1rem;">
+                                        <RadzenButton Icon="add" Text="Lägg till" Click="@(() => OpenImageDialog())" class="rz-my-2" />
+                                        <RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger" Click="@(() => RemoveImage())" class="rz-my-2" />
+                                    </RadzenColumn>
+                                </RadzenCard>
+                            </RadzenColumn>
+                        </RadzenRow>
+                        @* Password *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="Lösenord" Component="Password" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9">
+                                <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=model.Password />
+                                <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                        @* PasswordConfirmed *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9">
+                                <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
+                                <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                        @* Agency *@
+                        <RadzenRow AlignItems="AlignItems.Center">
+                            <RadzenColumn Size="12" SizeMD="3">
+                                <RadzenLabel Text="Mäklarbyrå" Component="AgencyId" />
+                            </RadzenColumn>
+                            <RadzenColumn Size="12" SizeMD="9">
+                                <RadzenDropDown Data="@realEstateAgencies" TextProperty="Name" ValueProperty="Id" Placeholder="Välj mäklarbyrå" Style="width: 100%;" Name="AgencyId" @bind-Value=model.AgencyId />
+                                <RadzenRequiredValidator Component="AgencyId" Text="Du måste välja mäklarbyrå" />
+                            </RadzenColumn>
+                        </RadzenRow>
+                    </RadzenStack>
+                    <RadzenRow class="rz-mt-4">
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenButton ButtonType="ButtonType.Submit" Style="width: 100%;" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
+                        </RadzenColumn>
+                        <RadzenColumn Size="12" SizeMD="6">
+                            <RadzenButton ButtonStyle="ButtonStyle.Light" Style="width: 100%;" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
+                        </RadzenColumn>
+                    </RadzenRow>
+                </RadzenFieldset>
+            </RadzenStack>
 
-                                    <RadzenCard Style="text-align: center; padding: 10px; display: flex; align-items: center; justify-content: center;">
-                                        <img src="@model.ImageUrl" alt="Image" style="max-width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
-                                        <RadzenColumn Style="display: flex; flex-direction: column; align-items: center; margin-left: 1rem;">
-                                            <RadzenButton Icon="add" Text="Lägg till" Click="@(() => OpenImageDialog())" class="rz-my-2" />
-                                            <RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger" Click="@(() => RemoveImage())" class="rz-my-2" />
-                                        </RadzenColumn>
-                                    </RadzenCard>
-
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Lösenord" Component="Password" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=model.Password />
-                                    <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
-                                    <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Mäklarbyrå" Component="AgencyId" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenDropDown Data="@realEstateAgencies" TextProperty="Name" ValueProperty="Id" Placeholder="Välj mäklarbyrå" Style="width: 100%;" Name="AgencyId" @bind-Value=model.AgencyId />
-                                    <RadzenRequiredValidator Component="AgencyId" Text="Du måste välja mäklarbyrå" />
-                                </RadzenColumn>
-                            </RadzenRow>
-                        </RadzenStack>
-                    </RadzenFieldset>
-                </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
-        <RadzenRow>
-            <RadzenColumn Size="12" SizeMD="4">
-                <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-mt-4 rz-mb-4">
-                    <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
-                </RadzenStack>
-            </RadzenColumn>
-        </RadzenRow>
-    </RadzenTemplateForm>
+        </RadzenTemplateForm>
+    </Panel>
 }
 
 @code {

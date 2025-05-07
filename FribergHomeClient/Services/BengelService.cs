@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using FribergHomeClient.Validation;
+using Newtonsoft.Json;
 
 namespace FribergHomeClient.Services
 {
