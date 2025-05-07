@@ -9,7 +9,7 @@
 
 @if (!dataLoaded)
 {
-    <Spinner/>
+    <Spinner />
 }
 else
 {
@@ -20,8 +20,15 @@ else
         </RadzenAlert>
     }
 
-    <RadzenDataGrid @ref="applicationList" AllowFiltering="true" FilterPopupRenderMode="PopupRenderMode.OnDemand" AllowPaging="true" PageSize="5" AllowSorting="true"
-                    Data="@applicationViewModels" TItem="ApplicationViewModel" ColumnWidth="100px">
+    <RadzenDataGrid @ref="applicationList"
+                    AllowFiltering="true"
+                    FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                    AllowPaging="true"
+                    PageSize="5"
+                    AllowSorting="true"
+                    Data="@applicationViewModels"
+                    TItem="ApplicationViewModel"
+                    ColumnWidth="100px">
         <Columns>
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
@@ -59,8 +66,6 @@ else
         applicationViewModels = await AgencyService.GenerateApplicationViewModels(Applications, agents);
         dataLoaded = true;
         StateHasChanged();
-
-        applicationViewModels = await AgencyService.GenerateApplicationViewModels(pendingApplications, agents);
     }
 
     private async Task ApproveApplication(ApplicationViewModel applicationVM)
@@ -81,7 +86,7 @@ else
             });
 
         applicationViewModels.Remove(applicationVM);
-        applicationList.Reload();
+        await applicationList.Reload();
         StateHasChanged();
     }
 
@@ -102,7 +107,7 @@ else
                 Detail = "Du har nu nekat ansökan"
             });
         applicationViewModels.Remove(applicationVM);
-        applicationList.Reload();
+        await applicationList.Reload();
         StateHasChanged();
 
     }
