@@ -5,6 +5,9 @@
 @inject IRealEstateAgentService AgentService
 @inject HttpClient Http
 
+@* Author: Tobias
+CoAuthor: Emelie *@
+
 @if (AgentDTO != null)
 {
     <AgentProfileForm Agent="AgentDTO" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></AgentProfileForm>
@@ -41,17 +44,16 @@ else
             navigationManager.NavigateTo("/RealEstateAgents/UpdateProfilee/My");
         }
 
-        var response = await Http.PutAsJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My", dto);
+        var response = await AgentService.UpdateAgentProfile(dto);
+        //var response = await Http.PutAsJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My", dto);
 
-        if (response.IsSuccessStatusCode)
+        if (response.Success)
         {
-            Console.WriteLine("Success!");
             NotificationService.Notify(NotificationSeverity.Success, "Profil uppdaterad");
             navigationManager.NavigateTo("/dashboard/myprofile");
         }
         else
         {
-            Console.WriteLine("Epic failure");
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att uppdatera din profil, försök igen");
         }
     }

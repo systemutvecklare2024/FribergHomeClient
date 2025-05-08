@@ -1,6 +1,7 @@
 ﻿using Blazored.LocalStorage;
 using FribergHomeClient.Data.Dto;
 using System.Net.Http.Json;
+using static System.Net.WebRequestMethods;
 
 namespace FribergHomeClient.Services
 {
@@ -51,14 +52,14 @@ namespace FribergHomeClient.Services
         }
         public async Task<ServiceResponse<RealEstateAgentDTO>> GetById(int id)
         {
-			try
-			{
+            try
+            {
                 var response = await client.GetAsync($"api/RealEstateAgents/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
                     var result = new ServiceResponse<RealEstateAgentDTO>
                     {
-                        Success= false,
+                        Success = false,
                         Message = $"Något gick fel: {response.ReasonPhrase}"
                     };
                     return result;
@@ -69,9 +70,9 @@ namespace FribergHomeClient.Services
                     Message = response.ReasonPhrase ?? "",
                     Data = await response.Content.ReadFromJsonAsync<RealEstateAgentDTO>()
                 };
-			}
-			catch (HttpRequestException ex)
-			{
+            }
+            catch (HttpRequestException ex)
+            {
 
                 return new ServiceResponse<RealEstateAgentDTO>
                 {
@@ -106,6 +107,36 @@ namespace FribergHomeClient.Services
             catch (HttpRequestException ex)
             {
                 return new ServiceResponse<UpdateAgentDTO>
+                {
+                    Success = false,
+                    Message = $"Något gick fel: {ex.Message}",
+                };
+            }
+        }
+
+        public async Task<ServiceResponse> UpdateAgentProfile(UpdateAgentDTO agentDTO)
+        {
+            try
+            {
+                var response = await client.PutAsJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My", agentDTO);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var result = new ServiceResponse
+                    {
+                        Success = false,
+                        Message = $"Något gick fel: {response.ReasonPhrase}"
+                    };
+                    return result;
+                }
+                return new ServiceResponse
+                {
+                    Success = true,
+                    Message = response.ReasonPhrase ?? "",
+                };
+            }
+            catch (HttpRequestException ex)
+            {
+                return new ServiceResponse
                 {
                     Success = false,
                     Message = $"Något gick fel: {ex.Message}",
