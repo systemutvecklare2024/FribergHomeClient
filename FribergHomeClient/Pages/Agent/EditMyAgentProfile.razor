@@ -6,28 +6,29 @@
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager navigationManager
 
-@if (agentId.HasValue)
+@if (AgentDTO != null)
 {
-    <AgentProfileForm Property="@agent" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></AgentProfileForm>
+    <AgentProfileForm Agent="AgentDTO" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></AgentProfileForm>
 }
+
 else
 {
-    <Spinner/>
-}  
-
+    <Spinner />
+}
 
 @code {
-    private int? agentId;
 
-    private UpdateAgentDTO agent;
+    private int? agentId;
+    private RealEstateAgentDTO AgentDTO;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        
+
         agentId = await LocalStorage.GetItemAsync<int>("AgentId");
+        AgentDTO = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{agentId.Value}");
     }
-    async Task UpdateAgentProfileCallback(UpdateAgentDTO dto)
+    async Task UpdateAgentProfileCallback(RealEstateAgentDTO dto)
     {
         if (!agentId.HasValue)
         {
@@ -35,7 +36,7 @@ else
             navigationManager.NavigateTo("/RealEstateAgents/UpdateProfilee/My");
         }
 
-        var response = await Http.PutAsJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My", dto);
+        var response = await Http.PutAsJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/My", dto);
 
         if (response.IsSuccessStatusCode)
         {

@@ -12,7 +12,7 @@
 }
 else
 {
-    <RadzenTemplateForm Data="@agent" Submit="@((AccountDTO args) => { Submit(args); })">
+    <RadzenTemplateForm Data="@agent" Submit="@((UpdateAgentDTO args) => { Submit(args); })">
         <RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
             <RadzenColumn SizeSM="8" SizeMD="6" SizeLG="4">
                 @if (!success && !string.IsNullOrEmpty(errorMessage))
@@ -79,24 +79,6 @@ else
 
                                 </RadzenColumn>
                             </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Lösenord" Component="Password" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=agent.Password />
-                                    <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
-                                </RadzenColumn>
-                            </RadzenRow>
-                            <RadzenRow AlignItems="AlignItems.Center">
-                                <RadzenColumn Size="12" SizeMD="3">
-                                    <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
-                                </RadzenColumn>
-                                <RadzenColumn Size="12" SizeMD="9">
-                                    <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=agent.ConfirmPassword />
-                                    <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
-                                </RadzenColumn>
-                            </RadzenRow>
                         </RadzenStack>
                     </RadzenFieldset>
                 </RadzenStack>
@@ -116,9 +98,10 @@ else
 @code {
     [Parameter]
     public int? Id { get; set; }
-    private AccountDTO? agent;
+    private UpdateAgentDTO? agent;
     private string errorMessage = string.Empty;
     private bool success;
+    private string defaultImage = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
 
 
     protected override async Task OnInitializedAsync()
@@ -129,13 +112,13 @@ else
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
             return;
         }
-        agent = await Http.GetFromJsonAsync<AccountDTO>($"api/RealEstateAgents/My");
+        agent = await Http.GetFromJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My");
         if (agent == null)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
         }
     }
-    async void Submit(AccountDTO arg)
+    async void Submit(UpdateAgentDTO arg)
     {
         var response = await accountService.
         success = response.Success;
