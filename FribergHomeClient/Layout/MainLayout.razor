@@ -2,7 +2,6 @@
 @inherits LayoutComponentBase
 
 @* //Author:Emelie *@
-<h2>@ToggleSidebar</h2>
 <RadzenComponents />
 <RadzenLayout>
 	<RadzenHeader>
@@ -11,8 +10,7 @@
 
 	</RadzenHeader>
 	<AuthorizeView>
-		<RadzenSidebar Expanded="@ToggleSidebar" ExpandedChanged="@OnSidebarChanged" class="sidebar-small" Style="width: max-content;">
-
+		<RadzenSidebar Expanded="@ToggleSidebar" ExpandedChanged="@OnSidebarChanged" class="sidebar-small override-align" Style="width: max-content; background-color: #54787e;">
 			<RadzenSiteDashboard/>
 		</RadzenSidebar>
 	</AuthorizeView>
@@ -24,7 +22,6 @@
 	</RadzenBody>
 
 	<RadzenNotification />
-	<RadzenSiteFooter />
 </RadzenLayout>
 
 

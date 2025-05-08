@@ -186,10 +186,14 @@ tr.rz-data-row.fade-out {
 @media (max-width: 768px) {
 	.hamburger-container {
 		display: block;
+		margin-left: 1rem;
 	}
 
 	.sidebar-small {
 		width: 100vw !important;
+	}
+	.override-align {
+		align-items: flex-start !important;
 	}
 }
 
@@ -198,18 +202,3 @@ tr.rz-data-row.fade-out {
 		display: none;
 	}
 }
-
-/*@media (max-width: 768px) {
-	.custom-sidebar {
-		position: fixed !important;
-		margin-top: 100px;
-		visibility: visible !important;
-		width: 100% !important;
-		display: block !important;
-		z-index: 1000 !important;
-	}
-	.hamburger-container {
-		display: block;
-	}
-}
-*/

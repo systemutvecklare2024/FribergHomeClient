@@ -1,26 +1,32 @@
 ﻿@* //Author:Emelie *@
 
+<RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" Style="background-color: #54787e;">
 
-<RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
-	<RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
+	<RadzenRow AlignItems="AlignItems.End" JustifyContent="JustifyContent.End">
+		@if (SidebarExpanded)
+		{
+			<RadzenButton Icon="arrow_menu_close" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+		}
 		@if (!SidebarExpanded)
 		{
-			<RadzenButton Icon="east" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+			<RadzenButton Icon="arrow_menu_open" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
 		}
-		<RadzenRow>
-			<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" />
-			@if (SidebarExpanded)
-			{
-				<RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
-			}
-		</RadzenRow>
+	</RadzenRow>
+
+	<RadzenStack Orientation="Orientation.Vertical" class="rz-p-2">
+
+		<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" />
+		<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" />
+		<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
+		<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
+
 	</RadzenStack>
-	<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" />
-	<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
-	<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
+
 </RadzenPanelMenu>
 
 @code {
+
 	[Parameter]
 	public bool SidebarExpanded { get; set; } = true;
+
 }
