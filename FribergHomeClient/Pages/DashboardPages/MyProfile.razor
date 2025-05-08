@@ -1,10 +1,12 @@
 ﻿@page "/dashboard/myprofile"
 @using FribergHomeClient.Components
-@using Blazored.LocalStorage
-@inject ILocalStorageService LocalStorage
 @inject NavigationManager navigationManager
+@inject IRealEstateAgentService AgentService
+@inject NotificationService NotificationService
 
-@* Author: Tobias *@
+@* Author: Tobias
+   CoAuthor: Emelie
+*@
 
 <h3>Min Profil</h3>
 
@@ -22,7 +24,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        agentId = await LocalStorage.GetItemAsync<int>("AgentId"); //Should this be in the component or the AgentService?
+        agentId = await AgentService.GetMyAgentId();
+        if (!agentId.HasValue)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades hitta mäklare, försök igen");
+        }
     }
 
 }

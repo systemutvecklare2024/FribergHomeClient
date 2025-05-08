@@ -60,7 +60,7 @@ else
             return;
         }
         var response = await AgentService.GetById(Id.Value);
-        if (!response.Sucess || response.Data == null)
+        if (!response.Success || response.Data == null)
         {
             errorMessage = "Misslyckades att hämta mäklare, försök igen";
             NotifyError(errorMessage);
