@@ -6,14 +6,15 @@
 
 @* Author: Christoffer *@
 
-<h3>Edit Property</h3>
+<PageTitle>Editera Bostad</PageTitle>
+
 @if(property != null)
 {
     <PropertyForm Property="@property" OnSubmit="@EditPropertyCallback" SubmitButtonText="Uppdatera"></PropertyForm>
 } 
 else
 {
-    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    <Spinner />
 }
 
 @code {
