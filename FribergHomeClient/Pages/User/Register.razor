@@ -154,6 +154,11 @@ else
             return;
         }
         realEstateAgencies = response.Data;
+        if(realEstateAgencies.Count == 0)
+        {
+            errorMessage = "Något gick fel när mäklarbyråer skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+        }
     }
 
     async void Submit(AccountDTO arg)
