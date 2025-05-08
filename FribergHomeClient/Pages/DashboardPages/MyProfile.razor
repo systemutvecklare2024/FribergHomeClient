@@ -2,6 +2,7 @@
 @using FribergHomeClient.Components
 @using Blazored.LocalStorage
 @inject ILocalStorageService LocalStorage
+@inject NavigationManager navigationManager
 
 @* Author: Tobias *@
 
@@ -13,7 +14,7 @@
 }
 else
 {
-    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    <Spinner/>
 }
 
 @code {
