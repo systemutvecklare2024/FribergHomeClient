@@ -2,20 +2,18 @@
 @inherits LayoutComponentBase
 
 @* //Author:Emelie *@
-
+<h2>@ToggleSidebar</h2>
 <RadzenComponents />
 <RadzenLayout>
 	<RadzenHeader>
-		@* <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" /> *@
-		<RadzenNavMenu IsSidebarVisible="SidebarVisible" OnSidebarVisible="@(() => SidebarVisible = !SidebarVisible)" />
-		@* <RadzenNavMenu OnSidebarVisible="@(() => SidebarVisible = !SidebarVisible)" /> *@
+
+		<RadzenNavMenu OnSidebarVisible="@(() => ToggleSidebar = !ToggleSidebar)" />
 
 	</RadzenHeader>
 	<AuthorizeView>
-		<RadzenSidebar @bind-Expanded="SidebarVisible">
-			<RadzenSiteDashboard SidebarVisible="@SidebarVisible"/>
-			@* <RadzenSidebar @bind-Expanded="@sidebar1Expanded"> *@
-			@* <RadzenSiteDashboard SideBarVisible="@SidebarVisible" /> *@
+		<RadzenSidebar Expanded="@ToggleSidebar" ExpandedChanged="@OnSidebarChanged" class="sidebar-small" Style="width: max-content;">
+
+			<RadzenSiteDashboard SidebarVisible="true"/>
 		</RadzenSidebar>
 	</AuthorizeView>
 
@@ -38,10 +36,11 @@
 </HeadContent>
 
 @code {
-	private bool SidebarVisible = true;
+	private bool ToggleSidebar = true; // Default state
 
-	public async Task ToggleSidebar()
+	private void OnSidebarChanged(bool expanded)
 	{
-
+		ToggleSidebar = expanded;
+		Console.WriteLine($"Sidebar Expanded Changed: {ToggleSidebar}");
 	}
 }

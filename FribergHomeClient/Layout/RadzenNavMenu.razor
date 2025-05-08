@@ -7,7 +7,6 @@
     <div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start" style="background-color: #EFEDEB;">
         <div class="rz-col-5">
             <RadzenStack Orientation="Orientation.Horizontal" Gap="10" AlignItems="AlignItems.Center">
-                @* <RadzenSidebarToggle class="mobile-toggle" Click="ToggleSidebar" /> *@
 
                     <div class="hamburger-container">
                         <RadzenButton Icon="menu" Click="@ToggleSidebar" />
@@ -41,9 +40,7 @@
 </RadzenStack>
 
 @code {
-    [Parameter]
-    public bool IsSidebarVisible { get; set; }
-    // private bool IsSidebarExpanded { get; set; }
+
     public bool OpenSidebar { get; set; } = false;
 
     [Parameter]

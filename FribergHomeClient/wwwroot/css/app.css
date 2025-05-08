@@ -187,10 +187,16 @@ tr.rz-data-row.fade-out {
 	.hamburger-container {
 		display: block;
 	}
+
+	.sidebar-small {
+		width: 100vw !important;
+	}
 }
 
-.hamburger-container {
-	display: none;
+@media (min-width: 769px) {
+	.hamburger-container {
+		display: none;
+	}
 }
 
 /*@media (max-width: 768px) {
