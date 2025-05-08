@@ -19,16 +19,16 @@ else
 @code {
 
     private int? agentId;
-    private RealEstateAgentDTO AgentDTO;
+    private UpdateAgentDTO AgentDTO;
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
         agentId = await LocalStorage.GetItemAsync<int>("AgentId");
-        AgentDTO = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{agentId.Value}");
+        AgentDTO = await Http.GetFromJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/{agentId.Value}");
     }
-    async Task UpdateAgentProfileCallback(RealEstateAgentDTO dto)
+    async Task UpdateAgentProfileCallback(UpdateAgentDTO dto)
     {
         if (!agentId.HasValue)
         {
@@ -36,7 +36,7 @@ else
             navigationManager.NavigateTo("/RealEstateAgents/UpdateProfilee/My");
         }
 
-        var response = await Http.PutAsJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/My", dto);
+        var response = await Http.PutAsJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My", dto);
 
         if (response.IsSuccessStatusCode)
         {
