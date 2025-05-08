@@ -6,7 +6,7 @@
 @inject IAccountService accountService
 @inject DialogService DialogService
 @inject NotificationService NotificationService
-@inject IRealEstateAgencyService agencyService
+@inject IRealEstateAgencyService AgencyService
 
 @* Author: Emelie *@
 @* CoAuthor: Christoffer, Glate *@
@@ -150,7 +150,19 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        realEstateAgencies = await agencyService.GetAll();
+        var response = await AgencyService.GetAll();
+        if (!response.Success)
+        {
+            errorMessage = response.Message;
+            NotifyError(errorMessage);
+            return;
+        }
+        realEstateAgencies = response.Data;
+        if(realEstateAgencies.Count == 0)
+        {
+            errorMessage = "Något gick fel när mäklarbyråer skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+        }
     }
 
     async void Submit(AccountDTO arg)
@@ -212,6 +224,17 @@ else
         {
             model.ImageUrl = result.ToString();
         }
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
     }
 }
 

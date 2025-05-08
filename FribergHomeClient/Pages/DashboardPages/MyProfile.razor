@@ -1,11 +1,14 @@
 ﻿@page "/dashboard/myprofile"
 @using FribergHomeClient.Components
-@using Blazored.LocalStorage
-@inject ILocalStorageService LocalStorage
+@inject NavigationManager navigationManager
+@inject IRealEstateAgentService AgentService
+@inject NotificationService NotificationService
 
-@* Author: Tobias *@
+@* Author: Tobias
+   CoAuthor: Emelie
+*@
 
-<h3>Min Profil</h3>
+<PageTitle>Min Profil</PageTitle>
 
 @if (agentId.HasValue)
 {
@@ -13,7 +16,7 @@
 }
 else
 {
-    <RadzenProgressBarCircular ProgressBarStyle="ProgressBarStyle.Info" Value="100" ShowValue="false" Mode="ProgressBarMode.Indeterminate" />
+    <Spinner/>
 }
 
 @code {
@@ -21,7 +24,11 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        agentId = await LocalStorage.GetItemAsync<int>("AgentId");
+        agentId = await AgentService.GetMyAgentId();
+        if (!agentId.HasValue)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades hitta mäklare, försök igen");
+        }
     }
 
 }

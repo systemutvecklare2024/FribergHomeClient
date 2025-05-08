@@ -1,0 +1,61 @@
+﻿@page "/RealEstateAgents/UpdateProfile/My"
+@using FribergHomeClient.Components
+@inject NotificationService NotificationService
+@inject NavigationManager navigationManager
+@inject IRealEstateAgentService AgentService
+@inject HttpClient Http
+
+@* Author: Tobias
+CoAuthor: Emelie *@
+
+<PageTitle>Editera Min Profil</PageTitle>
+
+@if (AgentDTO != null)
+{
+    <AgentProfileForm Agent="AgentDTO" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></AgentProfileForm>
+}
+
+else
+{
+    <Spinner />
+}
+
+@code {
+
+    private int? agentId;
+    private UpdateAgentDTO AgentDTO;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        var response = await AgentService.GetForEditWithMyId();
+        if (!response.Success || response.Data == null)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen.");
+            return;
+        }
+        AgentDTO = response.Data;
+        agentId = AgentDTO.Id;
+    }
+    async Task UpdateAgentProfileCallback(UpdateAgentDTO dto)
+    {
+        if (!agentId.HasValue)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Ej angiven profil");
+            navigationManager.NavigateTo("/RealEstateAgents/UpdateProfilee/My");
+        }
+
+        var response = await AgentService.UpdateAgentProfile(dto);
+
+        if (response.Success)
+        {
+            NotificationService.Notify(NotificationSeverity.Success, "Profil uppdaterad");
+            navigationManager.NavigateTo("/dashboard/myprofile");
+        }
+        else
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att uppdatera din profil, försök igen");
+        }
+    }
+}

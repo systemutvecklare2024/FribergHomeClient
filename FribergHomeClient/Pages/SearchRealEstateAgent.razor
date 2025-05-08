@@ -1,9 +1,12 @@
 ﻿@page "/searchrealestateagent"
 @using FribergHomeClient.Components
 @using FribergHomeClient.Data.Dto
-@inject HttpClient Http
+@inject IRealEstateAgentService AgentService
+@inject NotificationService NotificationService
 
 @* Author: Fredrik *@
+
+<PageTitle>Sök Mäklare</PageTitle>
 
 <div style="text-align: center;">
     <h3>Sök mäklare eller mäklarfirma</h3>
@@ -28,10 +31,18 @@ else
     private List<RealEstateAgentDTO> agents;
     private List<RealEstateAgentDTO> filteredAgents = new List<RealEstateAgentDTO>();
     private string SearchQuery = string.Empty;
+    private string errorMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        agents = await Http.GetFromJsonAsync<List<RealEstateAgentDTO>>("api/RealEstateAgents");
+        var response = await AgentService.GetAll();
+        if (!response.Success || response.Data == null)
+        {
+            errorMessage = "Något gick fel när mäklare skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+            return;
+        }
+        agents = response.Data;
         filteredAgents = agents;
     }
 
@@ -57,5 +68,16 @@ else
         SearchQuery = e.Value?.ToString() ?? string.Empty;
         SearchAgents();
         StateHasChanged();
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
     }
 }

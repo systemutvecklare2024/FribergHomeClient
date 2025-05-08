@@ -14,18 +14,45 @@ namespace FribergHomeClient.Services
             _client = client;
         }
 
-        public async Task<PropertyDTO> GetPropertyDTO(int id)
+        public async Task<ServiceResponse<PropertyDTO>> GetPropertyDTO(int id)
         {
             try
             {
-                var dto = await _client.GetFromJsonAsync<PropertyDTO>($"/api/Properties/{id}/details");
-                var muncipality = await _client.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{dto.MuncipalityId}");
-                dto.Muncipality = muncipality.Name;
-                return dto;
+                var response = await _client.GetAsync($"/api/Properties/{id}/details");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var failResult = new ServiceResponse<PropertyDTO>
+                    {
+                        Success = false,
+                        Message = $"Något gick fel: {response.ReasonPhrase}"
+                    };
+
+                    return failResult;
+                }
+
+
+                var result = new ServiceResponse<PropertyDTO>
+                {
+                    Data = await response.Content.ReadFromJsonAsync<PropertyDTO>(),
+                    Success = true,
+                    Message = response.ReasonPhrase ?? ""
+                };
+
+                if (result.Data != null)
+                {
+                    var muncipality = await _client.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{result.Data.MuncipalityId}");
+                    result.Data.Muncipality = muncipality.Name;
+                }
+
+                return result;
             }
-            catch (Exception)
+            catch (HttpRequestException ex)
             {
-                return new PropertyDTO();
+                return new ServiceResponse<PropertyDTO>
+                {
+                    Success = false,
+                    Message = $"Något gick fel: {ex.Message}",
+                };
             }
         }
 

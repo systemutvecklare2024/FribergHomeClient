@@ -13,13 +13,6 @@
 }
 else
 {
-    @if (!success && !string.IsNullOrEmpty(errorMessage))
-    {
-        <RadzenAlert Style="AlertStyle.Danger">
-            @errorMessage
-        </RadzenAlert>
-    }
-
     <RadzenDataGrid @ref="applicationList"
                     AllowFiltering="true"
                     FilterPopupRenderMode="PopupRenderMode.OnDemand"
@@ -54,16 +47,28 @@ else
     public List<ApplicationDTO> Applications { get; set; } = [];
     public List<ApplicationViewModel> applicationViewModels = [];
     public List<RealEstateAgentDTO> agents = [];
-    private RadzenDataGrid<ApplicationViewModel> applicationList;
-    private bool success = false;
+    private RadzenDataGrid<ApplicationViewModel>? applicationList;
     private string errorMessage = string.Empty;
     private bool dataLoaded = false;
 
 
     protected override async Task OnInitializedAsync()
     {
-        agents = await AgentService.GetAll();
+        var response = await AgentService.GetAll();
+        if (!response.Success || response.Data == null)
+        {
+            errorMessage = "Något gick fel när mäklare skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+            return;
+        }
+        agents = response.Data;
+
         applicationViewModels = await AgencyService.GenerateApplicationViewModels(Applications, agents);
+        if(applicationViewModels.Count == 0)
+        {
+            errorMessage = "Något gick fel när mäklare skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+        }
         dataLoaded = true;
         StateHasChanged();
     }
@@ -72,17 +77,18 @@ else
     {
         applicationVM.StatusType = StatusType.Approved;
         var result = await AgencyService.HandleApplication(applicationVM);
-        success = result.Success;
-        if (!success)
+        if (!result.Success)
         {
             errorMessage = result.Message;
+            NotifyError(errorMessage);
             return;
         }
         NotificationService.Notify(new NotificationMessage
             {
                 Severity = NotificationSeverity.Success,
                 Summary = "Godkänd",
-                Detail = "Du har nu godkänt ansökan"
+                Detail = "Du har nu godkänt ansökan",
+                Duration = 5000
             });
 
         applicationViewModels.Remove(applicationVM);
@@ -94,22 +100,34 @@ else
     {
         applicationVM.StatusType = StatusType.Denied;
         var result = await AgencyService.HandleApplication(applicationVM);
-        success = result.Success;
-        if (!success)
+        if (!result.Success)
         {
             errorMessage = result.Message;
+            NotifyError(errorMessage);
             return;
         }
         NotificationService.Notify(new NotificationMessage
             {
                 Severity = NotificationSeverity.Info,
                 Summary = "Nekad",
-                Detail = "Du har nu nekat ansökan"
+                Detail = "Du har nu nekat ansökan",
+                Duration = 5000
             });
         applicationViewModels.Remove(applicationVM);
         await applicationList.Reload();
         StateHasChanged();
 
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+        {
+            Severity = NotificationSeverity.Error,
+            Duration = 5000,
+            Summary = "Fel uppstod",
+            Detail = errorMessage
+        });
     }
 
 }
