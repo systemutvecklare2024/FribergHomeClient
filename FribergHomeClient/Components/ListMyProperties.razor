@@ -8,6 +8,7 @@
 @inject IPropertyService PropertyService
 
 
+@* Author: Christoffer *@
 @if (properties == null)
 {
     <Spinner />
@@ -15,23 +16,23 @@
 else
 {
     <RadzenDataGrid TItem="PropertyDTO"
-    AllowFiltering="true"
-    AllowColumnResize="true"
-    AllowAlternatingRows="false"
-    FilterMode="FilterMode.Advanced"
-    FilterPopupRenderMode="PopupRenderMode.OnDemand"
-    AllowSorting="true"
-    PageSize="20"
-    AllowPaging="true"
-    PagerHorizontalAlign="HorizontalAlign.Left"
-    ShowPagingSummary="true"
-    Data="@properties"
-    ColumnWidth="300px"
-    LogicalFilterOperator="LogicalFilterOperator.Or"
-    SelectionMode="DataGridSelectionMode.Single"
-    @bind-Value=@selectedProperties
-    RowRender="@OnRowRender"
-    CellContextMenu="@OnCellContextMenu">
+                    AllowFiltering="true"
+                    AllowColumnResize="true"
+                    AllowAlternatingRows="false"
+                    FilterMode="FilterMode.Advanced"
+                    FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                    AllowSorting="true"
+                    PageSize="20"
+                    AllowPaging="true"
+                    PagerHorizontalAlign="HorizontalAlign.Left"
+                    ShowPagingSummary="true"
+                    Data="@properties"
+                    ColumnWidth="300px"
+                    LogicalFilterOperator="LogicalFilterOperator.Or"
+                    SelectionMode="DataGridSelectionMode.Single"
+                    @bind-Value=@selectedProperties
+                    RowRender="@OnRowRender"
+                    CellContextMenu="@OnCellContextMenu">
         <Columns>
             <RadzenDataGridColumn Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
                 <Template Context="data">
@@ -88,9 +89,7 @@ else
 
     void OnRowRender(RowRenderEventArgs<PropertyDTO> args)
     {
-        Console.WriteLine($"Rendering row {args.Data.Id}");
-
-        if(removingPropertyIds.Contains(args.Data.Id.Value))
+        if (removingPropertyIds.Contains(args.Data.Id.Value))
         {
             args.Attributes.Add("class", "rz-data-row fade-out");
         }
@@ -176,7 +175,6 @@ else
                         Console.WriteLine($"Error: {result.Message}");
                     } else
                     {
-
                         var dtoId = propertyDTO.Id.Value;
                         removingPropertyIds.Add(dtoId);
                         StateHasChanged();
@@ -191,7 +189,7 @@ else
                     return result.Success;
                 }
             }
-                                                        },
+                                                            },
             new DialogOptions() { Width = "400px", Height = "250px" }
         );
     }

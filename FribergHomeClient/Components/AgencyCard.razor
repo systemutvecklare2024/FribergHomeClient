@@ -1,4 +1,7 @@
-﻿<RadzenCard Variant="Variant.Filled" class="rz-my-12 rz-mx-auto" Style="max-width: 420px">
+﻿@using static FribergHomeClient.Data.StatusTypes
+
+
+<RadzenCard Variant="Variant.Filled" class="rz-my-12 rz-mx-auto" Style="max-width: 1200px">
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4">
         <RadzenImage Path="@LogoUrl" Style="width: 100px; height: 100px; border-radius: 50%;" />
         <RadzenStack Gap="0">
@@ -6,6 +9,12 @@
             <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0">Presentation</RadzenText>
             <RadzenText TextStyle="TextStyle.Body1"><b>@Presentation</b></RadzenText>
         </RadzenStack>
+    </RadzenStack>
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="1rem" class="rz-p-4">
+        @if(pendingApplications != null && pendingApplications.Any())
+        {
+            <ListApplications Applications="@pendingApplications"/>
+        }
     </RadzenStack>
 </RadzenCard>
 
@@ -17,5 +26,21 @@
     public string? Presentation { get; set; }
     [Parameter]
     public string? LogoUrl { get; set; }
+    [Parameter]
+    public List<ApplicationDTO> Applications { get; set; }
+
+    private List<ApplicationDTO> pendingApplications = [];
+
+    protected override void OnInitialized()
+    {
+        if(Applications != null && Applications.Any())
+            SelectPendingApplications(Applications);
+    }
+
+    private void SelectPendingApplications(List<ApplicationDTO> applications)
+    {
+        pendingApplications = applications.Where(a => a.StatusType == StatusType.Pending).ToList();
+        StateHasChanged();
+    }
 
 }

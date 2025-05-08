@@ -1,19 +1,17 @@
-﻿
-using AutoMapper;
-using FribergHomeClient.Data.Dto;
+﻿using FribergHomeClient.Data.Dto;
 using System.Net.Http.Json;
+
+// Author: Christoffer, Emelie, Glate
 
 namespace FribergHomeClient.Services
 {
     public class PropertyService : IPropertyService
     {
         private readonly HttpClient _client;
-        private readonly IMapper _mapper;
 
-        public PropertyService(HttpClient client, IMapper mapper)
+        public PropertyService(HttpClient client)
         {
             _client = client;
-            this._mapper = mapper;
         }
 
         public async Task<PropertyDTO> GetPropertyDTO(int id)
@@ -31,7 +29,7 @@ namespace FribergHomeClient.Services
             }
         }
 
-        public async Task<ResponseService<List<PropertyDTO>>> GetListAsync(string uri)
+        public async Task<ServiceResponse<List<PropertyDTO>>> GetListAsync(string uri)
         {
             try
             {
@@ -40,7 +38,7 @@ namespace FribergHomeClient.Services
 
                 if (response!.IsSuccessStatusCode)
                 {
-                    var result = new ResponseService<List<PropertyDTO>>
+                    var result = new ServiceResponse<List<PropertyDTO>>
                     {
                         Data = await response.Content.ReadFromJsonAsync<List<PropertyDTO>>(),
                         Success = true,
@@ -53,7 +51,7 @@ namespace FribergHomeClient.Services
                     return result;
                 }
 
-                return new ResponseService<List<PropertyDTO>>
+                return new ServiceResponse<List<PropertyDTO>>
                 {
                     Success = false,
                     Message = $"Något gick fel: {response.ReasonPhrase}",
@@ -61,7 +59,7 @@ namespace FribergHomeClient.Services
             }
             catch (HttpRequestException ex)
             {
-                return new ResponseService<List<PropertyDTO>>
+                return new ServiceResponse<List<PropertyDTO>>
                 {
                     Success = false,
                     Message = $"Något gick fel: {ex.Message}",
@@ -70,22 +68,22 @@ namespace FribergHomeClient.Services
 
         }
 
-        public async Task<ResponseService> DeleteAsync(int id)
+        public async Task<ServiceResponse> DeleteAsync(int id)
         {
             try
             {
                 var response = await _client.DeleteAsync($"/api/properties/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new ResponseService { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
+                    return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
                 }
 
-                return new ResponseService { Success = true };
+                return new ServiceResponse { Success = true };
 
             }
             catch (Exception ex)
             {
-                return new ResponseService { Success = false, Message =  ex.Message };
+                return new ServiceResponse { Success = false, Message = ex.Message };
             }
         }
 

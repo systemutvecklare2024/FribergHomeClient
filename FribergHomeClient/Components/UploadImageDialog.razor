@@ -1,6 +1,7 @@
 ﻿@inject DialogService DialogService
 @inject NotificationService NotificationService
 
+@* Author Glate *@
 <div class="rz-dialog-content rz-p-4">
 	<div class="rz-mt-4 rz-text-align-right">
 		<RadzenCard Style="text-align: center; padding: 10px; margin: 0 auto;">
@@ -17,7 +18,6 @@
 				</RadzenRow>
 				<RadzenRow>
 					<RadzenButton Icon="add" Text="Lägg till" Click="@(() => AddImage())" Style="margin-left: 1rem;" />
-					@* <RadzenButton Icon="save" Text="Spara" ButtonStyle="ButtonStyle.Primary" Click="@(() => DialogService.Close(ExistingImageUrl))" /> *@
 				</RadzenRow>
 				@if (!string.IsNullOrEmpty(ErrorMessage))
 				{

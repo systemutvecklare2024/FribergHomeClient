@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using FribergHomeClient.Validation;
+using Newtonsoft.Json;
+
+// Author: Glate
 
 namespace FribergHomeClient.Services
 {

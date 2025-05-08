@@ -8,9 +8,6 @@
 @inject HttpClient Http
 @inject NotificationService NotificationService
 
-@inject HttpClient Http
-@inject NotificationService NotificationService
-
 <RadzenTemplateForm TItem="PropertyDTO" Data="@Property" Submit="@HandleSubmit">
     <ChildContent>
         <RadzenFieldset Text="Generell information">
@@ -92,7 +89,7 @@
                 <RadzenTextBox Name="PostalCode" @bind-Value="Property.PostalCode" Placeholder="Postal Code" Style="width:100%" />
             </RadzenFormField>
             <RadzenFormField Text="Kommun" Variant="Variant.Outlined">
-                <SelectMuncipalityComponent @bind-SelectedMunicipalityId="Property.MuncipalityId" />
+                <SelectMuncipality @bind-SelectedMunicipalityId="Property.MuncipalityId" />
             </RadzenFormField>
         </RadzenFieldset>
 

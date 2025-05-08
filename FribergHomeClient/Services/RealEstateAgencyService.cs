@@ -49,7 +49,7 @@ namespace FribergHomeClient.Services
             }
         }
 
-        public async Task<ResponseService<bool>> HandleApplication(ApplicationViewModel applicationVM)
+        public async Task<ServiceResponse<bool>> HandleApplication(ApplicationViewModel applicationVM)
         {
             try
             {
@@ -57,7 +57,7 @@ namespace FribergHomeClient.Services
                 var response = await client.PostAsJsonAsync<ApplicationDTO>($"/api/RealEstateAgencies/{dto.AgencyId}/applications/{dto.Id}", dto);
                 if (response.IsSuccessStatusCode)
                 {
-                    var result = new ResponseService<bool>()
+                    var result = new ServiceResponse<bool>()
                     {
                         Success = true,
                         Message = response.ReasonPhrase ?? ""
@@ -65,7 +65,7 @@ namespace FribergHomeClient.Services
                     return result;
                 }
 
-                return new ResponseService<bool>()
+                return new ServiceResponse<bool>()
                 {
                     Success = false,
                     Message = response.ReasonPhrase ?? ""
@@ -75,7 +75,7 @@ namespace FribergHomeClient.Services
             catch (HttpRequestException ex)
             {
 
-                return new ResponseService<bool>()
+                return new ServiceResponse<bool>()
                 {
                     Success = false,
                     Message = $"Något gick fel:{ex.Message}" ?? ""
