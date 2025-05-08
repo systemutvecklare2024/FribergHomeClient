@@ -4,15 +4,19 @@
 @* //Author:Emelie *@
 
 <RadzenComponents />
-<RadzenLayout Style="position: relative;">
+<RadzenLayout>
 	<RadzenHeader>
-		<div class="hamburger-container">
-			<RadzenButton Icon="menu" Click="@(() => SidebarVisible = !SidebarVisible)" class="hamburger-btn" />
-		</div>
-		<RadzenNavMenu OnSidebarExpanded="Test" />
+		@* <RadzenSidebarToggle Click="@(() => sidebar1Expanded = !sidebar1Expanded)" /> *@
+		<RadzenNavMenu IsSidebarVisible="SidebarVisible" OnSidebarVisible="@(() => SidebarVisible = !SidebarVisible)" />
+		@* <RadzenNavMenu OnSidebarVisible="@(() => SidebarVisible = !SidebarVisible)" /> *@
+
 	</RadzenHeader>
 	<AuthorizeView>
-		<RadzenSiteDashboard SideBarVisible="@SidebarVisible" />
+		<RadzenSidebar @bind-Expanded="SidebarVisible">
+			<RadzenSiteDashboard SidebarVisible="@SidebarVisible"/>
+			@* <RadzenSidebar @bind-Expanded="@sidebar1Expanded"> *@
+			@* <RadzenSiteDashboard SideBarVisible="@SidebarVisible" /> *@
+		</RadzenSidebar>
 	</AuthorizeView>
 
 	<RadzenBody>
@@ -34,10 +38,10 @@
 </HeadContent>
 
 @code {
-
 	private bool SidebarVisible = true;
-	private void Test(bool isExpanded)
+
+	public async Task ToggleSidebar()
 	{
-		// IsSidebarExpanded = isExpanded;
+
 	}
 }

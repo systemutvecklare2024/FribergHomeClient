@@ -2,7 +2,6 @@
 
 @if (SidebarVisible)
 {
-	<RadzenSidebar Responsive="false" Style="width: max-content;" class="change-stuff">
 		<RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
 			<RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
 				@if (!SidebarExpanded)
@@ -21,12 +20,11 @@
 			<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
 			<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
 		</RadzenPanelMenu>
-	</RadzenSidebar>
 }
 
 @code {
 	[Parameter]
 	public bool SidebarExpanded { get; set; } = true;
 	[Parameter]
-	public bool SidebarVisible { get; set; }
+	public bool SidebarVisible { get; set; } = true;
 }

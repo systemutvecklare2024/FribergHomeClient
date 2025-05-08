@@ -183,15 +183,27 @@ tr.rz-data-row.fade-out {
 	}
 }
 
+@media (max-width: 768px) {
+	.hamburger-container {
+		display: block;
+	}
+}
+
 .hamburger-container {
 	display: none;
 }
 
-@media only screen and (max-width: 768px) {
-	.change-stuff {
-		position: absolute !important;
+/*@media (max-width: 768px) {
+	.custom-sidebar {
+		position: fixed !important;
+		margin-top: 100px;
+		visibility: visible !important;
+		width: 100% !important;
+		display: block !important;
+		z-index: 1000 !important;
 	}
 	.hamburger-container {
 		display: block;
 	}
 }
+*/
