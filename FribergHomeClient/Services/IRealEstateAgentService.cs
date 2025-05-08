@@ -6,5 +6,8 @@ namespace FribergHomeClient.Services
     {
         Task<ServiceResponse<RealEstateAgentDTO>> GetById(int id);
         Task<ServiceResponse<List<RealEstateAgentDTO>>> GetAll();
+        Task<int?> GetMyAgentId();
+        Task<ServiceResponse<UpdateAgentDTO>> GetForEditWithMyId();
+        Task<ServiceResponse> UpdateAgentProfile(UpdateAgentDTO agentDTO);
     }
 }

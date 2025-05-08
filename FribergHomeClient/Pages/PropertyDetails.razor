@@ -3,6 +3,7 @@
 @using FribergHomeClient.Services
 @inject IPropertyService PropertyService
 @inject HttpClient Http
+@inject NotificationService NotificationService
 
 @* //Author:Emelie *@
 @* CoAuthor: Fredrik *@
@@ -159,12 +160,20 @@ else
     private RealEstateAgentDTO? agent { get; set; }
 
     private string[] descriptionArray = [];
+    private string errorMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
 
-        Property = await PropertyService.GetPropertyDTO(Id);
+        var response = await PropertyService.GetPropertyDTO(Id);
+        if (!response.Success || response.Data == null)
+        {
+            errorMessage = "Något gick fel när mäklare skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+            return;
+        }
 
+        Property = response.Data;
         // //Fredrik
         if (Property?.RealEstateAgentId != null && Property.RealEstateAgentId > 0)
         {
@@ -181,6 +190,17 @@ else
     private string[] SplitDescription(string description)
     {
         return description.Split("\r\n");
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
     }
 
 }

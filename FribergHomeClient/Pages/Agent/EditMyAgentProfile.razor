@@ -1,10 +1,12 @@
 ﻿@page "/RealEstateAgents/UpdateProfile/My"
-@using Blazored.LocalStorage
 @using FribergHomeClient.Components
-@inject HttpClient Http
 @inject NotificationService NotificationService
-@inject ILocalStorageService LocalStorage
 @inject NavigationManager navigationManager
+@inject IRealEstateAgentService AgentService
+@inject HttpClient Http
+
+@* Author: Tobias
+CoAuthor: Emelie *@
 
 @if (AgentDTO != null)
 {
@@ -25,8 +27,14 @@ else
     {
         await base.OnInitializedAsync();
 
-        agentId = await LocalStorage.GetItemAsync<int>("AgentId");
-        AgentDTO = await Http.GetFromJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/{agentId.Value}");
+        var response = await AgentService.GetForEditWithMyId();
+        if (!response.Success || response.Data == null)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen.");
+            return;
+        }
+        AgentDTO = response.Data;
+        agentId = AgentDTO.Id;
     }
     async Task UpdateAgentProfileCallback(UpdateAgentDTO dto)
     {
@@ -36,17 +44,15 @@ else
             navigationManager.NavigateTo("/RealEstateAgents/UpdateProfilee/My");
         }
 
-        var response = await Http.PutAsJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My", dto);
+        var response = await AgentService.UpdateAgentProfile(dto);
 
-        if (response.IsSuccessStatusCode)
+        if (response.Success)
         {
-            Console.WriteLine("Success!");
-            NotificationService.Notify(NotificationSeverity.Success, "Profil uppdaterad'");
+            NotificationService.Notify(NotificationSeverity.Success, "Profil uppdaterad");
             navigationManager.NavigateTo("/dashboard/myprofile");
         }
         else
         {
-            Console.WriteLine("Epic failure");
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att uppdatera din profil, försök igen");
         }
     }
