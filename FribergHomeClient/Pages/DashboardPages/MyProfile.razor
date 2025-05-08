@@ -22,7 +22,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        agentId = await LocalStorage.GetItemAsync<int>("AgentId");
+        agentId = await LocalStorage.GetItemAsync<int>("AgentId"); //Should this be in the component or the AgentService?
     }
 
 }
