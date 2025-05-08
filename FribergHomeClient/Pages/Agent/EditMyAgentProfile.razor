@@ -45,7 +45,6 @@ else
         }
 
         var response = await AgentService.UpdateAgentProfile(dto);
-        //var response = await Http.PutAsJsonAsync<UpdateAgentDTO>($"api/RealEstateAgents/My", dto);
 
         if (response.Success)
         {
