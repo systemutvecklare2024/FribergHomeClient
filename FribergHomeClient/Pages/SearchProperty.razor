@@ -2,6 +2,8 @@
 @page "/searchproperty/{muncipalityId:int?}"
 @using FribergHomeClient.Components
 
+@* Author: Glate *@
+
 @if (!MuncipalityId.HasValue)
 {
 	<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>

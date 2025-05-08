@@ -8,7 +8,7 @@
 			<RadzenText TextStyle="TextStyle.H5">Sök på kommun</RadzenText>
 			<RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="1rem" Wrap="FlexWrap.Wrap">
 				<RadzenFormField Text="Välj kommun" Variant="Variant.Outlined" Style="width: 100%;">
-					<SelectMuncipalityComponent @bind-SelectedMunicipalityId="MuncipalityId" />
+					<SelectMuncipality @bind-SelectedMunicipalityId="MuncipalityId" />
 				</RadzenFormField>
 			</RadzenStack>
 			<RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" Click="OnSearch" />

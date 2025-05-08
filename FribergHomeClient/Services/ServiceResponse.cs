@@ -1,5 +1,7 @@
 ﻿using FribergHomeClient.Validation;
 
+// Author: Christoffer
+
 namespace FribergHomeClient.Services
 {
 	public class ServiceResponse<T>
