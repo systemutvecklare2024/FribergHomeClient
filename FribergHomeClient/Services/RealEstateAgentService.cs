@@ -13,30 +13,70 @@ namespace FribergHomeClient.Services
             this.client = client;
         }
 
-        public async Task<List<RealEstateAgentDTO>> GetAll()
+        public async Task<ServiceResponse<List<RealEstateAgentDTO>>> GetAll()
         {
             try
             {
-                return await client.GetFromJsonAsync<List<RealEstateAgentDTO>>("api/RealEstateAgents");
+                var response = await client.GetAsync("api/RealEstateAgents");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var result = new ServiceResponse<List<RealEstateAgentDTO>>
+                    {
+                        Success = false,
+                        Message = $"Något gick fel: {response.ReasonPhrase}"
+                    };
+
+                    return result;
+                }
+
+                return new ServiceResponse<List<RealEstateAgentDTO>>
+                {
+                    Data = await response.Content.ReadFromJsonAsync<List<RealEstateAgentDTO>>(),
+                    Success = true,
+                    Message = response.ReasonPhrase ?? ""
+                };
             }
-            catch (Exception)
+            catch (HttpRequestException ex)
             {
 
-                throw;
+                return new ServiceResponse<List<RealEstateAgentDTO>>
+                {
+                    Success = false,
+                    Message = $"Något gick fel: {ex.Message}",
+                };
             }
         }
-        public async Task<RealEstateAgentDTO> GetById(int id)
+        public async Task<ServiceResponse<RealEstateAgentDTO>> GetById(int id)
         {
 			try
 			{
-                return await client.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{id}");
+                var response = await client.GetAsync($"api/RealEstateAgents/{id}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var result = new ServiceResponse<RealEstateAgentDTO>
+                    {
+                        Success= false,
+                        Message = $"Något gick fel: {response.ReasonPhrase}"
+                    };
+                    return result;
+                }
+                return new ServiceResponse<RealEstateAgentDTO>
+                {
+                    Success = true,
+                    Message = response.ReasonPhrase ?? "",
+                    Data = await response.Content.ReadFromJsonAsync<RealEstateAgentDTO>()
+                };
                 //Handle response
 			}
-			catch (Exception)
+			catch (HttpRequestException ex)
 			{
 
-				throw;
-			}
+                return new ServiceResponse<RealEstateAgentDTO>
+                {
+                    Success = false,
+                    Message = $"Något gick fel: {ex.Message}",
+                };
+            }
         }
     }
 }

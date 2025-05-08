@@ -22,10 +22,12 @@ namespace FribergHomeClient.Services
                 var muncipality = await _client.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{dto.MuncipalityId}");
                 dto.Muncipality = muncipality.Name;
                 return dto;
+                //Handle response here
             }
             catch (Exception)
             {
                 return new PropertyDTO();
+                //Handle response here
             }
         }
 

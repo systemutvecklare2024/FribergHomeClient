@@ -4,7 +4,7 @@ namespace FribergHomeClient.Services
 {
     public interface IRealEstateAgentService
     {
-        Task<RealEstateAgentDTO> GetById(int id);
-        Task<List<RealEstateAgentDTO>> GetAll();
+        Task<ServiceResponse<RealEstateAgentDTO>> GetById(int id);
+        Task<ServiceResponse<List<RealEstateAgentDTO>>> GetAll();
     }
 }
