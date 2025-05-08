@@ -19,33 +19,69 @@ namespace FribergHomeClient.Services
             this.mapper = mapper;
 
         }
-        public async Task<List<RealEstateAgencyDTO>> GetAll()
+        public async Task<ServiceResponse<List<RealEstateAgencyDTO>>> GetAll()
         {
 			try
 			{
-                var dtos = await client.GetFromJsonAsync<List<RealEstateAgencyDTO>>($"/api/RealEstateAgencies");
-                return dtos;
+                var response = await client.GetAsync($"/api/RealEstateAgencies");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var result = new ServiceResponse<List<RealEstateAgencyDTO>>
+                    {
+                        Success = false,
+                        Message = $"Något gick fel: {response.ReasonPhrase}"
+                    };
+                    return result;
+                }
+                return new ServiceResponse<List<RealEstateAgencyDTO>>
+                {
+                    Success = true,
+                    Data = await response.Content.ReadFromJsonAsync<List<RealEstateAgencyDTO>>(),
+                    Message = response.ReasonPhrase ?? ""
+                };
 
             }
-			catch (Exception)
+			catch (HttpRequestException ex)
 			{
 
-				return new List<RealEstateAgencyDTO>();
-			}
+                return new ServiceResponse<List<RealEstateAgencyDTO>>
+                {
+                    Success = false,
+                    Message = $"Något gick fel: {ex.Message}",
+                };
+            }
         }
 
-        public async Task<RealEstateAgencyPageDTO> GetById(int id)
+        public async Task<ServiceResponse<RealEstateAgencyPageDTO>> GetById(int id)
         {
             try
             {
-                Console.WriteLine("Hamnar i try");
-                return  await client.GetFromJsonAsync<RealEstateAgencyPageDTO>($"/api/RealEstateAgencies/{id}");
-                //Handle response here
+                var response = await client.GetAsync($"/api/RealEstateAgencies/{id}");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var result = new ServiceResponse<RealEstateAgencyPageDTO>
+                    {
+                        Success = false,
+                        Message = $"Något gick fel: {response.ReasonPhrase}"
+                    };
+                    return result;
+                }
+
+                return new ServiceResponse<RealEstateAgencyPageDTO>
+                {
+                    Success = true,
+                    Data = await response.Content.ReadFromJsonAsync<RealEstateAgencyPageDTO>(),
+                    Message = response.ReasonPhrase ?? ""
+                };
+
             }
-            catch (Exception)
+            catch (HttpRequestException ex)
             {
-                Console.WriteLine("Hamnar i catch");
-                return new RealEstateAgencyPageDTO();
+                return new ServiceResponse<RealEstateAgencyPageDTO>
+                {
+                    Success = false,
+                    Message = $"Något gick fel: {ex.Message}",
+                };
             }
         }
 
@@ -68,7 +104,7 @@ namespace FribergHomeClient.Services
                 return new ServiceResponse<bool>()
                 {
                     Success = false,
-                    Message = response.ReasonPhrase ?? ""
+                    Message = $"Något gick fel: {response.ReasonPhrase}" ?? ""
                 };
 
             }
@@ -83,7 +119,7 @@ namespace FribergHomeClient.Services
             }
         }
 
-        public async Task<List<ApplicationViewModel>> GenerateApplicationViewModels(List<ApplicationDTO> applicationDTOs, List<RealEstateAgentDTO> agentDTOs) //Should this be async
+        public async Task<List<ApplicationViewModel>> GenerateApplicationViewModels(List<ApplicationDTO> applicationDTOs, List<RealEstateAgentDTO> agentDTOs)
         {
             List<ApplicationViewModel> applicationViewModels = new List<ApplicationViewModel>();
 
@@ -93,7 +129,7 @@ namespace FribergHomeClient.Services
 
                 if(agent == null)
                 {
-                    return new List<ApplicationViewModel>(); //What to do here?
+                    return new List<ApplicationViewModel>();
                 }
 
                 var applicationViewModel = mapper.Map<ApplicationViewModel>(applicationDTO);
