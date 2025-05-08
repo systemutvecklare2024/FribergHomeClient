@@ -48,6 +48,7 @@ else
             return;
         }
         agent = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{Id.Value}");
+        
         if(agent == null) {
             NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
         }
