@@ -27,6 +27,7 @@ namespace FribergHomeClient.Services
             catch (Exception)
             {
                 return new PropertyDTO();
+                //Handle response here
             }
         }
 
