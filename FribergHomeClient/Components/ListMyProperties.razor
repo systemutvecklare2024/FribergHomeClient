@@ -89,8 +89,6 @@ else
 
     void OnRowRender(RowRenderEventArgs<PropertyDTO> args)
     {
-        Console.WriteLine($"Rendering row {args.Data.Id}");
-
         if(removingPropertyIds.Contains(args.Data.Id.Value))
         {
             args.Attributes.Add("class", "rz-data-row fade-out");
