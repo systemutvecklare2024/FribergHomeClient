@@ -4,14 +4,12 @@
 @* //Author:Emelie *@
 
 <RadzenComponents />
-<RadzenLayout>
+<RadzenLayout Style="position: relative;">
 	<RadzenHeader>
 		<RadzenNavMenu OnSidebarExpanded="Test" />
 	</RadzenHeader>
 	<AuthorizeView>
-
-		<RadzenSidebar @bind-Expanded="IsSidebarExpanded" Responsive="false" Style="width: max-content">
-
+		<RadzenSidebar Responsive="false" Style=" width: max-content;">
 			<RadzenSiteDashboard />
 		</RadzenSidebar>
 	</AuthorizeView>
