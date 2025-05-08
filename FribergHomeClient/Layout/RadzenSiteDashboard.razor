@@ -1,23 +1,32 @@
 ﻿@* //Author:Emelie *@
 
-<RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
-    <RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
-        <RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => sidebarExpanded = !sidebarExpanded)" />
-    </RadzenStack>
-    <RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" />
-    <RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" />
-    <RadzenPanelMenuItem Text="Redigera bostad" Icon="other_houses" Path="/dashboard/editproperty" />
-    <RadzenPanelMenuItem Text="Ta bort bostad" Icon="delete" Path="/dashboard/deleteproperty" />
-    <RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
-    <RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
-    <RadzenPanelMenuItem Text="UI Fundamentals" Icon="auto_awesome">
-        <RadzenPanelMenuItem Text="Themes" Icon="color_lens" />
-        <RadzenPanelMenuItem Text="Colors" Icon="invert_colors" />
-    </RadzenPanelMenuItem>
-</RadzenPanelMenu>
+@if (SidebarVisible)
+{
+	<RadzenSidebar Responsive="false" Style="width: max-content;" class="change-stuff">
+		<RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
+			<RadzenStack AlignItems="AlignItems.End" class="rz-p-2">
+				@if (!SidebarExpanded)
+				{
+					<RadzenButton Icon="east" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+				}
+				<RadzenRow>
+					<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" />
+					@if (SidebarExpanded)
+					{
+						<RadzenButton Icon="west" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+					}
+				</RadzenRow>
+			</RadzenStack>
+			<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" />
+			<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
+			<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
+		</RadzenPanelMenu>
+	</RadzenSidebar>
+}
 
 @code {
-    bool sidebarExpanded = true;
-    private MenuItemDisplayStyle DisplayStyle = MenuItemDisplayStyle.Icon;
-    //@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)
+	[Parameter]
+	public bool SidebarExpanded { get; set; } = true;
+	[Parameter]
+	public bool SidebarVisible { get; set; }
 }

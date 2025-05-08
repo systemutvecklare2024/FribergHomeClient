@@ -6,12 +6,13 @@
 <RadzenComponents />
 <RadzenLayout Style="position: relative;">
 	<RadzenHeader>
+		<div class="hamburger-container">
+			<RadzenButton Icon="menu" Click="@(() => SidebarVisible = !SidebarVisible)" class="hamburger-btn" />
+		</div>
 		<RadzenNavMenu OnSidebarExpanded="Test" />
 	</RadzenHeader>
 	<AuthorizeView>
-		<RadzenSidebar Responsive="false" Style=" width: max-content;">
-			<RadzenSiteDashboard />
-		</RadzenSidebar>
+		<RadzenSiteDashboard SideBarVisible="@SidebarVisible" />
 	</AuthorizeView>
 
 	<RadzenBody>
@@ -33,10 +34,10 @@
 </HeadContent>
 
 @code {
-	private bool IsSidebarExpanded = true;
 
+	private bool SidebarVisible = true;
 	private void Test(bool isExpanded)
 	{
-		IsSidebarExpanded = isExpanded;
+		// IsSidebarExpanded = isExpanded;
 	}
 }

@@ -182,3 +182,16 @@ tr.rz-data-row.fade-out {
 		height: 0;
 	}
 }
+
+.hamburger-container {
+	display: none;
+}
+
+@media only screen and (max-width: 768px) {
+	.change-stuff {
+		position: absolute !important;
+	}
+	.hamburger-container {
+		display: block;
+	}
+}
