@@ -20,7 +20,8 @@
 else
 {
     <Panel Title="Registrera">
-        <RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })">
+        <RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })" @ref="templateForm">
+            <DataAnnotationsValidator />
             @if (!success && !string.IsNullOrEmpty(errorMessage))
             {
                 <div class=" alert alert-danger">
@@ -96,7 +97,8 @@ else
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="9">
                                 <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=model.Password />
-                                <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
+                                @* <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" /> *@
+                                <RadzenDataAnnotationValidator Component="Password" />
                             </RadzenColumn>
                         </RadzenRow>
                         @* PasswordConfirmed *@
@@ -105,8 +107,9 @@ else
                                 <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="9">
-                                <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
-                                <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
+                                <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword Change="@(() => context.Validate())" />
+                                @* <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" /> *@
+                                <RadzenDataAnnotationValidator Component="ConfirmPassword" />
                             </RadzenColumn>
                         </RadzenRow>
                         @* Agency *@
@@ -122,7 +125,7 @@ else
                     </RadzenStack>
                     <RadzenRow class="rz-mt-4">
                         <RadzenColumn Size="12" SizeMD="6">
-                            <RadzenButton ButtonType="ButtonType.Submit" Style="width: 100%;" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
+                            <RadzenButton ButtonType="ButtonType.Submit" Disabled="@(!templateForm.IsValid)" Style="width: 100%;" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
                         </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="6">
                             <RadzenButton ButtonStyle="ButtonStyle.Light" Style="width: 100%;" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
@@ -136,6 +139,7 @@ else
 }
 
 @code {
+    private RadzenTemplateForm<AccountDTO> templateForm;
 
     private AccountDTO model = new();
     private List<RealEstateAgencyDTO> realEstateAgencies = [];
