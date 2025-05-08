@@ -2,6 +2,7 @@
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavManager
 @using FribergHomeClient.Data.Dto
+@inject NotificationService NotificationService
 
 @* Author: Emelie *@
 @* CoAuthor: Christoffer *@
@@ -10,12 +11,6 @@
 
 <Panel Title="Logga in">
     <RadzenTemplateForm Data=@model Submit="@((LoginDTO args) => OnLogin(args))">
-        @if (failed && !string.IsNullOrEmpty(errorMessage))
-        {
-            <div class=" alert alert-danger">
-                <p>@errorMessage</p>
-            </div>
-        }
         <RadzenStack class="rz-mb-3" Gap="0.5rem" >
             <RadzenLabel Text="E-post" />
             <RadzenTextBox @bind-Value="@model.Email" Name="Email" />
@@ -46,20 +41,20 @@
 @code {
 
     private LoginDTO model = new();
-    private bool failed = false;
+    //private bool failed = false;
     private string errorMessage = string.Empty;
 
     public async Task OnLogin(LoginDTO loginDTO)
     {
         if (!await AuthService.AuthenticateAsync(model))
         {
-            failed = true;
+            //failed = true;
             errorMessage = "Något gick fel vid inloggningen!";
-
+            NotifyError(errorMessage);
         }
         else
         {
-            NavManager.NavigateTo("/dashboard");
+            NavManager.NavigateTo("/dashboard/myobjects");
         }
 
     }
@@ -68,5 +63,16 @@
     {
         NavManager.NavigateTo("/register");
 
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
     }
 }

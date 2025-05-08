@@ -7,12 +7,14 @@
 @* //Author:Emelie *@
 @* CoAuthor: Fredrik *@
 
+
 @if (Property is null)
 {
     <Spinner />
 }
 else
 {
+    <PageTitle>@Property.Street</PageTitle>
     <RadzenStack Orientation="Orientation.Vertical" AlignItems="AlignItems.Normal" style="width: 50%; margin: auto;">
         <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.Start">
             <RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
@@ -21,8 +23,8 @@ else
         </RadzenStack>
         <RadzenStack Orientation="Orientation.Vertical" JustifyContent="JustifyContent.Stretch" AlignItems="AlignItems.Center">
             <RadzenCarousel Auto="false" AllowNavigation="true"
-            Style="height: 600px; width: 100%;"
-            ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
+                            Style="height: 600px; width: 100%;"
+                            ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
                 <Items>
                     @foreach (var image in Property.ImageUrls)
                     {
@@ -155,7 +157,7 @@ else
     public int Id { get; set; }
 
     public PropertyDTO Property { get; set; }
-    //Fredrik 
+    //Fredrik
     private RealEstateAgentDTO? agent { get; set; }
 
     private string[] descriptionArray = [];
@@ -172,7 +174,7 @@ else
         }
         else
         {
-            Console.WriteLine("AgentId är NULL eller saknas.");    
+            Console.WriteLine("AgentId är NULL eller saknas.");
         }
 
         descriptionArray = SplitDescription(Property.Description);
