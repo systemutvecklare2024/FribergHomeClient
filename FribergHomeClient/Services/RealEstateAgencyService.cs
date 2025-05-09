@@ -85,6 +85,39 @@ namespace FribergHomeClient.Services
             }
         }
 
+        public async Task<ServiceResponse<RealEstateAgencyPageDTO>> GetMyAgency()
+        {
+            try
+            {
+                var response = await client.GetAsync($"api/RealEstateAgencies/My");
+                if (!response.IsSuccessStatusCode)
+                {
+                    var result = new ServiceResponse<RealEstateAgencyPageDTO>
+                    {
+                        Success = false,
+                        Message = $"Något gick fel: {response.ReasonPhrase}"
+                    };
+                    return result;
+                }
+
+                return new ServiceResponse<RealEstateAgencyPageDTO>
+                {
+                    Success = true,
+                    Data = await response.Content.ReadFromJsonAsync<RealEstateAgencyPageDTO>(),
+                    Message = response.ReasonPhrase ?? ""
+                };
+
+            }
+            catch (HttpRequestException ex)
+            {
+                return new ServiceResponse<RealEstateAgencyPageDTO>
+                {
+                    Success = false,
+                    Message = $"Något gick fel: {ex.Message}",
+                };
+            }
+        }
+
         public async Task<ServiceResponse<bool>> HandleApplication(ApplicationViewModel applicationVM)
         {
             try

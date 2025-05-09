@@ -2,10 +2,12 @@
 @using FribergHomeClient.Components
 @using FribergHomeClient.Data.Dto
 @using Blazored.LocalStorage
-@inject ILocalStorageService LocalStorage
-@inject HttpClient Http
+@inject IRealEstateAgencyService AgencyService
+@inject NotificationService NotificationService
 
-<h3>Agency</h3>
+@* Author: Tobias
+CoAuthor: Emelie *@
+<PageTitle>Min Mäklarbyrå</PageTitle>
 
 @if (agency != null)
 {
@@ -28,11 +30,30 @@ else
 
 @code {
     RealEstateAgencyPageDTO? agency { get; set; }
+    private string errorMessage = string.Empty;
 
 
     protected override async Task OnInitializedAsync()
     {
-        agency = await Http.GetFromJsonAsync<RealEstateAgencyPageDTO>($"api/RealEstateAgencies/My");
+        var response = await AgencyService.GetMyAgency();
+        if(!response.Success || response.Data == null)
+        {
+            errorMessage = "Något gick fel när din mäklarbyrå skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+            return;
+        }
+        agency = response.Data;
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
     }
 
 }

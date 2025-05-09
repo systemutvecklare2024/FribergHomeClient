@@ -13,14 +13,6 @@
 }
 else
 {
-    @* @if (!success && !string.IsNullOrEmpty(errorMessage))
-    {
-        <RadzenAlert Style="AlertStyle.Danger">
-            @errorMessage
-        </RadzenAlert>
-        NotifyError(errorMessage);
-    } *@
-
     <RadzenDataGrid @ref="applicationList"
                     AllowFiltering="true"
                     FilterPopupRenderMode="PopupRenderMode.OnDemand"
@@ -56,7 +48,6 @@ else
     public List<ApplicationViewModel> applicationViewModels = [];
     public List<RealEstateAgentDTO> agents = [];
     private RadzenDataGrid<ApplicationViewModel>? applicationList;
-    //private bool success = false;
     private string errorMessage = string.Empty;
     private bool dataLoaded = false;
 
@@ -64,14 +55,14 @@ else
     protected override async Task OnInitializedAsync()
     {
         var response = await AgentService.GetAll();
-        //success = response.Success;
-        if (!response.Success)
+        if (!response.Success || response.Data == null)
         {
-            errorMessage = response.Message;
+            errorMessage = "Något gick fel när mäklare skulle hämtas, försök igen.";
             NotifyError(errorMessage);
             return;
         }
         agents = response.Data;
+
         applicationViewModels = await AgencyService.GenerateApplicationViewModels(Applications, agents);
         if(applicationViewModels.Count == 0)
         {
@@ -86,7 +77,6 @@ else
     {
         applicationVM.StatusType = StatusType.Approved;
         var result = await AgencyService.HandleApplication(applicationVM);
-        //success = result.Success;
         if (!result.Success)
         {
             errorMessage = result.Message;
@@ -110,7 +100,6 @@ else
     {
         applicationVM.StatusType = StatusType.Denied;
         var result = await AgencyService.HandleApplication(applicationVM);
-        //success = result.Success;
         if (!result.Success)
         {
             errorMessage = result.Message;

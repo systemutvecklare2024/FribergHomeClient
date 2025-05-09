@@ -1,8 +1,12 @@
 ﻿@using FribergHomeClient.Components
 @using FribergHomeClient.Data.Dto
+@inject IRealEstateAgentService AgentService
 @inject HttpClient Http
 @inject NotificationService NotificationService
 @inject NavigationManager navigationManager
+
+@* Author: Tobias
+CoAuthor: Emelie *@
 
 @if (agent == null)
 {
@@ -44,24 +48,40 @@ else
     [Parameter]
     public int? Id { get; set; }
     RealEstateAgentDTO? agent { get; set; }
+    private string errorMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
         // Need to handle 404s
         if(!Id.HasValue)
         {
-            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
+            errorMessage = "Misslyckades att hämta mäklare, försök igen";
+            NotifyError(errorMessage);
             return;
         }
-        agent = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{Id.Value}");
-        
-        if(agent == null) {
-            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att hämta mäklare, försök igen");
+        var response = await AgentService.GetById(Id.Value);
+        if (!response.Success || response.Data == null)
+        {
+            errorMessage = "Misslyckades att hämta mäklare, försök igen";
+            NotifyError(errorMessage);
+            return;
         }
+        agent = response.Data;
     }
     void NavigateTo()
     {
         navigationManager.NavigateTo("/RealEstateAgents/UpdateProfile/My");
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
     }
 
 }
