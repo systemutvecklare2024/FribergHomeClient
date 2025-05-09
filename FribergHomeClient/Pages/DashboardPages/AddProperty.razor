@@ -7,12 +7,14 @@
 @* Author: Christoffer *@
 
 <PageTitle>Lägg till bostad</PageTitle>
+<AdminPanel Title="Lägg till bostad">
+    <PropertyForm OnSubmit="@CreateProperty" SubmitButtonText="Lägg till"></PropertyForm>
+</AdminPanel>
 
-<PropertyForm OnSubmit="@CreateProperty" SubmitButtonText="Lägg till"></PropertyForm>
 @code {
     async Task CreateProperty(PropertyDTO dto)
     {
-        
+
         var response = await Http.PostAsJsonAsync<PropertyDTO>("api/properties", dto);
 
         if (response.IsSuccessStatusCode)

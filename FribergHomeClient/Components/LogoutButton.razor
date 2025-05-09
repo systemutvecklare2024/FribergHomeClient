@@ -7,23 +7,25 @@
 
 @* //Author:Emelie *@
 
-<RadzenPanelMenuItem Shade="Shade.Light" Click=@ShowLogoutDialog Text="Logga ut" Icon="logout"/>
+<RadzenPanelMenuItem Shade="Shade.Light" Click=@ShowLogoutDialog Text="Logga ut" Icon="logout" />
 
 @code {
-
-	async Task ShowLogoutDialog()
-	{
-		var result = await DialogService.OpenAsync<LogoutConfirmationDialog>(
-			"Bekräftelse",
-			null,
-			new DialogOptions() { Width = "400px", Height = "250px" });
-
-		if (result is bool confirmed && confirmed)
-		{
-			// Logga ut användaren
-			await authService.Logout();
-			NavManager.NavigateTo("/");
-		}
-	}
+    async Task ShowLogoutDialog()
+    {
+        var result = await DialogService.OpenAsync<ConfirmationDialog>(
+            "Bekräftelse logga ut",
+            new Dictionary<string, object> {
+                {"Description", $"Är du säker på att du vill logga ut?"},
+                {"SubmitButtonText", "Logga ut"},
+                {"OnSubmit", async () =>
+                {
+                    DialogService.Close();
+                    await authService.Logout();
+                    NavManager.NavigateTo("/");
+                    return true;
+                }}},
+            new DialogOptions()
+            );
+    }
 
 }

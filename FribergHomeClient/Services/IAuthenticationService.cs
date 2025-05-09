@@ -4,7 +4,8 @@ namespace FribergHomeClient.Services
 {
 	public interface IAuthenticationService
 	{
-		Task<bool> AuthenticateAsync(LoginDTO loginDTO);
-		Task Logout(); 
+		Task<ServiceResponse> AuthenticateAsync(LoginDTO loginDTO);
+
+        Task Logout(); 
 	}
 }

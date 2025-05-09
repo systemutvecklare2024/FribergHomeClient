@@ -1,7 +1,9 @@
 ﻿@page "/login"
+
+@using FribergHomeClient.Data.Dto
+
 @inject IAuthenticationService AuthService
 @inject NavigationManager NavManager
-@using FribergHomeClient.Data.Dto
 @inject NotificationService NotificationService
 
 @* Author: Emelie *@
@@ -41,37 +43,32 @@
 @code {
 
     private LoginDTO model = new();
-    //private bool failed = false;
-    private string errorMessage = string.Empty;
 
     public async Task OnLogin(LoginDTO loginDTO)
     {
-        if (!await AuthService.AuthenticateAsync(model))
-        {
-            //failed = true;
-            errorMessage = "Något gick fel vid inloggningen!";
-            NotifyError(errorMessage);
-        }
-        else
-        {
-            NavManager.NavigateTo("/dashboard/myobjects");
-        }
 
+        var response = await AuthService.AuthenticateAsync(model);
+        if (!response.Success)
+        {
+            foreach(var s in response?.ProblemDetails ?? [])
+            {
+                NotificationService.Notify(new NotificationMessage
+                    {
+                        Severity = NotificationSeverity.Error,
+                        Summary = s.Key,
+                        Detail = s.Value
+                    });
+            }
+            StateHasChanged();
+            return;
+        }
+        
+        // All is well
+        NavManager.NavigateTo("/dashboard/myobjects");
     }
 
     public void OnRegister()
     {
         NavManager.NavigateTo("/register");
-    }
-
-    private void NotifyError(string errorMessage)
-    {
-        NotificationService.Notify(new NotificationMessage
-            {
-                Severity = NotificationSeverity.Error,
-                Duration = 5000,
-                Summary = "Fel uppstod",
-                Detail = errorMessage
-            });
     }
 }
