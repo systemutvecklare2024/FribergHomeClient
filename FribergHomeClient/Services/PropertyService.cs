@@ -1,5 +1,6 @@
 ﻿using FribergHomeClient.Data.Dto;
 using System.Net.Http.Json;
+using static System.Net.WebRequestMethods;
 
 // Author: Christoffer, Emelie, Glate
 
@@ -7,18 +8,18 @@ namespace FribergHomeClient.Services
 {
     public class PropertyService : IPropertyService
     {
-        private readonly HttpClient _client;
+        private readonly HttpClient Http;
 
         public PropertyService(HttpClient client)
         {
-            _client = client;
+            Http = client;
         }
 
         public async Task<ServiceResponse<PropertyDTO>> GetPropertyDTO(int id)
         {
             try
             {
-                var response = await _client.GetAsync($"/api/Properties/{id}/details");
+                var response = await Http.GetAsync($"/api/Properties/{id}/details");
                 if (!response.IsSuccessStatusCode)
                 {
                     var failResult = new ServiceResponse<PropertyDTO>
@@ -40,7 +41,7 @@ namespace FribergHomeClient.Services
 
                 if (result.Data != null)
                 {
-                    var muncipality = await _client.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{result.Data.MuncipalityId}");
+                    var muncipality = await Http.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{result.Data.MuncipalityId}");
                     result.Data.Muncipality = muncipality.Name;
                 }
 
@@ -60,8 +61,8 @@ namespace FribergHomeClient.Services
         {
             try
             {
-                var response = await _client.GetAsync($"api/properties/{uri}");
-                var muncipalities = await _client.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
+                var response = await Http.GetAsync($"api/properties/{uri}");
+                var muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality");
 
                 if (response!.IsSuccessStatusCode)
                 {
@@ -99,7 +100,7 @@ namespace FribergHomeClient.Services
         {
             try
             {
-                var response = await _client.DeleteAsync($"/api/properties/{id}");
+                var response = await Http.DeleteAsync($"/api/properties/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
                     return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
@@ -107,6 +108,41 @@ namespace FribergHomeClient.Services
 
                 return new ServiceResponse { Success = true };
 
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse { Success = false, Message = ex.Message };
+            }
+        }
+
+        public async Task<ServiceResponse> CreateAsync(PropertyDTO property)
+        {
+            try
+            {
+                var response = await Http.PostAsJsonAsync("api/properties", property);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
+                }
+                return new ServiceResponse { Success = true };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResponse { Success = false, Message = ex.Message };
+            }
+
+        }
+
+        public async Task<ServiceResponse> UpdateAsync(PropertyDTO property)
+        {
+            try
+            {
+                var response = await Http.PutAsJsonAsync($"api/properties/{property.Id}", property);
+                if (!response.IsSuccessStatusCode)
+                {
+                    return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
+                }
+                return new ServiceResponse { Success = true };
             }
             catch (Exception ex)
             {

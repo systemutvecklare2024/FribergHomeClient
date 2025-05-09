@@ -5,7 +5,6 @@
 @using static FribergHomeClient.Data.PropertyTypes
 
 @* Author: Christoffer *@
-@inject HttpClient Http
 @inject NotificationService NotificationService
 
 <RadzenTemplateForm TItem="PropertyDTO" Data="@Property" Submit="@HandleSubmit">
@@ -13,64 +12,64 @@
         <RadzenFieldset Text="Generell information">
             <RadzenFormField Text="List Pris" Variant="Variant.Outlined">
                 <RadzenNumeric Name="ListingPrice" ShowUpDown="false"
-                TValue="decimal"
-                @bind-Value="@Property.ListingPrice"
-                Placeholder="Listing Price"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="decimal"
+                               @bind-Value="@Property.ListingPrice"
+                               Placeholder="Listing Price"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
             <RadzenFormField Text="Boarea" Variant="Variant.Outlined">
                 <RadzenNumeric ShowUpDown="false"
-                TValue="decimal"
-                @bind-Value="@Property.LivingSpace"
-                Placeholder="Boarea (m²)"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="decimal"
+                               @bind-Value="@Property.LivingSpace"
+                               Placeholder="Boarea (m²)"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
             <RadzenFormField Text="Biarea" Variant="Variant.Outlined">
                 <RadzenNumeric ShowUpDown="false"
-                TValue="decimal"
-                @bind-Value="@Property.SecondaryArea"
-                Placeholder="Biarea (m²)"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="decimal"
+                               @bind-Value="@Property.SecondaryArea"
+                               Placeholder="Biarea (m²)"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
             <RadzenFormField Text="Tomtarea" Variant="Variant.Outlined">
                 <RadzenNumeric ShowUpDown="false"
-                TValue="decimal"
-                @bind-Value="@Property.LotSize"
-                Placeholder="Tomtarea (m²)"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="decimal"
+                               @bind-Value="@Property.LotSize"
+                               Placeholder="Tomtarea (m²)"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
 
             <RadzenFormField Text="Månadskostnad" Variant="Variant.Outlined">
                 <RadzenNumeric ShowUpDown="false"
-                TValue="decimal"
-                @bind-Value="@Property.MonthlyFee"
-                Placeholder="Månadskostnad"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="decimal"
+                               @bind-Value="@Property.MonthlyFee"
+                               Placeholder="Månadskostnad"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
             <RadzenFormField Text="Driftkostnad" Variant="Variant.Outlined">
                 <RadzenNumeric ShowUpDown="false"
-                TValue="decimal"
-                @bind-Value="@Property.OperationalCostPerYear"
-                Placeholder="Driftkostnad"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="decimal"
+                               @bind-Value="@Property.OperationalCostPerYear"
+                               Placeholder="Driftkostnad"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
             <RadzenFormField Text="Byggår" Variant="Variant.Outlined">
                 <RadzenNumeric ShowUpDown="false"
-                TValue="int"
-                @bind-Value="@Property.YearBuilt"
-                Placeholder="Byggår"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="int"
+                               @bind-Value="@Property.YearBuilt"
+                               Placeholder="Byggår"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
             <RadzenFormField Text="Antal rum" Variant="Variant.Outlined">
                 <RadzenNumeric ShowUpDown="false"
-                TValue="int"
-                @bind-Value="@Property.NumberOfRooms"
-                Placeholder="Antal rum"
-                InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                               TValue="int"
+                               @bind-Value="@Property.NumberOfRooms"
+                               Placeholder="Antal rum"
+                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
             </RadzenFormField>
             <RadzenFormField Text="Upplåtelseform" Variant="Variant.Outlined">
                 <RadzenDropDown TValue="PropertyType" @bind-Value="Property.PropertyType"
-                Data="@propertyTypes">
+                                Data="@propertyTypes">
                     <Template Context="option">
                         @GetLocalized((PropertyType)option)
                     </Template>
@@ -104,7 +103,7 @@
                         <RadzenCard Style="text-align: center; padding: 10px;">
                             <img src="@img.ImgURL" alt="Image" style="width: 100%; height: auto; max-height: 150px; object-fit: cover;" />
                             <RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger"
-                            Click="@(() => RemoveImageUrl(img))" Style="margin-top: 5px;" />
+                                          Click="@(() => RemoveImageUrl(img))" Style="margin-top: 5px;" />
                         </RadzenCard>
                     </RadzenColumn>
                 }

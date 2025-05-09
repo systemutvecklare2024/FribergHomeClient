@@ -20,13 +20,9 @@
 else
 {
     <Panel Title="Registrera">
-        <RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })">
-            @if (!success && !string.IsNullOrEmpty(errorMessage))
-            {
-                <div class=" alert alert-danger">
-                    <p>@errorMessage</p>
-                </div>
-            }
+        <RadzenTemplateForm Data="@model" Submit="@((AccountDTO args) => { Submit(args); })" @ref="templateForm">
+            <DataAnnotationsValidator />
+ 
             <RadzenStack>
                 <RadzenFieldset Text="Användarinformation">
                     <RadzenStack Gap="1rem">
@@ -74,21 +70,8 @@ else
 
                         @* Author: Glate *@
                         @* ProfileImage *@
-                        <RadzenRow AlignItems="AlignItems.Center">
-                            <RadzenColumn Size="12" SizeMD="3">
-                                <RadzenLabel Text="Profilbild" Component="ImageUrl" />
-                            </RadzenColumn>
-                            <RadzenColumn SizeSM="12" SizeMD="9" Style="justify-content: center;">
+                        <EditProfileImage @bind-ImageUrl="model.ImageUrl" />
 
-                                <RadzenCard Style="text-align: center; padding: 10px; display: flex; align-items: center; justify-content: center;">
-                                    <img src="@model.ImageUrl" alt="Image" style="max-width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
-                                    <RadzenColumn Style="display: flex; flex-direction: column; align-items: center; margin-left: 1rem;">
-                                        <RadzenButton Icon="add" Text="Lägg till" Click="@(() => OpenImageDialog())" class="rz-my-2" />
-                                        <RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger" Click="@(() => RemoveImage())" class="rz-my-2" />
-                                    </RadzenColumn>
-                                </RadzenCard>
-                            </RadzenColumn>
-                        </RadzenRow>
                         @* Password *@
                         <RadzenRow AlignItems="AlignItems.Center">
                             <RadzenColumn Size="12" SizeMD="3">
@@ -96,7 +79,8 @@ else
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="9">
                                 <RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=model.Password />
-                                <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
+                                @* <RadzenRequiredValidator Component="Password" Text="Lösenord krävs" /> *@
+                                <RadzenDataAnnotationValidator Component="Password" />
                             </RadzenColumn>
                         </RadzenRow>
                         @* PasswordConfirmed *@
@@ -105,8 +89,8 @@ else
                                 <RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
                             </RadzenColumn>
                             <RadzenColumn Size="12" SizeMD="9">
-                                <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword />
-                                <RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
+                                <RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=model.ConfirmPassword Change="@(() => context.Validate())" />
+                                <RadzenDataAnnotationValidator Component="ConfirmPassword" />
                             </RadzenColumn>
                         </RadzenRow>
                         @* Agency *@
@@ -122,7 +106,7 @@ else
                     </RadzenStack>
                     <RadzenRow class="rz-mt-4">
                         <RadzenColumn Size="12" SizeMD="6">
-                            <RadzenButton ButtonType="ButtonType.Submit" Style="width: 100%;" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
+                            <RadzenButton ButtonType="ButtonType.Submit" Disabled="@(!templateForm.IsValid)" Style="width: 100%;" Size="ButtonSize.Large" Icon="save" Text="Registrera" />
                         </RadzenColumn>
                         <RadzenColumn Size="12" SizeMD="6">
                             <RadzenButton ButtonStyle="ButtonStyle.Light" Style="width: 100%;" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
@@ -136,14 +120,13 @@ else
 }
 
 @code {
+    private RadzenTemplateForm<AccountDTO> templateForm;
 
     private AccountDTO model = new();
     private List<RealEstateAgencyDTO> realEstateAgencies = [];
     private string errorMessage = string.Empty;
     private List<ValidationProblemDetails> ProblemDetails = new();
-    private bool success;
-    private string defaultImage = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
-
+    
     protected override async Task OnInitializedAsync()
     {
         var response = await AgencyService.GetAll();
@@ -164,12 +147,13 @@ else
     async void Submit(AccountDTO arg)
     {
         var response = await accountService.RegisterAccount(model);
-        success = response.Success;
+        var success = response.Success;
 
         Console.WriteLine(success);
 
         if (success)
         {
+            NotificationService.Notify(NotificationSeverity.Success, "Konto skapat");
             NavManager.NavigateTo("/login");
         }
         else
@@ -193,33 +177,6 @@ else
     void Cancel()
     {
         NavManager.NavigateTo("/");
-    }
-
-    private void RemoveImage()
-    {
-        model.ImageUrl = defaultImage;
-    }
-
-    protected override void OnInitialized()
-    {
-        model.ImageUrl = defaultImage;
-    }
-
-    private async Task OpenImageDialog()
-    {
-        var parameters = new Dictionary<string, object>{
-            { "ExistingImageUrl", model.ImageUrl }
-        };
-
-        var result = await DialogService.OpenAsync<UploadImageDialog>(
-            "Lägg till profilbild",
-            parameters,
-            new DialogOptions() { Width = "25rem", Height = "30rem" });
-
-        if (result != null)
-        {
-            model.ImageUrl = result.ToString();
-        }
     }
 
     private void NotifyError(string errorMessage)

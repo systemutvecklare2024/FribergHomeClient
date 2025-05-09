@@ -7,167 +7,97 @@
 @inject IAccountService accountService
 @inject DialogService DialogService
 
+@* Author: Tobias *@
+@* Co-Author: Christoffer *@
+
 <RadzenTemplateForm TItem="UpdateAgentDTO" Data="@Agent" Submit="@HandleSubmit">
-	<RadzenRow Gap="2rem" class="rz-p-0 rz-p-lg-4">
-		<RadzenColumn SizeSM="8" SizeMD="6" SizeLG="4">
-			@if (!success && !string.IsNullOrEmpty(errorMessage))
-			{
-				<div class=" alert alert-danger">
-					<p>@errorMessage</p>
-				</div>
-			}
-			<RadzenStack>
-				<RadzenFieldset Text="Användarinformation">
-					<RadzenStack Gap="1rem">
-						<RadzenRow AlignItems="AlignItems.Center">
-							<RadzenColumn Size="12" SizeMD="3">
-								<RadzenLabel Text="Förnamn" Component="FirstName" />
-							</RadzenColumn>
-							<RadzenColumn Size="12" SizeMD="9">
-								<RadzenTextBox Style="width: 100%;" Name="FirstName" @bind-Value=Agent.FirstName />
-								<RadzenRequiredValidator Component="FirstName" Text="Förnamn krävs" />
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow AlignItems="AlignItems.Center">
-							<RadzenColumn Size="12" SizeMD="3">
-								<RadzenLabel Text="Efternamn" Component="LastName" />
-							</RadzenColumn>
-							<RadzenColumn Size="12" SizeMD="9">
-								<RadzenTextBox Style="width: 100%;" Name="LastName" @bind-Value=Agent.LastName />
-								<RadzenRequiredValidator Component="LastName" Text="Efternamn krävs" />
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow AlignItems="AlignItems.Center">
-							<RadzenColumn Size="12" SizeMD="3">
-								<RadzenLabel Text="E-post" Component="Email" />
-							</RadzenColumn>
-							<RadzenColumn Size="12" SizeMD="9">
-								<RadzenTextBox type="email" Style="width: 100%;" Name="Email" @bind-Value=Agent.Email />
-								<RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
-								<RadzenRequiredValidator Component="Email" Text="E-post krävs" />
-							</RadzenColumn>
-						</RadzenRow>
-						<RadzenRow AlignItems="AlignItems.Center">
-							<RadzenColumn Size="12" SizeMD="3">
-								<RadzenLabel Text="Telefonnummer" Component="PhoneNumber" />
-							</RadzenColumn>
-							<RadzenColumn Size="12" SizeMD="9">
-								<RadzenTextBox Style="width: 100%;" Name="PhoneNumber" @bind-Value=Agent.PhoneNumber />
-								<RadzenRequiredValidator Component="PhoneNumber" Text="Telefonnummer krävs" />
-							</RadzenColumn>
-						</RadzenRow>
+
+    <RadzenStack>
+        <RadzenRow AlignItems="AlignItems.Center">
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="Förnamn" Component="FirstName" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="9">
+                <RadzenTextBox Style="width: 100%;" Name="FirstName" @bind-Value=Agent.FirstName />
+                <RadzenRequiredValidator Component="FirstName" Text="Förnamn krävs" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow AlignItems="AlignItems.Center">
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="Efternamn" Component="LastName" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="9">
+                <RadzenTextBox Style="width: 100%;" Name="LastName" @bind-Value=Agent.LastName />
+                <RadzenRequiredValidator Component="LastName" Text="Efternamn krävs" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow AlignItems="AlignItems.Center">
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="E-post" Component="Email" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="9">
+                <RadzenTextBox type="email" Style="width: 100%;" Name="Email" @bind-Value=Agent.Email />
+                <RadzenEmailValidator Component="Email" Text="Ogiltig E-post" />
+                <RadzenRequiredValidator Component="Email" Text="E-post krävs" />
+            </RadzenColumn>
+        </RadzenRow>
+        <RadzenRow AlignItems="AlignItems.Center">
+            <RadzenColumn Size="12" SizeMD="3">
+                <RadzenLabel Text="Telefonnummer" Component="PhoneNumber" />
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="9">
+                <RadzenTextBox Style="width: 100%;" Name="PhoneNumber" @bind-Value=Agent.PhoneNumber />
+                <RadzenRequiredValidator Component="PhoneNumber" Text="Telefonnummer krävs" />
+            </RadzenColumn>
+        </RadzenRow>
+
+        <EditProfileImage @bind-ImageUrl="Agent.ImageUrl" />
+
+    </RadzenStack>
+    <RadzenRow class="rz-mt-4" JustifyContent="JustifyContent.SpaceBetween">
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Style="width: 100%;" Icon="save" Text="Spara" />
+        </RadzenColumn>
+        <RadzenColumn Size="12" SizeMD="4">
+            <RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Style="width: 100%;" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
+        </RadzenColumn>
 
 
-						<RadzenRow AlignItems="AlignItems.Center">
-							<RadzenColumn Size="12" SizeMD="3">
-								<RadzenLabel Text="Profilbild" Component="ImageUrl" />
-							</RadzenColumn>
-							<RadzenColumn SizeSM="12" SizeMD="9" Style="justify-content: center;">
 
-								<RadzenCard Style="text-align: center; padding: 10px; display: flex; align-items: center; justify-content: center;">
-									<img src="@Agent.ImageUrl" alt="Image" style="max-width: 50%; height: auto; max-height: 150px; object-fit: cover;" />
-									<RadzenColumn Style="display: flex; flex-direction: column; align-items: center; margin-left: 1rem;">
-										<RadzenButton Icon="add" Text="Lägg till" Click="@(() => OpenImageDialog())" class="rz-my-2" />
-										<RadzenButton Icon="delete" Text="Ta bort" ButtonStyle="ButtonStyle.Danger" Click="@(() => RemoveImage())" class="rz-my-2" />
-									</RadzenColumn>
-								</RadzenCard>
-
-							</RadzenColumn>
-						</RadzenRow>
-						@* Lösenordsgrejer. Används inte än.*@
-						@* <RadzenRow AlignItems="AlignItems.Center">
-							<RadzenColumn Size="12" SizeMD="3">
-								<RadzenLabel Text="Lösenord" Component="Password" />
-							</RadzenColumn>
-
-							
-							  <RadzenColumn Size="12" SizeMD="9">
-							<RadzenPassword Style="width: 100%;" Name="Password" @bind-Value=Agent.Password />
-							<RadzenRequiredValidator Component="Password" Text="Lösenord krävs" />
-							</RadzenColumn>
-							</RadzenRow>
-							<RadzenRow AlignItems="AlignItems.Center">
-							<RadzenColumn Size="12" SizeMD="3">
-							<RadzenLabel Text="Upprepa Lösenord" Component="ConfirmPassword" />
-							</RadzenColumn>
-							<RadzenColumn Size="12" SizeMD="9">
-							<RadzenPassword Style="width: 100%;" Name="ConfirmPassword" @bind-Value=Agent.ConfirmPassword />
-							<RadzenRequiredValidator Component="ConfirmPassword" Text="Upprepa lösenord" />
-							</RadzenColumn>
-
-						</RadzenRow> *@
-					</RadzenStack>
-				</RadzenFieldset>
-			</RadzenStack>
-		</RadzenColumn>
-	</RadzenRow>
-	<RadzenRow>
-		<RadzenColumn Size="12" SizeMD="4">
-			<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="1rem" class="rz-mt-4 rz-mb-4">
-				<RadzenButton ButtonType="ButtonType.Submit" Size="ButtonSize.Large" Icon="save" Text="Spara" />
-				<RadzenButton ButtonStyle="ButtonStyle.Light" Variant="Variant.Flat" Size="ButtonSize.Large" Icon="cancel" Text="Avbryt" Click="@Cancel" />
-			</RadzenStack>
-		</RadzenColumn>
-	</RadzenRow>
+    </RadzenRow>
 </RadzenTemplateForm>
 
 @code {
-	[Parameter]
-	public UpdateAgentDTO? Agent { get; set; }
+    [Parameter]
+    public UpdateAgentDTO? Agent { get; set; }
 
-	[Parameter]
-	public string SubmitButtonText { get; set; } = "Lägg till";
+    [Parameter]
+    public string SubmitButtonText { get; set; } = "Lägg till";
 
-
-	private string errorMessage = string.Empty;
-	private bool success;
-
-	private string defaultImage = "https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png?20150327203541";
-
-	[Parameter]
-	public EventCallback<UpdateAgentDTO> OnSubmit { get; set; }
-
-	private async Task HandleSubmit(UpdateAgentDTO dto)
-	{
-		if (OnSubmit.HasDelegate)
-		{
-			await OnSubmit.InvokeAsync(dto);
-		}
-		else
-		{
-			NotificationService.Notify(new NotificationMessage
-				{
-					Severity = NotificationSeverity.Error,
-					Summary = "Ett fel uppstod",
-					Detail = "Problem med HandleSubmit callback"
-				});
-		}
-	}
-	private async Task OpenImageDialog()
-	{
-		var parameters = new Dictionary<string, object>{
-			{ "ExistingImageUrl", Agent.ImageUrl }
-		};
-
-		var result = await DialogService.OpenAsync<UploadImageDialog>(
-			"Lägg till profilbild",
-			parameters,
-			new DialogOptions() { Width = "25rem", Height = "30rem" });
-
-		if (result != null)
-		{
-			Agent.ImageUrl = result.ToString();
-		}
-	}
-	private void RemoveImage()
-	{
-		Agent.ImageUrl = defaultImage;
-	}
-
-	void Cancel()
-	{
-		NavManager.NavigateTo("/dashboard/myprofile");
-	}
+    [Parameter]
+    public EventCallback<UpdateAgentDTO> OnSubmit { get; set; }
 
 
+    private async Task HandleSubmit(UpdateAgentDTO dto)
+    {
+        if (OnSubmit.HasDelegate)
+        {
+            Console.WriteLine($"{dto.ImageUrl}");
+            await OnSubmit.InvokeAsync(dto);
+        }
+        else
+        {
+            NotificationService.Notify(new NotificationMessage
+                {
+                    Severity = NotificationSeverity.Error,
+                    Summary = "Ett fel uppstod",
+                    Detail = "Problem med HandleSubmit callback"
+                });
+        }
+    }
+
+    void Cancel()
+    {
+        NavManager.NavigateTo("/dashboard/myprofile");
+    }
 }

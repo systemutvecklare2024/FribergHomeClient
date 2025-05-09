@@ -14,6 +14,7 @@ namespace FribergHomeClient.Services
 		{
 			_client = client;
 		}
+
 		public async Task<ServiceResponse<AccountDTO>> RegisterAccount(AccountDTO accountDTO)
 		{
 			try
@@ -25,6 +26,7 @@ namespace FribergHomeClient.Services
                     var account = await result.Content.ReadFromJsonAsync<AccountDTO>();
                     return new ServiceResponse<AccountDTO> { Data = account };
                 }
+
                 //If not successful status code:
                 List<ValidationProblemDetails> problemDetails = await BengelService.GetValidationProblemsAsync(result);
 
@@ -38,7 +40,6 @@ namespace FribergHomeClient.Services
             // Check status code, throw exceptions
             catch (Exception ex)
             {
-
                 return new ServiceResponse<AccountDTO>
                 {
                     Success = false,

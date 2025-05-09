@@ -1,18 +1,23 @@
 ﻿@page "/RealEstateAgents/UpdateProfile/My"
 @using FribergHomeClient.Components
+@using Microsoft.AspNetCore.Authorization
 @inject NotificationService NotificationService
 @inject NavigationManager navigationManager
 @inject IRealEstateAgentService AgentService
 @inject HttpClient Http
 
+@attribute [Authorize(Roles = "Agent, SuperAgent")]
+
 @* Author: Tobias
 CoAuthor: Emelie *@
 
-<PageTitle>Editera Min Profil</PageTitle>
+<PageTitle>Uppdatera min profil</PageTitle>
 
 @if (AgentDTO != null)
 {
-    <AgentProfileForm Agent="AgentDTO" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></AgentProfileForm>
+    <AdminPanel Title="Uppdatera">
+        <AgentProfileForm Agent="AgentDTO" OnSubmit="@UpdateAgentProfileCallback" SubmitButtonText="Uppdatera"></AgentProfileForm>
+    </AdminPanel>
 }
 
 else
@@ -43,7 +48,7 @@ else
         if (!agentId.HasValue)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Ej angiven profil");
-            navigationManager.NavigateTo("/RealEstateAgents/UpdateProfilee/My");
+            navigationManager.NavigateTo("/RealEstateAgents/UpdateProfile/My");
         }
 
         var response = await AgentService.UpdateAgentProfile(dto);
