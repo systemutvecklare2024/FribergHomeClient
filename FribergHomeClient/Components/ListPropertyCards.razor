@@ -4,6 +4,13 @@
 @inject IPropertyService PropertyService
 
 @* Author: Glate *@
+
+<style>
+	.rz-pager {
+		background-color: var(--rz-primary-light);
+	}
+</style>
+
 @if (Properties == null || pagedProperties == null)
 {
 	if (string.IsNullOrEmpty(ErrorMessage))
@@ -39,7 +46,7 @@ else
 
 
 				<RadzenPager @ref="pager1" Count="@(Properties?.Count() ?? 0)" PageSize="@pageSize" PageChanged="@OnPageChange" AlwaysVisible="true" />
-				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
+				<div class="rz-background-color-primary-lighter rz-p-8" style="">
 					<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
 					@foreach (var p in pagedProperties)
 					{
