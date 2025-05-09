@@ -7,25 +7,27 @@
 
 @* //Author:Emelie *@
 
-
-<RadzenButton Shade="Shade.Darker" Click=@ShowLogoutDialog Text="Logga ut" ButtonStyle="ButtonStyle.Info" Style="margin-right:2em;" />
-
+<RadzenButton Shade="Shade.Light" Click=@ShowLogoutDialog ButtonStyle="ButtonStyle.Primary" Style="margin-right:2em;"
+			  Text=@(SidebarExpanded ? "Logga ut" : null)
+			  Icon=@(SidebarExpanded ? "logout" : "logout") />
 
 @code {
+	[Parameter]
+	public bool SidebarExpanded { get; set; } = true;
 
-    async Task ShowLogoutDialog()
-    {
-        var result = await DialogService.OpenAsync<LogoutConfirmationDialog>(
-            "Bekräftelse",
-            null,
-            new DialogOptions() { Width = "400px", Height = "250px" });
+	async Task ShowLogoutDialog()
+	{
+		var result = await DialogService.OpenAsync<LogoutConfirmationDialog>(
+			"Bekräftelse",
+			null,
+			new DialogOptions() { Width = "400px", Height = "250px" });
 
-        if (result is bool confirmed && confirmed)
-        {
-            // Logga ut användaren
-            await authService.Logout();
-            NavManager.NavigateTo("/");
-        }
-    }
+		if (result is bool confirmed && confirmed)
+		{
+			// Logga ut användaren
+			await authService.Logout();
+			NavManager.NavigateTo("/");
+		}
+	}
 
 }

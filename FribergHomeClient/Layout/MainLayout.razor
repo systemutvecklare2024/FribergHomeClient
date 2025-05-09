@@ -2,17 +2,16 @@
 @inherits LayoutComponentBase
 
 @* //Author:Emelie *@
-
 <RadzenComponents />
 <RadzenLayout>
 	<RadzenHeader>
-		<RadzenNavMenu OnSidebarExpanded="Test" />
+
+		<RadzenNavMenu OnSidebarVisible="@(() => ToggleSidebar = !ToggleSidebar)" />
+
 	</RadzenHeader>
 	<AuthorizeView>
-
-		<RadzenSidebar @bind-Expanded="IsSidebarExpanded" Responsive="false" Style="width: max-content">
-
-			<RadzenSiteDashboard />
+		<RadzenSidebar Responsive="true" Expanded="@ToggleSidebar" ExpandedChanged="@OnSidebarChanged" class="sidebar-small" Style="width: max-content; background-color: #54787e;">
+			<RadzenSiteDashboard/>
 		</RadzenSidebar>
 	</AuthorizeView>
 
@@ -23,7 +22,6 @@
 	</RadzenBody>
 
 	<RadzenNotification />
-	<RadzenSiteFooter />
 </RadzenLayout>
 
 
@@ -35,10 +33,11 @@
 </HeadContent>
 
 @code {
-	private bool IsSidebarExpanded = true;
+	private bool ToggleSidebar = true; 
 
-	private void Test(bool isExpanded)
+	private void OnSidebarChanged(bool expanded)
 	{
-		IsSidebarExpanded = isExpanded;
+		ToggleSidebar = expanded;
+		Console.WriteLine($"Sidebar Expanded Changed: {ToggleSidebar}");
 	}
 }

@@ -190,8 +190,25 @@ tr.rz-data-row.fade-out {
         height: auto;
     }
 
-    to {
-        opacity: 0;
-        height: 0;
-    }
+	to {
+		opacity: 0;
+		height: 0;
+	}
+}
+
+@media (max-width: 768px) {
+	.hamburger-container {
+		display: block;
+		margin-left: 1rem;
+	}
+
+	.sidebar-small {
+		width: 100vw !important;
+	}
+}
+
+@media (min-width: 769px) {
+	.hamburger-container {
+		display: none;
+	}
 }

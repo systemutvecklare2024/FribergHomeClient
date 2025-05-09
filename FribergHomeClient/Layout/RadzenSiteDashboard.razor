@@ -1,12 +1,33 @@
 ﻿@* //Author:Emelie *@
 
-<RadzenPanelMenu DisplayStyle="@(sidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false">
-    <RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" />
-    <RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" />
-    <RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
-    <RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
+<RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" Style="background-color: #54787e;">
+
+	<RadzenRow AlignItems="AlignItems.End" JustifyContent="JustifyContent.End">
+		@if (SidebarExpanded)
+		{
+			<RadzenButton Icon="arrow_menu_close" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+		}
+		@if (!SidebarExpanded)
+		{
+			<RadzenButton Icon="arrow_menu_open" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+		}
+	</RadzenRow>
+
+	<RadzenStack Orientation="Orientation.Vertical" class="rz-p-2">
+
+		<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" />
+		<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" />
+		<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
+		<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
+		<LogoutButton SidebarExpanded=@SidebarExpanded></LogoutButton>
+	</RadzenStack>
+
 </RadzenPanelMenu>
 
 @code {
-    bool sidebarExpanded = true;
+
+	[Parameter]
+	public bool SidebarExpanded { get; set; } = true;
+
+	//TODO: Implement very fun javascript to save screen width to a variable for a dynamic sidebar. Fun stuff.
 }
