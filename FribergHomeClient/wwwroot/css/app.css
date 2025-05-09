@@ -24,18 +24,29 @@ a, .btn-link {
     padding-top: 1.1rem;
 }
 
-/*.custom-navlink {
+a.custom-navlink {
     text-decoration: none !important;
     color: #007bff !important;
     transition: color 0.2s ease !important;
     font-size: 1.3em !important;
 }
 
-    .custom-navlink:hover {
+    a.custom-navlink:hover {
         text-decoration: none !important;
         color: #0056b3 !important;
     }
-*/
+
+p a.add-content, p a:active.add-content, p a:visited.add-content {
+    color: deeppink !important;
+    text-decoration-line: none;
+}
+
+p a:hover.add-content {
+    cursor: pointer;
+    color: pink;
+    text-decoration:none !important;
+}
+
 
 .valid.modified:not([type=checkbox]) {
     outline: 1px solid #26b050;

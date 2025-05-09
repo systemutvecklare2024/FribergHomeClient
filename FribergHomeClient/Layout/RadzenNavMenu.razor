@@ -3,6 +3,13 @@
 
 @* //Author:Emelie *@
 
+<style>
+    .rz-link .rz-link-text {
+        text-decoration: none !important;
+        font-size: 1.3em;
+    }
+</style>
+
 <RadzenStack Orientation="Orientation.Vertical" Gap="0">
     <div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start" style="background-color: #EFEDEB;">
         <div class="rz-col-5">
@@ -13,7 +20,6 @@
                         <RadzenButton Icon="menu" Click="@ToggleSidebar" />
                     </div>
                 </AuthorizeView>
-
                 <RadzenImage Path="/images/LoggaFribergHome.png" Style="width: 75px; height: auto; margin-left:40px; margin-right:40px;" />
                 <RadzenLink Path="/" Text="FribergHome.nu" Style="font-size: 24px; font-weight: bold;"  />
             </RadzenStack>
@@ -22,14 +28,13 @@
             <RadzenStack Orientation="Orientation.Horizontal" Gap="20" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" class="me-2">
                 <AuthorizeView>
                     <Authorized>
-                        <RadzenLink Path="/searchproperty" Text="Sök Bostad" Style="font-size: 1.3em; text-decoration: none;" />
-                        <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="font-size: 1.3em; text-decoration: none;" />
-                        <RadzenLink Path="/customerservice" Text="Kundservice" Style="font-size: 1.3em; text-decoration: none;" />
+                        <RadzenLink Path="/searchproperty" Text="Sök Bostad" />
+                        <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="margin-right:2em;" />
                     </Authorized>
                     <NotAuthorized>
-                        <RadzenLink Path="/searchproperty" Text="Sök Bostad" Style="font-size: 1.3em; text-decoration: none;" />
-                        <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="font-size: 1.3em; text-decoration: none;" />
-                        <RadzenLink Path="/login" Text="Logga in" Style="font-size: 1.3em; text-decoration: none; margin-right:2em;" />
+                        <RadzenLink Path="/searchproperty" Text="Sök Bostad" />
+                        <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" />
+                        <RadzenLink Path="/login" Text="Logga in" Style="margin-right:2em;" />
                     </NotAuthorized>
                 </AuthorizeView>
             </RadzenStack>
