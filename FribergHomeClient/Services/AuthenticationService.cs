@@ -22,36 +22,48 @@ namespace FribergHomeClient.Services
 			this.localStorage = localStorage;
 			this.authProvider = authProvider;
 		}
-		public async Task<bool> AuthenticateAsync(LoginDTO loginDTO)
+		public async Task<ServiceResponse> AuthenticateAsync(LoginDTO loginDTO)
 		{
 			var json = JsonConvert.SerializeObject(loginDTO);
 
-			var response = await client.PostAsJsonAsync<LoginDTO>("/api/accounts/login", loginDTO);
+			var response = await client.PostAsJsonAsync("/api/accounts/login", loginDTO);
 
-			if(!response.IsSuccessStatusCode)
-			{
-				return false;
-			}
+            var content = await response.Content.ReadFromJsonAsync<AuthResponse>();
+            
+			if (content == null)
+            {
+                return new ServiceResponse
+                {
+                    Success = false,
+					Message = $"Något gick fel med anslutningen till servern. Försök igen."
+                };
+            }
 
-			var content = await response.Content.ReadFromJsonAsync<AuthResponse>();
-			if(content == null)
-			{
-				return false;
-			}
+            if (response.IsSuccessStatusCode)
+            {
+                await SetLocalStorage(content);
+                await ((ApiAuthenticationStateProvider)authProvider).LoggedIn();
+                return new ServiceResponse { Success = true };
+            }
 
-			var token = content.Token;
-            var userId = content.UserId;
-			var agentId = content.AgentId;
-			await localStorage.SetItemAsync<int>("AgentId", agentId);
-
-            await localStorage.SetItemAsync("accessToken", token);
-
-			await ((ApiAuthenticationStateProvider)authProvider).LoggedIn();
-
-			return true;
+            return new ServiceResponse
+            {
+                Success = false,
+                Message = $"Något gick fel vid inloggningen",
+                ProblemDetails = await BengelService.GetValidationProblemsAsync(response)
+            };
 		}
 
-		public async Task Logout()
+        private async Task SetLocalStorage(AuthResponse content)
+        {
+            var token = content.Token;
+            var agentId = content.AgentId;
+            await localStorage.SetItemAsync<int>("AgentId", agentId);
+
+            await localStorage.SetItemAsync("accessToken", token);
+        }
+
+        public async Task Logout()
 		{
             await ((ApiAuthenticationStateProvider)authProvider).LoggedOut();
 		}
