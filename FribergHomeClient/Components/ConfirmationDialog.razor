@@ -1,9 +1,18 @@
 ﻿@inject DialogService DialogService
 @inject NotificationService NotificationService
 
-@* Author: Christoffer *@
+@* Author: Christoffer
+   CoAuthor: Emelie
+*@
+
+<style>
+    .rz-dialog-titlebar {
+        background-color: #DDE4E8;
+    }
+</style>
+
 <div class="rz-dialog-content rz-p-4">
-    <h4>@Description</h4>
+    <RadzenText TextStyle="TextStyle.Body1">@Description</RadzenText>
     <div class="rz-mt-4 rz-text-align-right">
         <RadzenButton Text="Avbryt" ButtonStyle="ButtonStyle.Light" Click="@(() => DialogService.Close(false))" class="rz-mr-2" />
         <RadzenButton Text="@SubmitButtonText" ButtonStyle="ButtonStyle.Danger" Click="@HandleSubmit" />
