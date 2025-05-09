@@ -192,9 +192,6 @@ tr.rz-data-row.fade-out {
 	.sidebar-small {
 		width: 100vw !important;
 	}
-	.override-align {
-		align-items: flex-start !important;
-	}
 }
 
 @media (min-width: 769px) {

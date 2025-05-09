@@ -7,24 +7,25 @@
     <div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start" style="background-color: #EFEDEB;">
         <div class="rz-col-5">
             <RadzenStack Orientation="Orientation.Horizontal" Gap="10" AlignItems="AlignItems.Center">
-
+                
+                <AuthorizeView>
                     <div class="hamburger-container">
                         <RadzenButton Icon="menu" Click="@ToggleSidebar" />
                     </div>
+                </AuthorizeView>
 
                 <RadzenImage Path="/images/LoggaFribergHome.png" Style="width: 75px; height: auto; margin-left:40px; margin-right:40px;" />
                 <RadzenLink Path="/" Text="FribergHome.nu" Style="font-size: 24px; font-weight: bold;"  />
             </RadzenStack>
         </div>
         <div class="rz-col-7">
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="20" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End">
+            <RadzenStack Orientation="Orientation.Horizontal" Gap="20" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" class="me-2">
                 <AuthorizeView>
                     <Authorized>
                         <RadzenLink Path="/searchproperty" Text="Sök Bostad" Style="font-size: 1.3em; text-decoration: none;" />
                         <RadzenLink Path="/dashboard" Text="Dashboard" Style="font-size: 1.3em; text-decoration: none;" />
                         <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="font-size: 1.3em; text-decoration: none;" />
                         <RadzenLink Path="/customerservice" Text="Kundservice" Style="font-size: 1.3em; text-decoration: none;" />
-                        <LogoutButton />
                     </Authorized>
                     <NotAuthorized>
                         <RadzenLink Path="/searchproperty" Text="Sök Bostad" Style="font-size: 1.3em; text-decoration: none;" />
