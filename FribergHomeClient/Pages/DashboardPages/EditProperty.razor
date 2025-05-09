@@ -6,12 +6,14 @@
 
 @* Author: Christoffer *@
 
-<PageTitle>Editera Bostad</PageTitle>
+<PageTitle>Ändra Bostad</PageTitle>
 
-@if(property != null)
+@if (property != null)
 {
-    <PropertyForm Property="@property" OnSubmit="@EditPropertyCallback" SubmitButtonText="Uppdatera"></PropertyForm>
-} 
+    <AdminPanel Title="Ändra bostad">
+        <PropertyForm Property="@property" OnSubmit="@EditPropertyCallback" SubmitButtonText="Uppdatera"></PropertyForm>
+    </AdminPanel>
+}
 else
 {
     <Spinner />
@@ -26,14 +28,14 @@ else
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        
+
         // Load Property
         property = await Http.GetFromJsonAsync<PropertyDTO>($"api/properties/{Id}/details");
     }
 
     async Task EditPropertyCallback(PropertyDTO dto)
     {
-        if(!Id.HasValue)
+        if (!Id.HasValue)
         {
             NotificationService.Notify(NotificationSeverity.Error, "Ej angiven bostad");
             NavigationManager.NavigateTo("/dashboard/myobjects");
