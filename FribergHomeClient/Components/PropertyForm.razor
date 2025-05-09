@@ -10,86 +10,128 @@
 <RadzenTemplateForm TItem="PropertyDTO" Data="@Property" Submit="@HandleSubmit">
     <ChildContent>
         <RadzenFieldset Text="Generell information">
-            <RadzenFormField Text="List Pris" Variant="Variant.Outlined">
-                <RadzenNumeric Name="ListingPrice" ShowUpDown="false"
-                               TValue="decimal"
-                               @bind-Value="@Property.ListingPrice"
-                               Placeholder="Listing Price"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
-            <RadzenFormField Text="Boarea" Variant="Variant.Outlined">
-                <RadzenNumeric ShowUpDown="false"
-                               TValue="decimal"
-                               @bind-Value="@Property.LivingSpace"
-                               Placeholder="Boarea (m²)"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
-            <RadzenFormField Text="Biarea" Variant="Variant.Outlined">
-                <RadzenNumeric ShowUpDown="false"
-                               TValue="decimal"
-                               @bind-Value="@Property.SecondaryArea"
-                               Placeholder="Biarea (m²)"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
-            <RadzenFormField Text="Tomtarea" Variant="Variant.Outlined">
-                <RadzenNumeric ShowUpDown="false"
-                               TValue="decimal"
-                               @bind-Value="@Property.LotSize"
-                               Placeholder="Tomtarea (m²)"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
 
-            <RadzenFormField Text="Månadskostnad" Variant="Variant.Outlined">
-                <RadzenNumeric ShowUpDown="false"
-                               TValue="decimal"
-                               @bind-Value="@Property.MonthlyFee"
-                               Placeholder="Månadskostnad"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
-            <RadzenFormField Text="Driftkostnad" Variant="Variant.Outlined">
-                <RadzenNumeric ShowUpDown="false"
-                               TValue="decimal"
-                               @bind-Value="@Property.OperationalCostPerYear"
-                               Placeholder="Driftkostnad"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
-            <RadzenFormField Text="Byggår" Variant="Variant.Outlined">
-                <RadzenNumeric ShowUpDown="false"
-                               TValue="int"
-                               @bind-Value="@Property.YearBuilt"
-                               Placeholder="Byggår"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
-            <RadzenFormField Text="Antal rum" Variant="Variant.Outlined">
-                <RadzenNumeric ShowUpDown="false"
-                               TValue="int"
-                               @bind-Value="@Property.NumberOfRooms"
-                               Placeholder="Antal rum"
-                               InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
-            </RadzenFormField>
-            <RadzenFormField Text="Upplåtelseform" Variant="Variant.Outlined">
-                <RadzenDropDown TValue="PropertyType" @bind-Value="Property.PropertyType"
-                                Data="@propertyTypes">
-                    <Template Context="option">
-                        @GetLocalized((PropertyType)option)
-                    </Template>
-                </RadzenDropDown>
-            </RadzenFormField>
+            @* Row 1 *@
+            <RadzenRow AlignItems="AlignItems.Center">
+
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="List Pris" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric Name="ListingPrice" ShowUpDown="false"
+                                       TValue="decimal"
+                                       @bind-Value="@Property.ListingPrice"
+                                       Placeholder="Listing Price"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Boarea" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric ShowUpDown="false"
+                                       TValue="decimal"
+                                       @bind-Value="@Property.LivingSpace"
+                                       Placeholder="Boarea (m²)"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Biarea" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric ShowUpDown="false"
+                                       TValue="decimal"
+                                       @bind-Value="@Property.SecondaryArea"
+                                       Placeholder="Biarea (m²)"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Tomtarea" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric ShowUpDown="false"
+                                       TValue="decimal"
+                                       @bind-Value="@Property.LotSize"
+                                       Placeholder="Tomtarea (m²)"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Månadskostnad" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric ShowUpDown="false"
+                                       TValue="decimal"
+                                       @bind-Value="@Property.MonthlyFee"
+                                       Placeholder="Månadskostnad"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Driftkostnad" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric ShowUpDown="false"
+                                       TValue="decimal"
+                                       @bind-Value="@Property.OperationalCostPerYear"
+                                       Placeholder="Driftkostnad"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Byggår" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric ShowUpDown="false"
+                                       TValue="int"
+                                       @bind-Value="@Property.YearBuilt"
+                                       Placeholder="Byggår"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Antal rum" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenNumeric ShowUpDown="false"
+                                       TValue="int"
+                                       @bind-Value="@Property.NumberOfRooms"
+                                       Placeholder="Antal rum"
+                                       InputAttributes="@(new Dictionary<string, object>() { { "aria-label", "enter value" } })" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="6" SizeMD="4">
+                    <RadzenFormField Text="Upplåtelseform" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenDropDown TValue="PropertyType" @bind-Value="Property.PropertyType"
+                                        Data="@propertyTypes">
+                            <Template Context="option">
+                                @GetLocalized((PropertyType)option)
+                            </Template>
+                        </RadzenDropDown>
+                    </RadzenFormField>
+                </RadzenColumn>
+            </RadzenRow>
         </RadzenFieldset>
 
         <RadzenFieldset Text="Adress information">
-            <RadzenFormField Text="Adress" Variant="Variant.Outlined">
-                <RadzenTextBox Name="Street" @bind-Value="Property.Street" Placeholder="Street" Style="width:100%" />
+
+            <RadzenRow AlignItems="AlignItems.Center">
+                @* Row 1 *@
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenFormField Text="Adress" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenTextBox Name="Street" @bind-Value="Property.Street" Placeholder="Street" />
+                    </RadzenFormField>
+                </RadzenColumn>
+                <RadzenColumn Size="12" SizeMD="6">
+                    <RadzenFormField Text="Ort" Variant="Variant.Outlined" Style="width: 100%;">
+                        <RadzenTextBox Name="City" @bind-Value="Property.City" Placeholder="City" />
+                    </RadzenFormField>
+                </RadzenColumn>
+
+            @* Row 2 *@
+                <RadzenColumn Size="12" SizeMD="6">
+            <RadzenFormField Text="Postkod" Variant="Variant.Outlined" Style="width: 100%;">
+                <RadzenTextBox Name="PostalCode" @bind-Value="Property.PostalCode" Placeholder="Postal Code" />
             </RadzenFormField>
-            <RadzenFormField Text="Ort" Variant="Variant.Outlined">
-                <RadzenTextBox Name="City" @bind-Value="Property.City" Placeholder="City" Style="width:100%" />
-            </RadzenFormField>
-            <RadzenFormField Text="Postkod" Variant="Variant.Outlined">
-                <RadzenTextBox Name="PostalCode" @bind-Value="Property.PostalCode" Placeholder="Postal Code" Style="width:100%" />
-            </RadzenFormField>
-            <RadzenFormField Text="Kommun" Variant="Variant.Outlined">
+            </RadzenColumn>
+            <RadzenColumn Size="12" SizeMD="6">
+            <RadzenFormField Text="Kommun" Variant="Variant.Outlined" Style="width: 100%;">
                 <SelectMuncipality @bind-SelectedMunicipalityId="Property.MuncipalityId" />
             </RadzenFormField>
+            </RadzenColumn>
+            </RadzenRow>
         </RadzenFieldset>
 
         <RadzenFieldset Text="Bilder">
