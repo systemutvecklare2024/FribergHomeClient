@@ -8,10 +8,20 @@
 
 <PageTitle>Sök Mäklare</PageTitle>
 
-<div style="text-align: center;">
-    <h3>Sök mäklare eller mäklarfirma</h3>
-    <input value="@SearchQuery" @oninput="@HandleInputChange" />
-</div>
+<RadzenRow Gap="1rem" class="rz-justify-content-center">
+    <RadzenColumn SizeSM="8" SizeMD="10" SizeLG="6">
+        <div class="rz-p-5 rz-p-md-12 rz-m-5 rz-background-color-primary-lighter" style="border-radius: 4px; box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);">
+            <RadzenText TextStyle="TextStyle.H5">Sök Mäklare</RadzenText>
+            <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="1rem" Wrap="FlexWrap.Wrap">
+                <RadzenFormField Text="Skriv in namn" Variant="Variant.Outlined" Style="width: 100%;">
+                    <RadzenAutoComplete @bind-Value=@searchQuery Data=@agents TextProperty="@nameof(RealEstateAgentDTO.FirstName)" Style="width: 13rem" Change="@(args => OnSearchQueryChanged(args))" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Namn" }})" />
+                    @* <SelectMuncipality @bind-SelectedMunicipalityId="MuncipalityId" /> *@
+                </RadzenFormField>
+            </RadzenStack>
+            <RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" Click="HandleInputChange" />
+        </div>
+    </RadzenColumn>
+</RadzenRow>
 
 @if (filteredAgents == null || filteredAgents.Count == 0)
 {
@@ -21,16 +31,21 @@
 }
 else
 {
-    @foreach (var agent in filteredAgents)
-    {
-        <AgentProfile Id="@agent.Id" />
-    }
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
+        <RadzenRow>
+            @foreach (var agent in filteredAgents)
+            {
+                <AgentProfile Id="@agent.Id" />
+            }
+        </RadzenRow>
+    </RadzenStack>
+
 }
 
 @code {
     private List<RealEstateAgentDTO> agents;
     private List<RealEstateAgentDTO> filteredAgents = new List<RealEstateAgentDTO>();
-    private string SearchQuery = string.Empty;
+    private string searchQuery = string.Empty;
     private string errorMessage = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -48,24 +63,30 @@ else
 
     private void SearchAgents()
     {
-        if (string.IsNullOrEmpty(SearchQuery))
+        if (string.IsNullOrEmpty(searchQuery))
         {
             filteredAgents = agents;
         }
         else
         {
             filteredAgents = agents.Where(a =>
-                (a.FirstName?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (a.LastName?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (a.Agency?.Name?.Equals(SearchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
+                (a.FirstName?.Equals(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.LastName?.Equals(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.Agency?.Name?.Equals(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
             ).ToList();
         }
 
     }
 
-    private void HandleInputChange(ChangeEventArgs e)
+    private void OnSearchQueryChanged(object value)
     {
-        SearchQuery = e.Value?.ToString() ?? string.Empty;
+        searchQuery = value?.ToString() ?? string.Empty;
+        //SearchAgents();
+        HandleInputChange();
+    }
+
+    private void HandleInputChange()
+    {
         SearchAgents();
         StateHasChanged();
     }
