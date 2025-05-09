@@ -10,7 +10,7 @@
 
 	</RadzenHeader>
 	<AuthorizeView>
-		<RadzenSidebar Expanded="@ToggleSidebar" ExpandedChanged="@OnSidebarChanged" class="sidebar-small" Style="width: max-content; background-color: #54787e;">
+		<RadzenSidebar Responsive="true" Expanded="@ToggleSidebar" ExpandedChanged="@OnSidebarChanged" class="sidebar-small" Style="width: max-content; background-color: #54787e;">
 			<RadzenSiteDashboard/>
 		</RadzenSidebar>
 	</AuthorizeView>
@@ -33,7 +33,7 @@
 </HeadContent>
 
 @code {
-	private bool ToggleSidebar = true; // Default state
+	private bool ToggleSidebar = true; 
 
 	private void OnSidebarChanged(bool expanded)
 	{
