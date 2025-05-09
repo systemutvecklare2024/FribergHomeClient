@@ -7,13 +7,9 @@
 
 @* //Author:Emelie *@
 
-<RadzenButton Shade="Shade.Light" Click=@ShowLogoutDialog ButtonStyle="ButtonStyle.Primary" Style="margin-right:2em;"
-			  Text=@(SidebarExpanded ? "Logga ut" : null)
-			  Icon=@(SidebarExpanded ? "logout" : "logout") />
+<RadzenPanelMenuItem Shade="Shade.Light" Click=@ShowLogoutDialog Text="Logga ut" Icon="logout"/>
 
 @code {
-	[Parameter]
-	public bool SidebarExpanded { get; set; } = true;
 
 	async Task ShowLogoutDialog()
 	{
