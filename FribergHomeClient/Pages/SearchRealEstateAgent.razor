@@ -4,7 +4,9 @@
 @inject IRealEstateAgentService AgentService
 @inject NotificationService NotificationService
 
-@* Author: Fredrik *@
+@* Author: Fredrik
+   CoAuthor: Emelie
+*@
 
 <PageTitle>Sök Mäklare</PageTitle>
 
@@ -78,7 +80,6 @@ else
                 NotificationService.Notify(new NotificationMessage {Severity = NotificationSeverity.Info, Detail = "Inga mäklare matchade din sökning." });
             }
         }
-        //lägg till felhantering om filteredAgents.Count == 0;
         StateHasChanged();
 
     }
