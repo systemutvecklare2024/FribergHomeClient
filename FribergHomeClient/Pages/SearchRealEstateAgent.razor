@@ -57,13 +57,12 @@ else
             NotifyError(errorMessage);
             return;
         }
-        agents = response.Data;
+        agents = response.Data.Where(a => a.Agency != null).ToList();
         filteredAgents = agents;
     }
 
     private void SearchAgents()
     {
-        Console.WriteLine($"SearchAgents körs med {searchQuery}");
         if (string.IsNullOrEmpty(searchQuery))
         {
             filteredAgents = agents;
