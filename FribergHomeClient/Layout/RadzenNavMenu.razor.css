@@ -1,19 +1,13 @@
-﻿body {
+﻿
+.icon-text {
+    color: var(--rz-link-color);
+    font-size: small;
+    font-weight: normal;
+    display: block;
+    line-height: 1;
 }
 
-@media (max-width: 768px) {
-    .rz-col-7 {
-        display: none;
-    }
-
-    .mobile-toggle {
-        display: inline-block !important;
-        margin-left: 20px;
-    }
-}
-
-@media (min-width: 769px) {
-    .mobile-toggle {
-        display: none !important;
-    }
+.navbar-link {
+    color: var(--rz-link-color) !important;
+    text-align: center;
 }
