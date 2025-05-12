@@ -122,9 +122,9 @@ namespace FribergHomeClient.Services
                 var response = await Http.PostAsJsonAsync("api/properties", property);
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
+                    return new ServiceResponse { Success = false, Message = $"Misslyckades att lägga till bostaden: {response.ReasonPhrase}" };
                 }
-                return new ServiceResponse { Success = true };
+                return new ServiceResponse { Success = true, Message = "Bostad tillagd" };
             }
             catch (Exception ex)
             {
