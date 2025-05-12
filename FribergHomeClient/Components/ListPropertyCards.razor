@@ -4,7 +4,14 @@
 @inject IPropertyService PropertyService
 
 @* Author: Glate *@
-@if (Properties == null)
+
+<style>
+	.rz-pager {
+		background-color: var(--rz-primary-light);
+	}
+</style>
+
+@if (Properties == null || pagedProperties == null)
 {
 	if (string.IsNullOrEmpty(ErrorMessage))
 	{
@@ -36,19 +43,43 @@ else
 		else
 		{
 			<RadzenColumn SizeSM="8" SizeMD="10" SizeLG="6">
-				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
+
+
+				<RadzenPager @ref="pager1" Count="@(Properties?.Count() ?? 0)" PageSize="@pageSize" PageChanged="@OnPageChange" AlwaysVisible="true" />
+				<div class="rz-background-color-primary-lighter rz-p-8" style="">
 					<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
-					@foreach (var p in Properties)
+					@foreach (var p in pagedProperties)
 					{
 						<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
 					}
 				</div>
+				<RadzenPager @ref="pager2" Count="@(Properties?.Count() ?? 0)" PageSize="@pageSize" PageChanged="@OnPageChange" AlwaysVisible="true" />
 			</RadzenColumn>
 		}
 	</RadzenRow>
 }
 
 @code {
+	private RadzenPager pager1;
+	private RadzenPager pager2;
+
+	private int currentPage = 0;
+	private int pageSize = 10; //Listings per page
+
+	private IEnumerable<PropertyDTO> pagedProperties =>
+		Properties?.Skip(currentPage * pageSize)
+		.Take(pageSize) ?? Enumerable.Empty<PropertyDTO>();
+
+	public List<PropertyDTO>? Properties;
+
+	public async Task OnPageChange(PagerEventArgs args)
+	{
+		currentPage = args.PageIndex;
+		if (pager1 != null) pager1.GoToPage(currentPage);
+		if (pager2 != null) pager2.GoToPage(currentPage);
+		await InvokeAsync(StateHasChanged); 
+	}
+
 	[Parameter]
 	public int Take { get; set; } = 0; //number of listings to be fetched if specified.
 
@@ -63,7 +94,6 @@ else
 
 	public string Header { get; set; } = "";
 
-	public List<PropertyDTO>? Properties;
 	public string ErrorMessage { get; set; } = string.Empty;
 
 
@@ -93,7 +123,6 @@ else
 			if (response.Success && response.Data != null)
 			{
 				Properties = response.Data;
-
 				if (string.IsNullOrEmpty(InitialHeader))
 				{
 					Header = MuncipalityId != 0 && Properties.Any()

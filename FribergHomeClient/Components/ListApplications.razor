@@ -4,8 +4,10 @@
 @inject IRealEstateAgencyService AgencyService
 @inject NotificationService NotificationService
 @inject IRealEstateAgentService AgentService
+@inject TooltipService TooltipService
 
 @* //Author:Emelie *@
+@* Puts: Christoffer *@
 
 @if (!dataLoaded)
 {
@@ -19,22 +21,27 @@ else
                     AllowPaging="true"
                     PageSize="5"
                     AllowSorting="true"
+                    AllowColumnResize="true"
                     Data="@applicationViewModels"
                     TItem="ApplicationViewModel"
-                    ColumnWidth="100px">
+                    ColumnWidth="300px">
         <Columns>
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
-            <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.CreatedAt)" Title="Skapad" />
+            <RadzenDataGridColumn Width="50px" Title="Skapad">
+                <Template Context="applicationViewModel">
+                    @applicationViewModel.CreatedAt.ToString("yyyy-MM-dd HH:mm", new System.Globalization.CultureInfo("sv-SE"))
+                </Template>
+            </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="50px" Title="Status">
                 <Template Context="applicationViewModel">
                     @StatusTypes.GetLocalized(applicationViewModel.StatusType)
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn Width="50px">
+            <RadzenDataGridColumn Width="30px" Title="Åtgärd">
                 <Template Context="applicationViewModel">
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(async () => await ApproveApplication(applicationViewModel)) Text="Godkänn" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Shade="Shade.Lighter" Icon="info" class="rz-m-1" Click=@(async () => await DenyApplication(applicationViewModel)) Text="Neka" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="check" Click=@(async () => await ApproveApplication(applicationViewModel)) MouseEnter="@(args => ShowTooltip(args, "Acceptera", "var(--rz-success-lighter);"))" Text="" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="close" Click=@(async () => await DenyApplication(applicationViewModel)) MouseEnter="@(args => ShowTooltip(args, "Neka", "var(--rz-danger-lighter);"))" Text="" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -64,7 +71,7 @@ else
         agents = response.Data;
 
         applicationViewModels = await AgencyService.GenerateApplicationViewModels(Applications, agents);
-        if(applicationViewModels.Count == 0)
+        if (applicationViewModels.Count == 0)
         {
             errorMessage = "Något gick fel när mäklare skulle hämtas, försök igen.";
             NotifyError(errorMessage);
@@ -122,12 +129,22 @@ else
     private void NotifyError(string errorMessage)
     {
         NotificationService.Notify(new NotificationMessage
-        {
-            Severity = NotificationSeverity.Error,
-            Duration = 5000,
-            Summary = "Fel uppstod",
-            Detail = errorMessage
-        });
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
+    }
+
+    void ShowTooltip(ElementReference elementReference, string text, string backgroundColor)
+    {
+        var options = new TooltipOptions()
+            {
+                Position = TooltipPosition.Top,
+                Style = $"background-color: {backgroundColor}; color: var(--rz-text-color); border: 1px solid var(--rz-border-color);"
+            };
+        TooltipService.Open(elementReference, text, options);
     }
 
 }
