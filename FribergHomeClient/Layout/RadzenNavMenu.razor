@@ -4,58 +4,97 @@
 @* //Author:Emelie *@
 
 <style>
-    .rz-link .rz-link-text {
-        text-decoration: none !important;
-        font-size: 1.3em;
-    }
+	.rz-link .rz-link-text {
+		text-decoration: none !important;
+		font-size: 1.3em;
+	}
 
-    .rz-link:hover {
-        color: #598087;
-    }
+	.rz-link:hover {
+		color: #598087;
+	}
 </style>
 
 <RadzenStack Orientation="Orientation.Vertical" Gap="0">
-    <div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start" style="background-color: #EFEDEB;">
-        <div class="rz-col-5">
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="10" AlignItems="AlignItems.Center">                
-                <AuthorizeView>
-                    <div class="hamburger-container">
-                        <RadzenButton Icon="menu" Click="@ToggleSidebar" />
-                    </div>
-                </AuthorizeView>
-                <RadzenImage Path="/images/LoggaFribergHome.png" Style="width: 75px; height: auto; margin-left:40px; margin-right:40px;" />
-                <RadzenLink Path="/" Text="FribergHome.nu" Style="font-size: 24px; font-weight: bold;"  />
-            </RadzenStack>
-        </div>
-        <div class="rz-col-7">
-            <RadzenStack Orientation="Orientation.Horizontal" Gap="20" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" class="me-2">
-                <AuthorizeView>
-                    <Authorized>
-                        <RadzenLink Path="/searchproperty" Text="Sök Bostad" />
-                        <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" Style="margin-right:2em;" />
-                    </Authorized>
-                    <NotAuthorized>
-                        <RadzenLink Path="/searchproperty" Text="Sök Bostad" />
-                        <RadzenLink Path="/searchrealestateagent" Text="Sök Mäklare" />
-                        <RadzenLink Path="/login" Text="Logga in" Style="margin-right:2em;" />
-                    </NotAuthorized>
-                </AuthorizeView>
-            </RadzenStack>
-        </div>
-    </div>
+	<div class="rz-display-flex rz-row rz-align-items-center rz-justify-content-flex-start" style="background-color: #EFEDEB;">
+		<div class="rz-col-5">
+			<RadzenStack Orientation="Orientation.Horizontal" Gap="10" AlignItems="AlignItems.Center">
+				<AuthorizeView>
+					<div class="hamburger-container">
+						<RadzenButton Icon="menu" Click="@ToggleSidebar" />
+					</div>
+				</AuthorizeView>
+
+				<RadzenLink Path="/">
+					<RadzenImage Path="/images/LoggaFribergHome.png" Style="width: 75px; height: auto;" class="logo-mx-custom" />
+				</RadzenLink>
+
+				<RadzenLink Text="FribergHome.nu" Style="font-size: 20px; font-weight: bold;" class="rz-display-none rz-display-sm-inline-block" />
+			</RadzenStack>
+		</div>
+		<div class="rz-col-7">
+			<RadzenStack Orientation="Orientation.Horizontal" Gap="20" AlignItems="AlignItems.Center" JustifyContent="JustifyContent.End" class="me-3">
+				@* Navbar buttons *@
+				<AuthorizeView>
+					<Authorized>
+						<RadzenLink Path="/searchproperty" Style="color: var(--rz-link-color); text-align: center;">
+							<span class="rz-display-none rz-display-sm-inline-block">Sök Bostad</span> @* Big screen *@
+							<span class="rz-display-inline-block rz-display-sm-none">@* Medium/small screen *@
+								<RadzenIcon Icon="home" Style="font-size: 2rem;" />
+								<span class="icon-text">Bostad</span>
+							</span>
+						</RadzenLink>
+
+						<RadzenLink Path="/searchrealestateagent" Style="color: var(--rz-link-color); text-align: center;">
+							<span class="rz-display-none rz-display-sm-inline-block">Sök Mäklare</span>	@* Big screen *@
+							<span class="rz-display-inline-block rz-display-sm-none">@* Medium/small screen *@
+								<RadzenIcon Icon="person_search" Style="font-size: 2rem;" />
+								<span class="icon-text">Mäklare</span>
+							</span>
+						</RadzenLink>
+					</Authorized>
+
+					<NotAuthorized>
+						<RadzenLink Path="/searchproperty" Style="color: var(--rz-link-color); text-align: center;">
+							<span class="rz-display-none rz-display-sm-inline-block">Sök Bostad</span>@* Big screen *@
+							<span class="rz-display-inline-block rz-display-sm-none">@* Medium/small screen *@
+								<RadzenIcon Icon="home" Style="font-size: 2rem;" />
+								<span class="icon-text">Bostad</span>
+							</span>
+						</RadzenLink>
+
+						<RadzenLink Path="/searchrealestateagent" Style="color: var(--rz-link-color); text-align: center;">
+							<span class="rz-display-none rz-display-sm-inline-block">Sök Mäklare</span>@* Big screen *@
+							<span class="rz-display-inline-block rz-display-sm-none">@* Medium/small screen *@
+								<RadzenIcon Icon="person_search" Style="font-size: 2rem;" />
+								<span class="icon-text">Mäklare</span>
+							</span>
+						</RadzenLink>
+
+						<RadzenLink Path="/login" Style="color: var(--rz-link-color); text-align: center;">
+							<span class="rz-display-none rz-display-sm-inline-block">Logga in</span>@* Big screen *@
+							<span class="rz-display-inline-block rz-display-sm-none">@* Medium/small screen *@
+								<RadzenIcon Icon="login" Style="font-size: 2rem;" />
+								<span class="icon-text">Logga in</span>
+							</span>
+						</RadzenLink>
+					</NotAuthorized>
+				</AuthorizeView>
+			</RadzenStack>
+		</div>
+	</div>
 </RadzenStack>
 
 @code {
 
-    public bool OpenSidebar { get; set; } = false;
+	public bool OpenSidebar { get; set; } = false;
 
-    [Parameter]
-    public EventCallback<bool> OnSidebarVisible { get; set; }
+	[Parameter]
+	public EventCallback<bool> OnSidebarVisible { get; set; }
 
-    private async Task ToggleSidebar()
-    {
-        OpenSidebar = !OpenSidebar;
-        await OnSidebarVisible.InvokeAsync(OpenSidebar);
-    }
+	private async Task ToggleSidebar()
+	{
+		OpenSidebar = !OpenSidebar;
+		await OnSidebarVisible.InvokeAsync(OpenSidebar);
+	}
 }
 
