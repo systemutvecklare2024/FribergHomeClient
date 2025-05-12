@@ -14,16 +14,15 @@
             <RadzenText TextStyle="TextStyle.H5">Sök Mäklare</RadzenText>
             <RadzenStack Orientation="Orientation.Horizontal" AlignItems="AlignItems.End" Gap="1rem" Wrap="FlexWrap.Wrap">
                 <RadzenFormField Text="Skriv in namn" Variant="Variant.Outlined" Style="width: 100%;">
-                    <RadzenAutoComplete @bind-Value=@searchQuery Data=@agents TextProperty="@nameof(RealEstateAgentDTO.FirstName)" Style="width: 13rem" Change="@(args => OnSearchQueryChanged(args))" InputAttributes="@(new Dictionary<string,object>(){ { "aria-label", "Namn" }})" />
-                    @* <SelectMuncipality @bind-SelectedMunicipalityId="MuncipalityId" /> *@
+                    <RadzenTextBox @bind-Value="searchQuery"></RadzenTextBox>
                 </RadzenFormField>
             </RadzenStack>
-            <RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" Click="HandleInputChange" />
+            <RadzenButton Text="Sök" class="rz-my-2" Style="width: 100%;" Click="@HandleInputChange" />
         </div>
     </RadzenColumn>
 </RadzenRow>
 
-@if (filteredAgents == null || filteredAgents.Count == 0)
+@if (agents == null || agents.Count == 0)
 {
     <div style="text-align:center;">
         <Spinner />
@@ -32,19 +31,18 @@
 else
 {
     <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center" Wrap="FlexWrap.Wrap">
-        <RadzenRow>
+        <RadzenRow Style="width: 75%" JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
             @foreach (var agent in filteredAgents)
             {
                 <AgentProfile Id="@agent.Id" />
             }
         </RadzenRow>
     </RadzenStack>
-
 }
 
 @code {
     private List<RealEstateAgentDTO> agents;
-    private List<RealEstateAgentDTO> filteredAgents = new List<RealEstateAgentDTO>();
+    private List<RealEstateAgentDTO> filteredAgents  = new List<RealEstateAgentDTO>();
     private string searchQuery = string.Empty;
     private string errorMessage = string.Empty;
 
@@ -63,6 +61,7 @@ else
 
     private void SearchAgents()
     {
+        Console.WriteLine($"SearchAgents körs med {searchQuery}");
         if (string.IsNullOrEmpty(searchQuery))
         {
             filteredAgents = agents;
@@ -70,25 +69,23 @@ else
         else
         {
             filteredAgents = agents.Where(a =>
-                (a.FirstName?.Equals(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (a.LastName?.Equals(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
-                (a.Agency?.Name?.Equals(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
+                (a.FirstName?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false) ||
+                (a.LastName?.Contains(searchQuery, StringComparison.OrdinalIgnoreCase) ?? false)
             ).ToList();
+
+            if(filteredAgents.Count() == 0)
+            {
+                NotificationService.Notify(new NotificationMessage {Severity = NotificationSeverity.Info, Detail = "Inga mäklare matchade din sökning." });
+            }
         }
+        //lägg till felhantering om filteredAgents.Count == 0;
+        StateHasChanged();
 
-    }
-
-    private void OnSearchQueryChanged(object value)
-    {
-        searchQuery = value?.ToString() ?? string.Empty;
-        //SearchAgents();
-        HandleInputChange();
     }
 
     private void HandleInputChange()
     {
         SearchAgents();
-        StateHasChanged();
     }
 
     private void NotifyError(string errorMessage)
