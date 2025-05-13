@@ -18,15 +18,15 @@
 else
 {
     <RadzenDataGrid @ref="applicationList"
-    AllowFiltering="true"
-    FilterPopupRenderMode="PopupRenderMode.OnDemand"
-    AllowPaging="true"
-    PageSize="5"
-    AllowSorting="true"
-    AllowColumnResize="true"
-    Data="@applicationViewModels"
-    TItem="ApplicationViewModel"
-    ColumnWidth="300px">
+                    AllowFiltering="true"
+                    FilterPopupRenderMode="PopupRenderMode.OnDemand"
+                    AllowPaging="true"
+                    PageSize="5"
+                    AllowSorting="true"
+                    AllowColumnResize="true"
+                    Data="@applicationViewModels"
+                    TItem="ApplicationViewModel"
+                    ColumnWidth="300px">
         <Columns>
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
@@ -84,14 +84,14 @@ else
 
     private async Task HandleApplicationAsync(ApplicationViewModel vm, StatusType status)
     {
-        // Use automapper to map early, to avoid updating the vm.status and showing the update 
+        // Use automapper to map early, to avoid updating the vm.status and showing the update
         // before confirmation response from server
         var dto = Mapper.Map<ApplicationDTO>(vm);
         dto.StatusType = status;
         var result = await AgencyService.HandleApplication(dto);
 
 
-        if(!result.Success)
+        if (!result.Success)
         {
             NotifyError(result.Message);
             return;
@@ -100,7 +100,7 @@ else
         // Create a triple for easy assigning of variables
         //("Godkänd", "Du har nu godkänt ansökan.", NotificationSeverity.Success),
         //     |                     |                          |
-        //  summary               detail                    severity 
+        //  summary               detail                    severity
 
         var (summary, detail, severity) = status switch
         {
@@ -110,11 +110,11 @@ else
         };
 
         NotificationService.Notify(new NotificationMessage
-        {
-            Summary = summary,
-            Detail = detail,
-            Severity = severity
-        });
+            {
+                Summary = summary,
+                Detail = detail,
+                Severity = severity
+            });
 
         vm.StatusType = status;
         applicationViewModels.Remove(vm);
