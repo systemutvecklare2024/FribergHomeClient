@@ -87,6 +87,7 @@ else
         // Use automapper to map early, to avoid updating the vm.status and showing the update 
         // before confirmation response from server
         var dto = Mapper.Map<ApplicationDTO>(vm);
+        dto.StatusType = status;
         var result = await AgencyService.HandleApplication(dto);
 
 
