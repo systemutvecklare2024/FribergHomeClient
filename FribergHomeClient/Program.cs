@@ -20,6 +20,7 @@ builder.Services.AddScoped<IPropertyService, PropertyService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IRealEstateAgencyService, RealEstateAgencyService>();
 builder.Services.AddScoped<IRealEstateAgentService, RealEstateAgentService>();
+builder.Services.AddScoped<IMuncipalityService, MuncipalityService>();
 
 // Auth
 builder.Services.AddScoped<ApiAuthenticationStateProvider>();

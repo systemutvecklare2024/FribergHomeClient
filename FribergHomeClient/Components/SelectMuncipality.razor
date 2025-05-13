@@ -1,5 +1,7 @@
 ﻿@using FribergHomeClient.Data.Dto
 @inject HttpClient Http
+@inject IMuncipalityService MuncipalityService
+@inject NotificationService NotificationService
 
 @* Author: Christoffer *@
 @* CoAuthor: Glate *@
@@ -28,10 +30,18 @@
     private List<string> filteredMuncipalities { get; set; } = [];
     private string selectedMuncipality;
     private string lastValidMunicipalityName;
+    private string errorMessage = string.Empty;
 
     protected async override Task OnInitializedAsync()
     {
-        muncipalities = await Http.GetFromJsonAsync<List<MuncipalityDTO>>("api/muncipality") ?? [];
+        var response = await MuncipalityService.GetAll();
+        if (!response.Success || response.Data == null)
+        {
+            errorMessage = "Kunde inte ladda kommunerna, försök igen.";
+            NotifyError(errorMessage);
+            return;
+        }
+        muncipalities = response.Data;
         filteredMuncipalities = muncipalities.Select(m => m.Name).ToList();
     }
 
@@ -83,5 +93,16 @@
                 .Select(m => m.Name)
                 .ToList();
         }
+    }
+
+    private void NotifyError(string errorMessage)
+    {
+        NotificationService.Notify(new NotificationMessage
+            {
+                Severity = NotificationSeverity.Error,
+                Duration = 5000,
+                Summary = "Fel uppstod",
+                Detail = errorMessage
+            });
     }
 }
