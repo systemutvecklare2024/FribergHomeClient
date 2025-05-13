@@ -29,10 +29,11 @@ namespace FribergHomeClient.Data.Dto
 		public string Street { get; set; }
 		public string City { get; set; }
 		public string PostalCode { get; set; }
-		public int MuncipalityId { get; set; }
-		public string Muncipality { get; set; } = "";
+        public int MuncipalityId { get; set; }
+        public string Muncipality { get; set; } = string.Empty;
+        public MuncipalityDTO? MuncipalityDTO { get; set; }
 
-		public List<PropertyImageDTO> ImageUrls { get; set; }
+        public List<PropertyImageDTO> ImageUrls { get; set; }
 
 		public int RealEstateAgentId { get; set; } //Fredrik
 
