@@ -3,7 +3,6 @@ using FribergHomeClient.Data.Dto;
 using FribergHomeClient.Data.ViewModel;
 using FribergHomeClient.Helpers;
 using Radzen;
-using System.Net.Http.Json;
 
 namespace FribergHomeClient.Services
 {
@@ -18,11 +17,10 @@ namespace FribergHomeClient.Services
 		{
             this.client = client;
             this.mapper = mapper;
-
         }
+
         public async Task<ServiceResponse<List<RealEstateAgencyDTO>>> GetAll()
         {
-
             return await client.GetServiceResponseAsync<List<RealEstateAgencyDTO>>($"/api/RealEstateAgencies");
         }
 
@@ -60,9 +58,9 @@ namespace FribergHomeClient.Services
                 applicationViewModel.FirstName = agent.FirstName; 
                 applicationViewModel.LastName = agent.LastName; 
 
-
                 applicationViewModels.Add(applicationViewModel);
             }
+
             return applicationViewModels;
         }
     }

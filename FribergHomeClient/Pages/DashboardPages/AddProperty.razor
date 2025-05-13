@@ -1,10 +1,13 @@
 ﻿@page "/dashboard/addproperty"
 @using FribergHomeClient.Components
-@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
 @inject NotificationService NotificationService
 @inject NavigationManager NavigationManager
+@inject IPropertyService PropertyService
 
 @* Author: Christoffer *@
+
+@attribute [Authorize(Roles = "Agent, SuperAgent")]
 
 <PageTitle>Lägg till bostad</PageTitle>
 <AdminPanel Title="Lägg till bostad">
@@ -15,18 +18,17 @@
     async Task CreateProperty(PropertyDTO dto)
     {
 
-        var response = await Http.PostAsJsonAsync<PropertyDTO>("api/properties", dto);
+        var response = await PropertyService.CreateAsync(dto);
 
-        if (response.IsSuccessStatusCode)
+        if (response.Success)
         {
-            Console.WriteLine("Success!");
-            NotificationService.Notify(NotificationSeverity.Success, "Bostad tillagd");
+            NotificationService.Notify(NotificationSeverity.Success, response.Message);
             NavigationManager.NavigateTo("/dashboard/myobjects");
         }
         else
         {
-            Console.WriteLine("Epic failure");
-            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att lägga till bostad, försök igen");
+            Console.WriteLine(response.Message);
+            NotificationService.Notify(NotificationSeverity.Error, response.Message, duration: 5000);
         }
     }
 }
