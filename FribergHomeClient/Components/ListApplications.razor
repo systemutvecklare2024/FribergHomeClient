@@ -1,10 +1,12 @@
-﻿@using FribergHomeClient.Data
+﻿@using AutoMapper
+@using FribergHomeClient.Data
 @using FribergHomeClient.Data.ViewModel
 @using static FribergHomeClient.Data.StatusTypes
 @inject IRealEstateAgencyService AgencyService
 @inject NotificationService NotificationService
 @inject IRealEstateAgentService AgentService
 @inject TooltipService TooltipService
+@inject IMapper Mapper
 
 @* //Author:Emelie *@
 @* Puts: Christoffer *@
@@ -40,8 +42,8 @@ else
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="30px" Title="Åtgärd">
                 <Template Context="applicationViewModel">
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="check" Click=@(async () => await ApproveApplication(applicationViewModel)) MouseEnter="@(args => ShowTooltip(args, "Acceptera", "var(--rz-success-lighter);"))" Text="" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="close" Click=@(async () => await DenyApplication(applicationViewModel)) MouseEnter="@(args => ShowTooltip(args, "Neka", "var(--rz-danger-lighter);"))" Text="" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="check" Click=@(async () => await HandleApplicationAsync(applicationViewModel, StatusType.Approved)) MouseEnter="@(args => ShowTooltip(args, "Acceptera", "var(--rz-success-lighter);"))" Text="" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="close" Click=@(async () => await HandleApplicationAsync(applicationViewModel, StatusType.Denied)) MouseEnter="@(args => ShowTooltip(args, "Neka", "var(--rz-danger-lighter);"))" Text="" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>
@@ -80,50 +82,44 @@ else
         StateHasChanged();
     }
 
-    private async Task ApproveApplication(ApplicationViewModel applicationVM)
+    private async Task HandleApplicationAsync(ApplicationViewModel vm, StatusType status)
     {
-        applicationVM.StatusType = StatusType.Approved;
-        var result = await AgencyService.HandleApplication(applicationVM);
+        // Use automapper to map early, to avoid updating the vm.status and showing the update
+        // before confirmation response from server
+        var dto = Mapper.Map<ApplicationDTO>(vm);
+        dto.StatusType = status;
+        var result = await AgencyService.HandleApplication(dto);
+
+
         if (!result.Success)
         {
-            errorMessage = result.Message;
-            NotifyError(errorMessage);
+            NotifyError(result.Message);
             return;
         }
-        NotificationService.Notify(new NotificationMessage
-            {
-                Severity = NotificationSeverity.Success,
-                Summary = "Godkänd",
-                Detail = "Du har nu godkänt ansökan",
-                Duration = 5000
-            });
 
-        applicationViewModels.Remove(applicationVM);
-        await applicationList.Reload();
-        StateHasChanged();
-    }
+        // Create a triple for easy assigning of variables
+        //("Godkänd", "Du har nu godkänt ansökan.", NotificationSeverity.Success),
+        //     |                     |                          |
+        //  summary               detail                    severity
 
-    private async Task DenyApplication(ApplicationViewModel applicationVM)
-    {
-        applicationVM.StatusType = StatusType.Denied;
-        var result = await AgencyService.HandleApplication(applicationVM);
-        if (!result.Success)
+        var (summary, detail, severity) = status switch
         {
-            errorMessage = result.Message;
-            NotifyError(errorMessage);
-            return;
-        }
+            StatusType.Approved => ("Godkänd", "Du har nu godkänt ansökan.", NotificationSeverity.Success),
+            StatusType.Denied => ("Nekad", "Du har nu nekat ansökan.", NotificationSeverity.Info),
+            _ => throw new InvalidOperationException($"Status '{status}' stöds ej")
+        };
+
         NotificationService.Notify(new NotificationMessage
             {
-                Severity = NotificationSeverity.Info,
-                Summary = "Nekad",
-                Detail = "Du har nu nekat ansökan",
-                Duration = 5000
+                Summary = summary,
+                Detail = detail,
+                Severity = severity
             });
-        applicationViewModels.Remove(applicationVM);
+
+        vm.StatusType = status;
+        applicationViewModels.Remove(vm);
         await applicationList.Reload();
         StateHasChanged();
-
     }
 
     private void NotifyError(string errorMessage)

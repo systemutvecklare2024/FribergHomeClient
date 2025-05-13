@@ -9,7 +9,7 @@ namespace FribergHomeClient.Services
         Task<ServiceResponse<List<RealEstateAgencyDTO>>> GetAll();
         Task<ServiceResponse<RealEstateAgencyPageDTO>> GetById(int id);
         Task<List<ApplicationViewModel>> GenerateApplicationViewModels(List<ApplicationDTO> applicationDTOs, List<RealEstateAgentDTO>agentDTOs);
-        Task<ServiceResponse> HandleApplication(ApplicationViewModel applicationVM);
+        Task<ServiceResponse> HandleApplication(ApplicationDTO dto);
         Task<ServiceResponse<RealEstateAgencyPageDTO>> GetMyAgency();
     }
 }
