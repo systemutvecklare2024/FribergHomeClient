@@ -2,7 +2,6 @@
 using System.Net.Http.Json;
 
 // Author: Christoffer, Emelie, Glate
- 
 namespace FribergHomeClient.Services
 {
     public class PropertyService : IPropertyService
@@ -92,7 +91,6 @@ namespace FribergHomeClient.Services
                     Message = $"Något gick fel: {ex.Message}",
                 };
             }
-
         }
 
         public async Task<ServiceResponse> DeleteAsync(int id)
@@ -126,6 +124,7 @@ namespace FribergHomeClient.Services
                 {
                     return new ServiceResponse { Success = false, Message = $"Misslyckades att lägga till bostaden: {response.ReasonPhrase}" };
                 }
+
                 return new ServiceResponse { Success = true, Message = "Bostad tillagd" };
             }
             catch (Exception ex)
@@ -144,6 +143,7 @@ namespace FribergHomeClient.Services
                 {
                     return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
                 }
+
                 return new ServiceResponse { Success = true, Message = "Bostaden har uppdaterats." };
             }
             catch (Exception ex)

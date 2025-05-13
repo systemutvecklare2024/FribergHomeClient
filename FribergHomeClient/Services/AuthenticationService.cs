@@ -22,6 +22,7 @@ namespace FribergHomeClient.Services
 			this.localStorage = localStorage;
 			this.authProvider = authProvider;
 		}
+
 		public async Task<ServiceResponse> AuthenticateAsync(LoginDTO loginDTO)
 		{
 			var json = JsonConvert.SerializeObject(loginDTO);
