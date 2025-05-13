@@ -1,9 +1,8 @@
 ﻿using FribergHomeClient.Data.Dto;
 using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
 
 // Author: Christoffer, Emelie, Glate
-
+ 
 namespace FribergHomeClient.Services
 {
     public class PropertyService : IPropertyService
@@ -15,7 +14,7 @@ namespace FribergHomeClient.Services
             Http = client;
         }
 
-        public async Task<ServiceResponse<PropertyDTO>> GetPropertyDTO(int id)
+        public async Task<ServiceResponse<PropertyDTO>> GetAsync(int id)
         {
             try
             {
@@ -103,7 +102,10 @@ namespace FribergHomeClient.Services
                 var response = await Http.DeleteAsync($"/api/properties/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
+                    return new ServiceResponse { 
+                        Success = false, 
+                        Message = $"Något gick fel vid borttagning av fastigheten: {response.ReasonPhrase}",
+                    };
                 }
 
                 return new ServiceResponse { Success = true };
@@ -142,13 +144,12 @@ namespace FribergHomeClient.Services
                 {
                     return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
                 }
-                return new ServiceResponse { Success = true };
+                return new ServiceResponse { Success = true, Message = "Bostaden har uppdaterats." };
             }
             catch (Exception ex)
             {
                 return new ServiceResponse { Success = false, Message = ex.Message };
             }
         }
-
     }
 }
