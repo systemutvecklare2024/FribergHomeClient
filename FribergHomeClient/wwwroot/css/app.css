@@ -222,4 +222,7 @@ tr.rz-data-row.fade-out {
 	.hamburger-container {
 		display: none;
 	}
+    .logo-mx-custom {
+        margin-left: 1em;
+    }
 }
