@@ -167,29 +167,34 @@ else
                 {"Description", $"Vill du verkligen ta bort objektet på {propertyDTO.Street}?"},
                 {"SubmitButtonText", "Ta bort"},
                 {"OnSubmit", async () =>
-                {
-                    DialogService.Close();
-                    var result = await PropertyService.DeleteAsync(propertyDTO.Id.Value);
-                    if(!result.Success)
                     {
-                        Console.WriteLine($"Error: {result.Message}");
-                    } else
-                    {
-                        var dtoId = propertyDTO.Id.Value;
-                        removingPropertyIds.Add(dtoId);
-                        StateHasChanged();
+                        DialogService.Close();
+                        var result = await PropertyService.DeleteAsync(propertyDTO.Id.Value);
+                        if(!result.Success)
+                        {
+                            NotificationService.Notify(new NotificationMessage
+                            {
+                                Severity = NotificationSeverity.Error,
+                                Summary = "Prroblem att ta bort",
+                                Detail = result.Message
+                            });
+                        } else
+                        {
+                            var dtoId = propertyDTO.Id.Value;
+                            removingPropertyIds.Add(dtoId);
+                            StateHasChanged();
 
-                        await Task.Delay(800);
+                            await Task.Delay(800);
 
-                        // Update the table
-                        properties = properties.Where(p => p.Id != propertyDTO.Id).AsQueryable();
-                        removingPropertyIds.Remove(dtoId);
-                        StateHasChanged();
+                            // Update the table
+                            properties = properties.Where(p => p.Id != propertyDTO.Id).AsQueryable();
+                            removingPropertyIds.Remove(dtoId);
+                            StateHasChanged();
+                        }
+                        return result.Success;
                     }
-                    return result.Success;
                 }
-            }
-                                                            },
+            },
             new DialogOptions() { Width = "400px", Height = "250px" }
         );
     }

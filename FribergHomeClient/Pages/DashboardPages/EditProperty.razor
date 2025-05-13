@@ -1,10 +1,13 @@
 ﻿@page "/dashboard/editproperty/{Id:int?}"
 @using FribergHomeClient.Components
-@inject HttpClient Http
+@using Microsoft.AspNetCore.Authorization
 @inject NotificationService NotificationService
 @inject NavigationManager NavigationManager
+@inject IPropertyService PropertyService
 
 @* Author: Christoffer *@
+
+@attribute [Authorize(Roles = "Agent, SuperAgent")]
 
 <PageTitle>Ändra Bostad</PageTitle>
 
@@ -29,30 +32,41 @@ else
     {
         await base.OnInitializedAsync();
 
+        if (!Id.HasValue)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, "Ej angiven bostad", duration: 5000);
+            NavigationManager.NavigateTo("/dashboard/myobjects");
+            return;
+        }
+
         // Load Property
-        property = await Http.GetFromJsonAsync<PropertyDTO>($"api/properties/{Id}/details");
+        var response = await PropertyService.GetAsync(Id.Value);
+        if (!response.Success)
+        {
+            NotificationService.Notify(NotificationSeverity.Error, response.Message, duration: 5000);
+            return;
+        }
+
+        property = response.Data;
     }
 
     async Task EditPropertyCallback(PropertyDTO dto)
     {
         if (!Id.HasValue)
         {
-            NotificationService.Notify(NotificationSeverity.Error, "Ej angiven bostad");
+            NotificationService.Notify(NotificationSeverity.Error, "Ej angiven bostad", duration: 5000);
             NavigationManager.NavigateTo("/dashboard/myobjects");
         }
 
-        var response = await Http.PutAsJsonAsync<PropertyDTO>($"api/properties/{Id}", dto);
+        var response = await PropertyService.UpdateAsync(dto);
 
-        if (response.IsSuccessStatusCode)
+        if (!response.Success)
         {
-            Console.WriteLine("Success!");
-            NotificationService.Notify(NotificationSeverity.Success, "Bostad ändrad");
-            NavigationManager.NavigateTo("/dashboard/myobjects");
+            NotificationService.Notify(NotificationSeverity.Error, response.Message, duration: 5000);
+            return;
         }
-        else
-        {
-            Console.WriteLine("Epic failure");
-            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades att ändra bostad, försök igen");
-        }
+
+        NotificationService.Notify(NotificationSeverity.Success, response.Message);
+        NavigationManager.NavigateTo("/dashboard/myobjects");
     }
 }

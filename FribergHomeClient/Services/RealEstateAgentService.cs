@@ -1,8 +1,6 @@
 ﻿using Blazored.LocalStorage;
 using FribergHomeClient.Data.Dto;
 using FribergHomeClient.Helpers;
-using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
 
 namespace FribergHomeClient.Services
 {
