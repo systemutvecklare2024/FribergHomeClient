@@ -4,7 +4,7 @@ html, body {
 :root .rz-sidebar {
     border-inline-end: none;
 }
-
+/*CSS for fancy sunset backdrop.*/
 .top-backdrop {
     width: 100%;
     height: 300px;
@@ -16,7 +16,7 @@ html, body {
     z-index: 0;
     margin-bottom: 1em;
 }
-
+/*If you use top-backdrop class, wrap other content in this*/
 .content {
     position: relative;
     z-index: 1;  
