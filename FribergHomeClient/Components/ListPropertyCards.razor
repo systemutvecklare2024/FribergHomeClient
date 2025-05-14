@@ -15,9 +15,7 @@
 {
 	if (string.IsNullOrEmpty(ErrorMessage))
 	{
-		<div style="display: flex; justify-content: center; align-items: center;">
-			<Spinner />
-		</div>
+		<Spinner />
 	}
 }
 else
@@ -42,9 +40,7 @@ else
 		}
 		else
 		{
-			<RadzenColumn SizeSM="8" SizeMD="10" SizeLG="6">
-
-
+			<RadzenColumn SizeSM="8" SizeMD="10" SizeLG="8">
 				<RadzenPager @ref="pager1" Count="@(Properties?.Count() ?? 0)" PageSize="@pageSize" PageChanged="@OnPageChange" AlwaysVisible="true" />
 				<ContainerBox BorderRadius="0">
 					<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>

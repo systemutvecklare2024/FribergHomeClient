@@ -5,11 +5,11 @@ CoAuthor: Emelie
 Styling: Fredrik *@
 
 <RadzenCard Variant="Variant.Filled" style="width: 100%; max-width: 800px; padding 1rem; padding-right: var(--card-padding-right);" class="rz-my-12 rz-mx-auto">
-    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" Gap="2rem" class="rz-p-4">
+    <RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Center" Gap="2rem" class="rz-p-4" Wrap="FlexWrap.Wrap">
         <RadzenImage Path="@LogoUrl" Style="width: 200px; height: 200px; border-radius: 50%;" />
         <RadzenStack Gap="0">
             <RadzenText TextStyle="TextStyle.Body1" style="max-width: 100%; font-size: clamp(1rem, 4vw, 1.5rem); padding-left: 3vw;"><b>@(Name)</b></RadzenText>
-            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-0" style="font-size: clamp(0.8rem, 1.5vw, 1.2rem); padding-left: 3vw;">Presentation</RadzenText>
+            <RadzenText TextStyle="TextStyle.Overline" class="rz-display-flex rz-mt-4 rz-mb-2" style="font-size: clamp(0.8rem, 1.5vw, 1.2rem); padding-left: 3vw;">Presentation</RadzenText>
             <RadzenText TextStyle="TextStyle.Body1" Style="font-size: clamp(0.8rem, 1.5vw, 1.5rem); padding-left: 3vw;"><b>@Presentation</b></RadzenText>
         </RadzenStack>
     </RadzenStack>

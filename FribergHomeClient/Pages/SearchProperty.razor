@@ -8,13 +8,21 @@
 
 @if (!MuncipalityId.HasValue)
 {
-	<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
-	<ListPropertyCards InitialHeader="Alla listningar"></ListPropertyCards>
+	<div class="top-backdrop">
+		<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
+	</div>
+	<div class="content">
+		<ListPropertyCards InitialHeader="Alla listningar"></ListPropertyCards>
+	</div>
 }
 else
 {
-	<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
-	<ListPropertyCards MuncipalityId="MuncipalityId"></ListPropertyCards>
+	<div class="top-backdrop">
+		<SearchBar OnSearchMuncipality="HandleSearch"></SearchBar>
+	</div>
+	<div class="content">
+		<ListPropertyCards MuncipalityId="MuncipalityId"></ListPropertyCards>
+	</div>
 }
 
 @code {
@@ -23,7 +31,7 @@ else
 
 	private async Task HandleSearch(int muncipalityId)
 	{
-			MuncipalityId = muncipalityId;
-			StateHasChanged();
+		MuncipalityId = muncipalityId;
+		StateHasChanged();
 	}
 }
