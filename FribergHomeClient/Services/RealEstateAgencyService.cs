@@ -34,9 +34,8 @@ namespace FribergHomeClient.Services
             return await client.GetServiceResponseAsync<RealEstateAgencyPageDTO>($"api/RealEstateAgencies/My");
         }
 
-        public async Task<ServiceResponse> HandleApplication(ApplicationViewModel applicationVM)
+        public async Task<ServiceResponse> HandleApplication(ApplicationDTO dto)
         {
-            var dto = mapper.Map<ApplicationDTO>(applicationVM);
             return await client.PostServiceResponseAsync($"/api/RealEstateAgencies/{dto.AgencyId}/applications/{dto.Id}", dto);
         }
 
