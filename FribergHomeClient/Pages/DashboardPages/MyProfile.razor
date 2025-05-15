@@ -12,23 +12,25 @@
 
 @if (agentId.HasValue)
 {
-    <AgentProfile Id="agentId"></AgentProfile>
+	<RadzenRow Gap="1rem" class="rz-justify-content-center">
+		<AgentProfile Id="agentId"></AgentProfile>
+	</RadzenRow>
 }
 else
 {
-    <Spinner/>
+	<Spinner />
 }
 
 @code {
-    private int? agentId;
+	private int? agentId;
 
-    protected override async Task OnInitializedAsync()
-    {
-        agentId = await AgentService.GetMyAgentId();
-        if (!agentId.HasValue)
-        {
-            NotificationService.Notify(NotificationSeverity.Error, "Misslyckades hitta mäklare, försök igen");
-        }
-    }
+	protected override async Task OnInitializedAsync()
+	{
+		agentId = await AgentService.GetMyAgentId();
+		if (!agentId.HasValue)
+		{
+			NotificationService.Notify(NotificationSeverity.Error, "Misslyckades hitta mäklare, försök igen");
+		}
+	}
 
 }

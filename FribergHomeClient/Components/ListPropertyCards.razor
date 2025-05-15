@@ -15,9 +15,7 @@
 {
 	if (string.IsNullOrEmpty(ErrorMessage))
 	{
-		<div style="display: flex; justify-content: center; align-items: center;">
-			<Spinner />
-		</div>
+		<Spinner />
 	}
 }
 else
@@ -26,7 +24,7 @@ else
 		@if (IsCompactView)
 		{
 			<RadzenColumn SizeSM="12" SizeMD="6">
-				<div class="rz-background-color-primary-lighter rz-p-8" style="border-radius: 4px;">
+				<ContainerBox>
 					@if (!string.IsNullOrEmpty(Header))
 					{
 						<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
@@ -37,22 +35,20 @@ else
 							<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
 						}
 					</div>
-				</div>
+				</ContainerBox>
 			</RadzenColumn>
 		}
 		else
 		{
-			<RadzenColumn SizeSM="8" SizeMD="10" SizeLG="6">
-
-
+			<RadzenColumn SizeSM="8" SizeMD="10" SizeLG="8">
 				<RadzenPager @ref="pager1" Count="@(Properties?.Count() ?? 0)" PageSize="@pageSize" PageChanged="@OnPageChange" AlwaysVisible="true" />
-				<div class="rz-background-color-primary-lighter rz-p-8" style="">
+				<ContainerBox BorderRadius="0">
 					<RadzenText TextStyle="TextStyle.H5" Style="display: block;">@Header</RadzenText>
 					@foreach (var p in pagedProperties)
 					{
 						<PropertyCard Property="p" IsCompactView=IsCompactView></PropertyCard>
 					}
-				</div>
+				</ContainerBox>
 				<RadzenPager @ref="pager2" Count="@(Properties?.Count() ?? 0)" PageSize="@pageSize" PageChanged="@OnPageChange" AlwaysVisible="true" />
 			</RadzenColumn>
 		}
@@ -77,7 +73,7 @@ else
 		currentPage = args.PageIndex;
 		if (pager1 != null) pager1.GoToPage(currentPage);
 		if (pager2 != null) pager2.GoToPage(currentPage);
-		await InvokeAsync(StateHasChanged); 
+		await InvokeAsync(StateHasChanged);
 	}
 
 	[Parameter]
