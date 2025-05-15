@@ -1,9 +1,8 @@
 ﻿using FribergHomeClient.Data.Dto;
+using FribergHomeClient.Helpers;
 using System.Net.Http.Json;
-using static System.Net.WebRequestMethods;
 
 // Author: Christoffer, Emelie, Glate
-
 namespace FribergHomeClient.Services
 {
     public class PropertyService : IPropertyService
@@ -15,46 +14,14 @@ namespace FribergHomeClient.Services
             Http = client;
         }
 
-        public async Task<ServiceResponse<PropertyDTO>> GetPropertyDTO(int id)
+        public async Task<ServiceResponse<PropertyDTO>> GetAsync(int id)
         {
-            try
+            var serviceResponse = await Http.GetServiceResponseAsync<PropertyDTO>($"/api/Properties/{id}/details");
+            if(serviceResponse.Data != null)
             {
-                var response = await Http.GetAsync($"/api/Properties/{id}/details");
-                if (!response.IsSuccessStatusCode)
-                {
-                    var failResult = new ServiceResponse<PropertyDTO>
-                    {
-                        Success = false,
-                        Message = $"Något gick fel: {response.ReasonPhrase}"
-                    };
-
-                    return failResult;
-                }
-
-
-                var result = new ServiceResponse<PropertyDTO>
-                {
-                    Data = await response.Content.ReadFromJsonAsync<PropertyDTO>(),
-                    Success = true,
-                    Message = response.ReasonPhrase ?? ""
-                };
-
-                if (result.Data != null)
-                {
-                    var muncipality = await Http.GetFromJsonAsync<MuncipalityDTO>($"/api/muncipality/{result.Data.MuncipalityId}");
-                    result.Data.Muncipality = muncipality.Name;
-                }
-
-                return result;
+                serviceResponse.Data.Muncipality = serviceResponse.Data.MuncipalityDTO.Name;
             }
-            catch (HttpRequestException ex)
-            {
-                return new ServiceResponse<PropertyDTO>
-                {
-                    Success = false,
-                    Message = $"Något gick fel: {ex.Message}",
-                };
-            }
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<List<PropertyDTO>>> GetListAsync(string uri)
@@ -93,7 +60,6 @@ namespace FribergHomeClient.Services
                     Message = $"Något gick fel: {ex.Message}",
                 };
             }
-
         }
 
         public async Task<ServiceResponse> DeleteAsync(int id)
@@ -103,7 +69,10 @@ namespace FribergHomeClient.Services
                 var response = await Http.DeleteAsync($"/api/properties/{id}");
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
+                    return new ServiceResponse { 
+                        Success = false, 
+                        Message = $"Något gick fel vid borttagning av fastigheten: {response.ReasonPhrase}",
+                    };
                 }
 
                 return new ServiceResponse { Success = true };
@@ -122,9 +91,10 @@ namespace FribergHomeClient.Services
                 var response = await Http.PostAsJsonAsync("api/properties", property);
                 if (!response.IsSuccessStatusCode)
                 {
-                    return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
+                    return new ServiceResponse { Success = false, Message = $"Misslyckades att lägga till bostaden: {response.ReasonPhrase}" };
                 }
-                return new ServiceResponse { Success = true };
+
+                return new ServiceResponse { Success = true, Message = "Bostad tillagd" };
             }
             catch (Exception ex)
             {
@@ -142,13 +112,13 @@ namespace FribergHomeClient.Services
                 {
                     return new ServiceResponse { Success = false, Message = $"Något gick fel: {response.ReasonPhrase}" };
                 }
-                return new ServiceResponse { Success = true };
+
+                return new ServiceResponse { Success = true, Message = "Bostaden har uppdaterats." };
             }
             catch (Exception ex)
             {
                 return new ServiceResponse { Success = false, Message = ex.Message };
             }
         }
-
     }
 }

@@ -16,7 +16,8 @@
             {
                 StatusType.Pending => "Inväntar svar",
                 StatusType.Approved => "Godkänd",
-                StatusType.Denied => "Nekad"
+                StatusType.Denied => "Nekad",
+                _ => "Ej vald",
             };
         }
     }

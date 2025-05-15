@@ -2,6 +2,7 @@
 @using FribergHomeClient.Data
 @using FribergHomeClient.Services
 @inject IPropertyService PropertyService
+@inject IRealEstateAgentService AgentService
 @inject HttpClient Http
 @inject NotificationService NotificationService
 
@@ -189,24 +190,28 @@ else
 	protected override async Task OnInitializedAsync()
 	{
 
-		var response = await PropertyService.GetPropertyDTO(Id);
-		if (!response.Success || response.Data == null)
-		{
-			errorMessage = "Något gick fel när mäklare skulle hämtas, försök igen.";
-			NotifyError(errorMessage);
-			return;
-		}
+        var response = await PropertyService.GetAsync(Id);
+        if (!response.Success || response.Data == null)
+        {
+            errorMessage = "Något gick fel när bostaden skulle hämtas, försök igen.";
+            NotifyError(errorMessage);
+            return;
+        }
 
-		Property = response.Data;
-		// //Fredrik
-		if (Property?.RealEstateAgentId != null && Property.RealEstateAgentId > 0)
-		{
-			agent = await Http.GetFromJsonAsync<RealEstateAgentDTO>($"api/RealEstateAgents/{Property.RealEstateAgentId}");
-		}
-		else
-		{
-			Console.WriteLine("AgentId är NULL eller saknas.");
-		}
+        Property = response.Data;
+        // //Fredrik
+        if (Property?.RealEstateAgentId != null && Property.RealEstateAgentId > 0)
+        {
+            var agentResponse = await AgentService.GetById(Property.RealEstateAgentId);
+            if (!agentResponse.Success || agentResponse.Data == null)
+            {
+                errorMessage = "Något gick fel när mäklaren skulle hämtas, försök igen.";
+                NotifyError(errorMessage);
+                return;
+            }
+
+            agent = agentResponse.Data;
+        }
 
 		descriptionArray = SplitDescription(Property.Description);
 	}

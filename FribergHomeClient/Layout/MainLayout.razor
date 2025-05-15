@@ -11,7 +11,7 @@
 	</RadzenHeader>
 	<AuthorizeView>
 		<RadzenSidebar Responsive="true" Expanded="@ToggleSidebar" ExpandedChanged="@OnSidebarChanged" class="sidebar-small" Style="width: max-content; background-color: #54787e;">
-			<RadzenSiteDashboard/>
+			<RadzenSiteDashboard ToggleSidebar="HandleSidebarToggle" />
 		</RadzenSidebar>
 	</AuthorizeView>
 
@@ -33,11 +33,20 @@
 </HeadContent>
 
 @code {
-	private bool ToggleSidebar = true; 
+	private bool ToggleSidebar = true;
+	private bool SmallScreen { get; set; }
 
 	private void OnSidebarChanged(bool expanded)
 	{
 		ToggleSidebar = expanded;
 		Console.WriteLine($"Sidebar Expanded Changed: {ToggleSidebar}");
+	}
+
+	private async Task HandleSidebarToggle(bool isToggled)
+	{
+		if(isToggled)
+		{
+			OnSidebarChanged(ToggleSidebar = !ToggleSidebar);
+		}
 	}
 }

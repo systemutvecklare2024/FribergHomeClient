@@ -13,11 +13,9 @@ CoAuthor: Emelie *@
 {
     <AgencyCard Name="@agency.Name" Applications="@agency.Applications" Presentation="@agency.Presentation" LogoUrl="@agency.LogoUrl"></AgencyCard>
     <RadzenRow JustifyContent="@JustifyContent.Center" AlignItems="@AlignItems.Normal" Gap="1">
-
-
         @foreach (var agent in agency.Agents)
         {
-            <RadzenColumn Size="2" class="rz-text-align-center rz-p-2">
+            <RadzenColumn Size="12" SizeMD="4" class="rz-text-align-center rz-p-2">
                 <SmallAgentCard Agent="@agent"/>
             </RadzenColumn>
         }

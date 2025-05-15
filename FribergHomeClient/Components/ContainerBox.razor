@@ -1,0 +1,27 @@
+﻿<div class="rz-background-color-primary-lighter rz-p-8 @Class" style="@SetStyle()">
+	@ChildContent
+</div>
+
+@code {
+	[Parameter]
+	public RenderFragment? ChildContent { get; set; }
+
+	[Parameter]
+	public int BorderRadius { get; set; } = 4;
+
+	[Parameter]
+	public string Style { get; set; } = "";
+
+	[Parameter]
+	public string Class { get; set; } = "";
+
+	private string SetBorderRadius()
+	{
+		return $"border-radius: {BorderRadius}px;";
+	}
+
+	private string SetStyle()
+	{
+		return $"{SetBorderRadius()} {Style}";
+	}
+}
