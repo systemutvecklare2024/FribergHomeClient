@@ -1,15 +1,16 @@
 ﻿@inject IJSRuntime JS
 
 @* //Author:Emelie *@
+@* //Co-Author: Glate *@
 
 <RadzenPanelMenu DisplayStyle="@(LargeSidebar ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" Style="background-color: #54787e;">
 
 	<RadzenRow AlignItems="AlignItems.End" JustifyContent="JustifyContent.End">
-		@if (LargeSidebar)
+		@if (LargeSidebar && !SmallScreen)
 		{
 			<RadzenButton Icon="arrow_menu_close" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
 		}
-		@if (!LargeSidebar)
+		@if (!LargeSidebar && !SmallScreen)
 		{
 			<RadzenButton Icon="arrow_menu_open" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
 		}
@@ -47,6 +48,10 @@
 	public void UpdateWidth(int width)
 	{
 		windowWidth = width;
+		if(windowWidth < 769)
+		{
+			LargeSidebar = SmallScreen; //If window width < 769, force icons and text on sidebar.
+		}
 		StateHasChanged();
 	}
 
