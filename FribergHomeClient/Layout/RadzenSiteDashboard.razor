@@ -1,34 +1,60 @@
-﻿@* //Author:Emelie *@
+﻿@inject IJSRuntime JS
 
-<RadzenPanelMenu DisplayStyle="@(SidebarExpanded ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" Style="background-color: #54787e;">
+@* //Author:Emelie *@
+
+<RadzenPanelMenu DisplayStyle="@(LargeSidebar ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" Style="background-color: #54787e;">
 
 	<RadzenRow AlignItems="AlignItems.End" JustifyContent="JustifyContent.End">
-		@if (SidebarExpanded)
+		@if (LargeSidebar)
 		{
-			<RadzenButton Icon="arrow_menu_close" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+			<RadzenButton Icon="arrow_menu_close" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
 		}
-		@if (!SidebarExpanded)
+		@if (!LargeSidebar)
 		{
-			<RadzenButton Icon="arrow_menu_open" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => SidebarExpanded = !SidebarExpanded)" />
+			<RadzenButton Icon="arrow_menu_open" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
 		}
 	</RadzenRow>
 
 	<RadzenStack Orientation="Orientation.Vertical" class="rz-p-2">
-
-		<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" />
-		<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" />
-		<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" />
-		<RadzenPanelMenuItem Text="Ändra Profil" Icon="edit" Path="/RealEstateAgents/UpdateProfile/My" />
-		<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" />
+		<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" Click="@OnToggleSidebar" />
+		<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" Click="@OnToggleSidebar" />
+		<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" Click="@OnToggleSidebar" />
+		<RadzenPanelMenuItem Text="Ändra Profil" Icon="edit" Path="/RealEstateAgents/UpdateProfile/My" Click="@OnToggleSidebar" />
+		<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" Click="@OnToggleSidebar" />
 		<LogoutButton></LogoutButton>
 	</RadzenStack>
 
 </RadzenPanelMenu>
 
 @code {
+	[Parameter]
+	public bool LargeSidebar { get; set; } = true;
 
 	[Parameter]
-	public bool SidebarExpanded { get; set; } = true;
+	public EventCallback<bool> ToggleSidebar { get; set; }
 
-	//TODO: Implement very fun javascript to save screen width to a variable for a dynamic sidebar. Fun stuff.
+	private bool SmallScreen => windowWidth < 769 ? true : false;
+
+	//Author: Javascript-Glate
+	private int windowWidth;
+	protected override async Task OnInitializedAsync()
+	{
+		await JS.InvokeVoidAsync("listenForResize", DotNetObjectReference.Create(this));
+		windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+	}
+
+	[JSInvokable]
+	public void UpdateWidth(int width)
+	{
+		windowWidth = width;
+		StateHasChanged();
+	}
+
+	private async Task OnToggleSidebar() //if small screen (full screen sidebar), EventCallback bool to close sidebar on click.
+	{
+		if (SmallScreen)
+		{
+			await ToggleSidebar.InvokeAsync(SmallScreen);
+		}
+	}
 }
