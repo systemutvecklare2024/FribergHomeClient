@@ -6,7 +6,7 @@
 @inject IRealEstateAgentService AgentService
 @inject HttpClient Http
 
-@attribute [Authorize(Roles = "Agent, SuperAgent")]
+@attribute [Authorize(Roles = "User, Agent, SuperAgent")]
 
 @* Author: Tobias
 CoAuthor: Emelie *@

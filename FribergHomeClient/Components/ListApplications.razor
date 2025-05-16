@@ -26,7 +26,8 @@ else
                     AllowColumnResize="true"
                     Data="@applicationViewModels"
                     TItem="ApplicationViewModel"
-                    ColumnWidth="300px">
+                    ColumnWidth="300px"
+                    EmptyText="Inga ansökningar">
         <Columns>
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />
@@ -42,8 +43,8 @@ else
             </RadzenDataGridColumn>
             <RadzenDataGridColumn Width="30px" Title="Åtgärd">
                 <Template Context="applicationViewModel">
-                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="check" Click=@(async () => await HandleApplicationAsync(applicationViewModel, StatusType.Approved)) MouseEnter="@(args => ShowTooltip(args, "Acceptera", "var(--rz-success-lighter);"))" Text="" />
-                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="close" Click=@(async () => await HandleApplicationAsync(applicationViewModel, StatusType.Denied)) MouseEnter="@(args => ShowTooltip(args, "Neka", "var(--rz-danger-lighter);"))" Text="" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Success" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="check" Click=@(async () => await HandleApplicationAsync(applicationViewModel, StatusType.Approved)) MouseEnter="@(args => ShowTooltip(args, "Acceptera", "var(--rz-success-light);"))" Text="" />
+                    <RadzenButton ButtonStyle="ButtonStyle.Danger" Variant="Variant.Flat" Size="ButtonSize.Small" Shade="Shade.Lighter" Icon="close" Click=@(async () => await HandleApplicationAsync(applicationViewModel, StatusType.Denied)) MouseEnter="@(args => ShowTooltip(args, "Neka", "var(--rz-danger-light);"))" Text="" />
                 </Template>
             </RadzenDataGridColumn>
         </Columns>

@@ -40,5 +40,11 @@ namespace FribergHomeClient.Services
         {
             return await localStorage.GetItemAsync<int>("AgentId");
         }
+
+        public async Task<ServiceResponse<RealEstateAgentDTO>> GetLoggedInAgent()
+        {
+            var agent = await client.GetServiceResponseAsync<RealEstateAgentDTO>($"api/RealEstateAgents/my");
+            return agent;
+		}
     }
 }
