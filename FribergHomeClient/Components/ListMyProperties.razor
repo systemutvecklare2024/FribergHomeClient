@@ -45,7 +45,12 @@ else
                     @GetPropertyTypeDisplayName(property.PropertyType)
                 </Template>
             </RadzenDataGridColumn>
-            <RadzenDataGridColumn Property="@nameof(PropertyDTO.ListingPrice)" Title="Pris" Width="120px" />
+
+            <RadzenDataGridColumn Title="Pris" Width="120px">
+                <Template Context="property">
+                    @property.ListingPrice.ToString("#,##0").Replace(",", " ")kr
+                </Template>
+            </RadzenDataGridColumn>
             <RadzenDataGridColumn Property="@nameof(PropertyDTO.Street)" Title="Adress" Frozen="true" Width="160px" />
             <RadzenDataGridColumn Property="@nameof(PropertyDTO.City)" Title="Ort" Width="120px" />
             <RadzenDataGridColumn Property="@nameof(PropertyDTO.PostalCode)" Title="Post nummer" Width="80px" />
