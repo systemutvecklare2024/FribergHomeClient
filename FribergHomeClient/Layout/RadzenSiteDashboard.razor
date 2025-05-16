@@ -1,29 +1,65 @@
 ﻿@inject IJSRuntime JS
+@inject IRealEstateAgentService Agent
 
 @* //Author:Emelie *@
 @* //Co-Author: Glate *@
 
+<style>
+	.rz-navigation-item{
+		background-color: #54787e !important;
+	}
+</style>
+
 <RadzenPanelMenu DisplayStyle="@(LargeSidebar ? MenuItemDisplayStyle.IconAndText : MenuItemDisplayStyle.Icon)" ShowArrow="false" Style="background-color: #54787e;">
 
 	<RadzenRow AlignItems="AlignItems.End" JustifyContent="JustifyContent.End">
-		@if (LargeSidebar && !SmallScreen)
-		{
-			<RadzenButton Icon="arrow_menu_close" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
-		}
-		@if (!LargeSidebar && !SmallScreen)
-		{
-			<RadzenButton Icon="arrow_menu_open" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
-		}
+
+		<RadzenColumn Size="1">
+			<RadzenRow AlignItems="AlignItems.End" JustifyContent="JustifyContent.End">
+
+				@if (LargeSidebar && !SmallScreen)
+				{
+					<RadzenButton Icon="arrow_menu_close" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
+				}
+				@if (!LargeSidebar && !SmallScreen)
+				{
+					<RadzenButton Icon="arrow_menu_open" Variant="Variant.Text" ButtonStyle="ButtonStyle.Secondary" Click="@(() => LargeSidebar = !LargeSidebar)" />
+				}
+			</RadzenRow>
+		</RadzenColumn>
 	</RadzenRow>
 
 	<RadzenStack Orientation="Orientation.Vertical" class="rz-p-2">
-		<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" Click="@OnToggleSidebar" />
-		<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" Click="@OnToggleSidebar" />
-		<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" Click="@OnToggleSidebar" />
-		<RadzenPanelMenuItem Text="Ändra Profil" Icon="edit" Path="/RealEstateAgents/UpdateProfile/My" Click="@OnToggleSidebar" />
-		<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" Click="@OnToggleSidebar" />
-		<LogoutButton></LogoutButton>
+		<AuthorizeView Roles="Agent, SuperAgent">
+			<RadzenPanelMenuItem Text="Mina Objekt" Icon="home" Path="dashboard/myobjects" Click="@OnToggleSidebar" />
+			<RadzenPanelMenuItem Text="Lägg till ny bostad" Icon="add_home" Path="/dashboard/addproperty" Click="@OnToggleSidebar" />
+			<RadzenPanelMenuItem Text="Mäklarbyrå" Icon="holiday_village" Path="/dashboard/agency" Click="@OnToggleSidebar" />
+		</AuthorizeView>
+
 	</RadzenStack>
+		<div style="justify-content: start;">
+			<RadzenPanelMenuItem Style="z-index: 40; width: 100%; background-color: #54787e; border: none; padding: 0 !important;" class="force-background">
+				<Template>
+					@if (LargeSidebar)
+					{
+					<RadzenText TextStyle="TextStyle.Body2" Style="color: white; display: flex; align-items: center;" class="rz-m-3">
+						<RadzenImage Path="@LoggedInAgent.ImageUrl" AlternateText="Profilbild" Style="height: 4em; width: 4em; border-radius: 50%;" class="rz-me-1"></RadzenImage>
+						@LoggedInAgent.FirstName
+						<RadzenIcon Icon="arrow_drop_down" Style="color: white;" class="rz-ms-2"></RadzenIcon>
+					</RadzenText>
+					}
+					else{
+					<RadzenIcon Icon="account_circle" Style="color: white;" class="rz-ms-2"></RadzenIcon>
+					}
+				</Template>
+				<ChildContent>
+					<RadzenPanelMenuItem Text="Min Profil" Icon="account_circle" Path="/dashboard/myprofile" Click="@OnToggleSidebar" />
+					<RadzenPanelMenuItem Text="Ändra Profil" Icon="edit" Path="/RealEstateAgents/UpdateProfile/My" Click="@OnToggleSidebar" />
+
+					<LogoutButton></LogoutButton>
+				</ChildContent>
+			</RadzenPanelMenuItem>
+		</div>
 
 </RadzenPanelMenu>
 
@@ -36,19 +72,23 @@
 
 	private bool SmallScreen => windowWidth < 769 ? true : false;
 
+	private RealEstateAgentDTO LoggedInAgent { get; set; } = new RealEstateAgentDTO();
+
 	//Author: Javascript-Glate
 	private int windowWidth;
 	protected override async Task OnInitializedAsync()
 	{
 		await JS.InvokeVoidAsync("listenForResize", DotNetObjectReference.Create(this));
 		windowWidth = await JS.InvokeAsync<int>("getWindowWidth");
+		var agentResponse = await Agent.GetLoggedInAgent();
+		LoggedInAgent = agentResponse.Data!;
 	}
 
 	[JSInvokable]
 	public void UpdateWidth(int width)
 	{
 		windowWidth = width;
-		if(windowWidth < 769)
+		if (windowWidth < 769)
 		{
 			LargeSidebar = SmallScreen; //If window width < 769, force icons and text on sidebar.
 		}
