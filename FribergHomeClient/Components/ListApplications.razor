@@ -26,7 +26,8 @@ else
                     AllowColumnResize="true"
                     Data="@applicationViewModels"
                     TItem="ApplicationViewModel"
-                    ColumnWidth="300px">
+                    ColumnWidth="300px"
+                    EmptyText="Inga ansökningar">
         <Columns>
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.FirstName)" Title="Förnamn" />
             <RadzenDataGridColumn Width="50px" Property="@nameof(ApplicationViewModel.LastName)" Title="Efternamn" />

@@ -32,7 +32,8 @@ else
                     SelectionMode="DataGridSelectionMode.Single"
                     @bind-Value=@selectedProperties
                     RowRender="@OnRowRender"
-                    CellContextMenu="@OnCellContextMenu">
+                    CellContextMenu="@OnCellContextMenu"
+                    EmptyText="Inga listningar">
         <Columns>
             <RadzenDataGridColumn Title="Foto" Frozen="true" Sortable="false" Filterable="false" Width="80px" TextAlign="TextAlign.Center">
                 <Template Context="data">
