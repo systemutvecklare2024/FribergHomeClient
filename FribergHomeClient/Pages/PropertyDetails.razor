@@ -8,6 +8,9 @@
 
 @* //Author:Emelie *@
 @* CoAuthor: Fredrik *@
+@* CoAuthor: Glate*@
+@* CoAuthor: Christoffer*@
+@* CoAuthor: Tobias*@
 
 
 @if (Property is null)
@@ -21,12 +24,6 @@ else
 		<RadzenColumn SizeLG="8" Size="12">
 			<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
 				<RadzenRow JustifyContent="JustifyContent.Center">
-					<!--Street-->
-					@* <RadzenColumn>
-						<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
-							<RadzenText TextStyle="TextStyle.H3" TextAlign="TextAlign.Start" TagName="TagName.P">@Property.Street</RadzenText>
-						</RadzenRow>
-					</RadzenColumn> *@
 
 					<!--Image City/Muncipality Description Property Details/Data Agent-->
 					<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start" class="rz-my-8">
@@ -37,8 +34,8 @@ else
 
 									<!--Image-->
 									<RadzenCarousel Auto="false" AllowNavigation="true"
-													Style="width: 100%;"
-													ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
+									Style="height: 45vh; width: 100%;"
+									ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
 										<Items>
 											@foreach (var image in Property.ImageUrls)
 											{
@@ -53,6 +50,7 @@ else
 									<RadzenRow JustifyContent="JustifyContent.SpaceBetween" class="rz-my-2">
 										<RadzenColumn>
 											<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
+												<!--Street-->
 												<RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Start" TagName="TagName.P">@Property.Street</RadzenText>
 											</RadzenRow>
 											<RadzenText TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Left" TagName="TagName.P" class="">
@@ -169,8 +167,7 @@ else
 								</div>
 
 								<RadzenColumn Size="12" SizeMD="6" SizeLG="3" SizeXL="3" class="rz-my-4">
-									@* @* Fredrik*@ 
-														<!--Agent-->
+									<!--Agent-->
 									@if (agent != null)
 									{
 										<AgentProfile Id="@Property.RealEstateAgentId" />
@@ -184,12 +181,7 @@ else
 									}
 								</RadzenColumn>
 							</RadzenColumn>
-
-							<!--Agent-->
-
 						</RadzenRow>
-
-
 					</RadzenRow>
 				</RadzenRow>
 			</RadzenStack>
@@ -199,8 +191,8 @@ else
 }
 
 @code {
-	[Parameter]
-	public int Id { get; set; }
+		[Parameter]
+		public int Id { get; set; }
 
 	public PropertyDTO Property { get; set; }
 	//Fredrik
