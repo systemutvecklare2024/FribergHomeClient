@@ -5,6 +5,16 @@
 
 @* Author: Tobias
 CoAuthor: Emelie *@
+<style>
+	.custom-mail {
+		text-decoration: none !important;
+		color: white;
+	}
+
+	.custom-mail:hover {
+		color: #598087;
+	}
+</style>
 
 @if (agent == null)
 {
@@ -23,12 +33,14 @@ else
 					<RadzenText TextStyle="TextStyle.Body1"><b>@agent?.Agency?.Name</b></RadzenText>
 				</RadzenStack>
 			</RadzenStack>
-			<RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-p-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
-				<RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Kontaktuppgifter</strong></RadzenText>
+			<RadzenCard class="rz-background-color-primary-light rz-shadow-0 rz-border-radius-0 rz-px-8" style="margin: 1rem calc(-1 * var(--rz-card-padding));">
+				@* <RadzenText TextStyle="TextStyle.H6" class="rz-color-on-primary-light"><strong>Kontaktuppgifter</strong></RadzenText> *@
 				<RadzenRow RowGap="0">
 					<RadzenColumn SizeSM="4">
-						<RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Email</RadzenText>
-						<RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@(agent?.Email)</b></RadzenText>
+						<RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mb-0">Email</RadzenText>
+						<RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>
+							<a class="custom-mail" href="mailto:@(agent?.Email)">@(agent?.Email)</a>
+							</b></RadzenText>
 						<RadzenText TextStyle="TextStyle.Overline" class="rz-color-on-primary-light rz-display-flex rz-mt-4 rz-mb-0">Telefonnummer</RadzenText>
 						<RadzenText TextStyle="TextStyle.Body1" class="rz-color-on-primary-light"><b>@(agent?.PhoneNumber)</b></RadzenText>
 					</RadzenColumn>
