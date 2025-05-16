@@ -34,8 +34,8 @@ else
 
 									<!--Image-->
 									<RadzenCarousel Auto="false" AllowNavigation="true"
-									Style="height: 45vh; width: 100%;"
-									ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
+													Style="height: 45vh; width: 100%;"
+													ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
 										<Items>
 											@foreach (var image in Property.ImageUrls)
 											{
@@ -191,8 +191,8 @@ else
 }
 
 @code {
-		[Parameter]
-		public int Id { get; set; }
+	[Parameter]
+	public int Id { get; set; }
 
 	public PropertyDTO Property { get; set; }
 	//Fredrik
