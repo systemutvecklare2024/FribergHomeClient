@@ -22,62 +22,66 @@ else
 			<RadzenStack Orientation="Orientation.Horizontal" JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start" Wrap="FlexWrap.Wrap">
 				<RadzenRow JustifyContent="JustifyContent.Center">
 					<!--Street-->
-					<RadzenColumn>
+					@* <RadzenColumn>
 						<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
 							<RadzenText TextStyle="TextStyle.H3" TextAlign="TextAlign.Start" TagName="TagName.P">@Property.Street</RadzenText>
 						</RadzenRow>
-					</RadzenColumn>
+					</RadzenColumn> *@
 
 					<!--Image City/Muncipality Description Property Details/Data Agent-->
-					<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
+					<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start" class="rz-my-8">
 						<!--Image City/Muncipality Description-->
 						<RadzenRow>
 							<RadzenColumn SizeLG="8" SizeMD="12" SizeSM="12">
-								<!--Image-->
-								<RadzenCarousel Auto="false" AllowNavigation="true"
-												Style="height: 50vh; width: 100%;"
-												ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
-									<Items>
-										@foreach (var image in Property.ImageUrls)
-										{
-											<RadzenCarouselItem>
-												<RadzenImage Path="@image.ImgURL" class="rz-w-100 rz-h-100" />
-											</RadzenCarouselItem>
-										}
-									</Items>
-								</RadzenCarousel>
+								<ContainerBox>
 
-								<!--City Muncipality-->
-								<RadzenRow JustifyContent="JustifyContent.SpaceBetween">
-									<RadzenColumn>
+									<!--Image-->
+									<RadzenCarousel Auto="false" AllowNavigation="true"
+													Style="width: 100%;"
+													ButtonStyle="ButtonStyle.Light" ButtonSize="ButtonSize.Small" ButtonShade="Shade.Lighter" ButtonVariant="Variant.Text">
+										<Items>
+											@foreach (var image in Property.ImageUrls)
+											{
+												<RadzenCarouselItem>
+													<RadzenImage Path="@image.ImgURL" class="rz-w-100 rz-h-100" />
+												</RadzenCarouselItem>
+											}
+										</Items>
+									</RadzenCarousel>
 
-								<RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P" class="rz-my-2">
-									@Property.City, @Property.Muncipality kommun
-								</RadzenText>
-									</RadzenColumn>
-									<RadzenColumn>
-										<RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.End" TagName="TagName.P" class="rz-my-2">
-											@Property.ListingPrice.ToString("#,##0").Replace(",", " ")kr
+									<!--City Muncipality-->
+									<RadzenRow JustifyContent="JustifyContent.SpaceBetween" class="rz-my-2">
+										<RadzenColumn>
+											<RadzenRow JustifyContent="JustifyContent.Start" AlignItems="AlignItems.Start">
+												<RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Start" TagName="TagName.P">@Property.Street</RadzenText>
+											</RadzenRow>
+											<RadzenText TextStyle="TextStyle.Subtitle1" TextAlign="TextAlign.Left" TagName="TagName.P" class="">
+												@Property.City, @Property.Muncipality kommun
+											</RadzenText>
+										</RadzenColumn>
+										<RadzenColumn>
+											<RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.End" TagName="TagName.P" class="">
+												@Property.ListingPrice.ToString("#,##0").Replace(",", " ")kr
+											</RadzenText>
+										</RadzenColumn>
+									</RadzenRow>
+
+									<!--Description-->
+									@foreach (var descriptionSection in descriptionArray)
+									{
+										<RadzenText TextStyle="TextStyle.Caption" TextAlign="TextAlign.JustifyAll" TagName="TagName.P" Style="font-size:1.2em; margin-bottom:1em;">
+											@descriptionSection
 										</RadzenText>
-									</RadzenColumn>
-								</RadzenRow>
-
-								<!--Description-->
-								@foreach (var descriptionSection in descriptionArray)
-								{
-									<RadzenText TextStyle="TextStyle.Caption" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.4em; margin-bottom:1em">
-										@descriptionSection
-									</RadzenText>
-								}
+									}
+								</ContainerBox>
 							</RadzenColumn>
-
 							<RadzenColumn SizeLG="4" SizeMD="12" SizeSM="12">
 
 
-								<div class="rz-background-color-primary-lighter rz-px-1 rz-py-4 " style="border-radius: 4px;">
+								<div class="rz-background-color-primary-lighter rz-px-2 rz-py-8" style="border-radius: 4px;">
 									<RadzenRow JustifyContent="JustifyContent.SpaceAround" AlignItems="AlignItems.Start" Gap="1rem">
 										<!--Property Details-->
-										<RadzenColumn Size="2">
+										<RadzenColumn Size="4">
 											<RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P" Style="font-size:1.2em">
 												Utgångspris
 											</RadzenText>
@@ -120,7 +124,7 @@ else
 										</RadzenColumn>
 
 										<!--Property Data-->
-										<RadzenColumn Size="2">
+										<RadzenColumn Size="4">
 											<RadzenText TextStyle="TextStyle.H5" TextAlign="TextAlign.Left" TagName="TagName.P" style="font-size:1.2em; white-space: nowrap;">
 												@Property.ListingPrice.ToString("#,##0").Replace(",", " ")kr
 											</RadzenText>
@@ -166,7 +170,7 @@ else
 
 								<RadzenColumn Size="12" SizeMD="6" SizeLG="3" SizeXL="3" class="rz-my-4">
 									@* @* Fredrik*@ 
-												<!--Agent-->
+														<!--Agent-->
 									@if (agent != null)
 									{
 										<AgentProfile Id="@Property.RealEstateAgentId" />
@@ -189,6 +193,7 @@ else
 					</RadzenRow>
 				</RadzenRow>
 			</RadzenStack>
+
 		</RadzenColumn>
 	</RadzenRow>
 }
@@ -248,5 +253,4 @@ else
 				Detail = errorMessage
 			});
 	}
-
-		}
+}
