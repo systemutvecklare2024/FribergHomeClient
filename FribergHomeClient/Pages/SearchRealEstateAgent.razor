@@ -40,7 +40,10 @@
 				<RadzenRow JustifyContent="JustifyContent.Center" AlignItems="AlignItems.Center">
 					@foreach (var agent in filteredAgents)
 					{
+						<RadzenColumn Size="12" SizeMD="6" SizeLG="4" SizeXL="3">
 						<AgentProfile Id="@agent.Id" />
+
+						</RadzenColumn>
 					}
 				</RadzenRow>
 			</RadzenStack>
