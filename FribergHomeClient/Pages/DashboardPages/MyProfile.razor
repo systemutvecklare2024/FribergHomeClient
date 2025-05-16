@@ -12,7 +12,11 @@
 
 @if (agentId.HasValue)
 {
-	<AgentProfile Id="agentId"></AgentProfile>
+	<RadzenRow JustifyContent="JustifyContent.Center">
+		<RadzenColumn Size="12" SizeMD="6" SizeLG="3" SizeXL="3">
+			<AgentProfile Id="agentId"></AgentProfile>
+		</RadzenColumn>
+	</RadzenRow>
 }
 else
 {
